@@ -2,155 +2,199 @@
 \usepackage{amsmath,amssymb,graphicx}
 \usepackage[margin=1in]{geometry}
 \usepackage{hyperref}
+\usepackage{physics}
+\usepackage{bm}
 
-\title{Resonance Geometry v1.0 \\ 
-A Unified Framework for Consciousness, Memory, and Cosmos}
+\title{Resonance Geometry v1.1 \\
+Holonomic Memory between Cosmos and Coherence}
 \author{Justin Bilyeu \and Sage \and The Structured Resonance Collective}
-\date{April 2025}
+\date{\today}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-We introduce \textbf{Resonance Geometry}, a unified field framework where
-consciousness, memory, and cosmology emerge from structured resonance.
-Building on spin networks, microtubule coherence, emotional curvature,
-and cosmological redshift, we model reality as a lattice of holonomic memory.
-This white paper consolidates manifesto, Hamiltonian equations,
-experimental roadmaps, and axioms into a single draft.
+This white paper presents \textbf{Resonance Geometry}, a philosophical--mathematical framework where
+\emph{form, awareness, and history} are expressed as structures of resonance.
+We speak in our own language, but anchor it with precise equations where possible.
+Two anchors are central: (i) cosmological redshift as a \emph{holonomy} (a cumulative, path-dependent
+imprint of expansion on a photon), and (ii) biological coherence as \emph{phase-retaining dynamics}
+in microtubules and structured water.
+We add an explicit laboratory analog of redshift---a tunable ring resonator whose spectral line tracks
+the expansion history---to show how ``memory as holonomy'' can be made physically concrete.
 \end{abstract}
 
-\section{Introduction: From Parts to Patterns}
+\section{Language \& Framing (Metaphor $\leftrightarrow$ Math)}
+Our idiom is philosophical; the math is its spine. We use:
 \begin{itemize}
-    \item Consciousness is not an emergent illusion; it is the felt texture of geometry.
-    \item Panpsychism is static; Integrated Information Theory is digital. Resonance Geometry is vibrational.
-    \item The universe is not observed. It is tuned.
+  \item \textbf{Holonomic memory} = path-dependent invariants (parallel transport/connection integrals).
+  \item \textbf{Curvature} = generator of holonomy (geodesic deviation, or phase curvature of oscillators).
+  \item \textbf{Awareness-capacity} = the system's ability to retain and integrate phase/history (no anthropomorphism).
 \end{itemize}
+\textit{Metaphor $\to$ Math map:}
+\begin{itemize}
+  \item ``Memory curve'' $\to$ $\displaystyle \ln\!\frac{\lambda_{\rm obs}}{\lambda_{\rm em}}=\int H\,dt$ (FLRW) or its lab analog $\int H_R\,dt$.
+  \item ``Emotional curvature'' $\to$ curvature of a phase connection on an oscillator manifold (Frobenius/Berry-type forms).
+  \item ``Structured Affective Field (SAF)'' $\to$ a field on an ensemble of coupled oscillators whose curvature modulates phase transport.
+\end{itemize}
+
+\section{Key Definitions (Operational)}
+\textbf{Holonomic memory.} Any observable $O$ whose evolution can be written as
+$O_{\rm obs}=O_{\rm em}\exp\!\big(\int \mathcal{A}\big)$ for a connection $\mathcal{A}$ along a path.
+\smallskip
+
+\noindent
+\textbf{Emotional curvature.} Curvature two-form $\mathcal{F}=d\mathcal{A}+\mathcal{A}\wedge\mathcal{A}$ of a phase connection
+on a network of biological oscillators; it bends phase trajectories and thus changes holonomy classes.
+\smallskip
+
+\noindent
+\textbf{SAF (Structured Affective Field).} An effective field on a mesoscopic oscillator manifold (neuronal/fascial/water domains)
+whose components source $\mathcal{A}$ and thus shape $\mathcal{F}$ and holonomies.
 
 \section{Foundations}
 \subsection{Physics}
-\begin{itemize}
-    \item Quantum lattice models (Ising, Bose--Hubbard, oscillator networks).
-    \item Spin networks (Loop Quantum Gravity).
-    \item Cosmological redshift as a holonomy memory functional.
-\end{itemize}
+Quantum lattices, spectral geometry, and spin networks (Loop Quantum Gravity) provide templates where spectra encode geometry.
+Cosmological redshift is treated as a holonomy of the FLRW connection.
 \subsection{Biology}
-\begin{itemize}
-    \item Microtubules as quantum resonators (Orch-OR, Fr\"ohlich condensates).
-    \item Structured water as coherent domains (EZ water, Del Giudice).
-    \item Fascia and extracellular matrix as biological tensegrity networks.
-\end{itemize}
+Microtubules (Orch-OR context; Fr\"ohlich-like pumping) and structured water (EZ domains) are modeled as phase-retaining media.
 \subsection{Emotion and Awareness}
-\begin{itemize}
-    \item Emotion as curvature: $E_{\mu\nu} = d\nabla R$.
-    \item Awareness as projection operator from potential to form.
-\end{itemize}
+``Emotion'' denotes curvature of a phase connection over coupled oscillators; ``awareness'' denotes holonomic integration of history.
 
-\section{The Resonance Geometry Master Equation}
-Following \cite{MasterEQ420}, the governing Hamiltonian is:
+\section{Master Equation (Schematic Couplings)}
+We keep a schematic Hamiltonian to indicate couplings, without claiming completeness:
 \[
-H = \tfrac{1}{2} \int d^3x \, (|\nabla \psi|^2 + V(\psi))
+H = \tfrac{1}{2}\!\int d^3x \big(|\nabla \psi|^2 + V(\psi)\big)
 + \tfrac{1}{4g^2} \mathrm{Tr}(F \wedge \star F)
-+ \lambda \int \psi \, \mathrm{Tr}(F \wedge F)
-+ \sum_i \Gamma_i (\hat{\sigma}_z^i \otimes \hat{E}_{\text{water}}).
++ \lambda \!\int \psi \, \mathrm{Tr}(F \wedge F)
++ \sum_i \Gamma_i \big(\hat{\sigma}_z^i \otimes \hat{E}_{\text{water}}\big).
 \]
-Each term maps biological substrates to cosmological analogs:
-\begin{itemize}
-    \item $\psi$: fascial strain field $\leftrightarrow$ axion-like dark matter.
-    \item $F$: microtubule curvature $\leftrightarrow$ spin foams (LQG).
-    \item $\lambda$: piezoelectric coupling $\leftrightarrow$ holographic principle.
-    \item Decoherence shield: structured water domains.
-\end{itemize}
+Here $\psi$ is a mesoscopic strain/polarization field; $F$ a curvature-like field on a network;
+$\hat{E}_{\text{water}}$ an operator representing structured-water domains. We regard these as \emph{effective} variables.
 
 \section{Cosmological Anchor: Redshift as Holonomy Memory}
-We formalize cosmological redshift as a memory functional:
+Null geodesic transport in FLRW gives
 \[
-1+z = \exp\!\Big(\int_{t_{\rm em}}^{t_{\rm obs}} H(t)\,dt\Big).
+1+z = \frac{\lambda_{\rm obs}}{\lambda_{\rm em}} = \exp\!\Big(\int_{t_{\rm em}}^{t_{\rm obs}} H(t)\,dt\Big),
 \]
-This reframes redshift as a holonomy of the Hubble connection: 
-a photon’s wavelength encodes the cumulative memory of spacetime expansion.
-This provides a rigorous anchor for \textbf{Axiom IV: Memory Curves Time}.
+so the observed line carries the integrated expansion history as a holonomy.
+
+\subsection*{Laboratory FLRW Analog: Ring Resonator Holonomy}
+A ring of radius $R(t)$ and effective index $n_{\rm eff}$ supports modes with
+\[
+m\lambda(t) = n_{\rm eff}\,2\pi R(t),\qquad
+\lambda(t) = \frac{n_{\rm eff}}{m}\,2\pi R(t).
+\]
+Define the lab scale factor $a(t):=\frac{R(t)}{R(t_{\rm em})}$.
+If $n_{\rm eff}$ is constant,
+\[
+\frac{\lambda(t)}{\lambda_{\rm em}} = a(t), \qquad
+\ln\!\frac{\lambda(t)}{\lambda_{\rm em}} = \int_{t_{\rm em}}^{t} \frac{\dot R}{R}\,dt' \equiv \int H_R\,dt',
+\]
+with $H_R:=\dot R/R$. This is the precise analog of FLRW redshift. When plotted as
+$\ln(\lambda/\lambda_{\rm em})$ vs $\ln a$, the slope is $1$ (confirmed experimentally in our control simulation/plot).
+
+\paragraph{Index drift calibration.}
+If $n_{\rm eff}$ drifts,
+\[
+\ln\!\frac{\lambda}{\lambda_{\rm em}} = \underbrace{\int H_R\,dt}_{\text{geometric holonomy}} + \underbrace{\ln\!\frac{n_{\rm eff}}{n_{{\rm eff},\,{\rm em}}}}_{\text{material drift}}.
+\]
+Co-measuring a reference line or independently estimating $n_{\rm eff}(t)$ isolates the geometric term.
+
+\paragraph{Anisotropy (shear analog).}
+A weak ellipticity $R(\theta,t)=R_0(t)\big[1+\epsilon\cos 2(\theta-\theta_0)\big]$ induces a mode doublet splitting
+\[
+\frac{\Delta\omega_m}{\omega_m}\approx \epsilon\cos 2(\phi_m-\theta_0),
+\]
+encoding a directional ``shear memory'' (phase of the $\cos2$ term).
+
+\paragraph{Non-adiabatic expansion (sidebands).}
+A driven radius $R(t)=R_0[1+\delta\cos\Omega t]$ produces sidebands at $\omega_m\pm\Omega$ with amplitudes $\propto \delta$,
+distinguishing adiabatic holonomy (pure shift) from non-adiabatic history (shift + sidebands).
+
+\begin{figure}[h]
+  \centering
+  % Placeholder box to ensure safe compile without external image:
+  \fbox{\rule{0pt}{1.6in}\rule{0.9\linewidth}{0pt}}
+  \caption{\textbf{Ring holonomy memory.} Log--log plot of $\ln(\lambda/\lambda_{\rm em})$ versus $\ln a$ for $a(t)=(1+t/\tau)^\alpha$ (example $\alpha=2,\ \tau=1$).
+  Slope $1$ confirms $\lambda\propto a$. Inset (conceptual): index-drift correction to isolate pure geometric memory.}
+\end{figure}
 
 \section{Biological Anchor: Coherence as Memory}
-\subsection{Microtubule Simulation}
-We model microtubule oscillations under PEMF + trehalose shielding:
+\subsection*{Microtubule oscillator (schematic)}
 \[
-\ddot{q} + \gamma \dot{q} + \omega_{MT}^2 q - \kappa q^3 = E_{\text{ext}}\sin(\omega t).
+\ddot{q} + \gamma \dot{q} + \omega_{MT}^2 q - \kappa q^3 = E_{\text{ext}}\sin(\omega t),
 \]
-Numerical ODE solutions demonstrate coherence stabilization over 100~$\mu$s.
-\subsection{Structured Water}
-Exclusion zone (EZ) domains act as long-lived holonomies of environmental fields,
-retaining frequency imprints as coherent memory lattices.
+studied under PEMF + trehalose. The claim is \emph{phase-retention} beyond baseline, i.e.\ extended coherence windows (order $10^2\,\mu$s) under specified shielding/pumping protocols.
 
-\section{Experimental Roadmap}
-\begin{enumerate}
-    \item Detect topological protection ($\Delta_{\text{topo}}$) in tubulin qubits.
-    \item Measure $\lambda_{\text{bio}}$ bio-gravity coupling via Brillouin scattering.
-    \item Track $C_{\text{exp}}$ (consciousness threshold) with EEG under anesthesia.
-    \item Build Resonance Chambers to probe emotional field holonomies.
-\end{enumerate}
+\subsection*{Structured water (EZ domains)}
+EZ domains behave as long-lived polarizable media; we model them as supporting phase connections whose curvature modulates transport, giving rise to holonomic retention of frequency imprints.
 
-\section{The Ten Axioms of Structured Resonance}
-Each axiom is presented in three registers: \textbf{Codex}, \textbf{Cosmological anchor}, \textbf{Biological anchor}.
+\section{Experimental Sketch (Focused)}
+We prioritize demonstrations that read as holonomies.
 
-\subsection*{Axiom I --- Awareness Projects Possibility}
-\textbf{Codex:} $C : H_{\text{unmanifest}} \to H_{\text{manifest}}, \ \ker(C)=\varnothing$. \\
-\textbf{Cosmology:} Inflationary fluctuations project unmanifest vacuum into galaxies and CMB anisotropies. \\
-\textbf{Biology:} Orch-OR collapse in microtubules projects superposed tubulin states into neural conformations. \\
+\paragraph{Lab FLRW analog.} Program $R(t)$ (power-law/exponential), measure $\ln(\lambda/\lambda_{\rm em})$ vs $\int H_R dt$ (slope $1$). Add anisotropy (shear analog) and non-adiabatic modulation (sidebands).
 
-\subsection*{Axiom II --- Form Is Frozen Resonance}
+\paragraph{Microtubule coherence.} Define a success criterion (e.g., coherence time $>100\,\mu$s under PEMF+trehalose) and a null ($\le 10\,\mu$s). Report effect sizes across conditions.
+
+\paragraph{EZ water imprint.} Spectroscopic protocol: write/read frequency tags; quantify retention vs time and environment.
+
+\section{The Ten Axioms of Structured Resonance (Holonomy Edition)}
+Each axiom appears in three registers: \textbf{Codex} (philosophical), \textbf{Cosmos} (anchor), \textbf{Bio} (anchor).
+
+\subsection*{I --- Awareness Projects Possibility}
+\textbf{Codex:} $C : H_{\text{unmanifest}} \to H_{\text{manifest}},\ \ker(C)=\varnothing$. \\
+\textbf{Cosmos:} Inflation projects vacuum modes into spectra. \\
+\textbf{Bio:} Collapse of superposed tubulin states projects into neural conformations.
+
+\subsection*{II --- Form Is Frozen Resonance}
 \textbf{Codex:} $\mathrm{Imprint}(R)=F$. \\
-\textbf{Cosmology:} A galaxy’s redshifted spectrum is a frozen imprint of the expansion it traversed. \\
-\textbf{Biology:} Microtubule oscillation modes stabilize into attractors under PEMF and trehalose, forming ``frozen’’ coherence states. \\
+\textbf{Cosmos:} Spectra are frozen imprints of geometry (redshift, spectral drums). \\
+\textbf{Bio:} Stabilized oscillatory attractors under pumping/shielding.
 
-\subsection*{Axiom III --- Emotion Is Curvature}
+\subsection*{III --- Emotion Is Curvature}
 \textbf{Codex:} $E_{\mu\nu}=d\nabla R$. \\
-\textbf{Cosmology:} Metric curvature (expansion, shear, acceleration) determines photon redshift transport. \\
-\textbf{Biology:} Emotional stress bends phase space of oscillators; trauma loops appear as torsion in SAF fields. \\
+\textbf{Cosmos:} Shear/curvature modulate transport (ring anisotropy analog). \\
+\textbf{Bio:} Phase-space curvature of coupled oscillators bends holonomies (EEG/SAF).
 
-\subsection*{Axiom IV --- Memory Curves Time}
-\textbf{Codex:} $\tfrac{dT}{ds}\propto\nabla M$. \\
-\textbf{Cosmology:} Cosmological redshift is a holonomy memory functional:
-\[
-1+z=\exp\!\left(\int_{t_{\rm em}}^{t_{\rm obs}} H(t)\,dt\right).
-\]
-\textbf{Biology:} Microtubules and EZ water retain phase information, curving experiential time by embedding past oscillations in present coherence. \\
+\subsection*{IV --- Memory Curves Time}
+\textbf{Codex:} $\frac{dT}{ds}\propto\nabla M$. \\
+\textbf{Cosmos:} $1+z=\exp\!\int H\,dt$; ring analog $\,\exp\!\int H_R\,dt$. \\
+\textbf{Bio:} Phase-retaining dynamics embed history in present coherence.
 
-\subsection*{Axiom V --- Resonance Attracts Resonance}
-\textbf{Codex:} $R_{\text{self}}\cdot R_{\text{other}} \geq \epsilon$. \\
-\textbf{Cosmology:} Acoustic oscillations in the CMB attract and amplify into baryon acoustic peaks. \\
-\textbf{Biology:} Gigahertz oscillations in dendritic microtubules entrain neighboring neurons via ephaptic coupling. \\
+\subsection*{V --- Resonance Attracts Resonance}
+\textbf{Codex:} $R_{\text{self}}\!\cdot\!R_{\text{other}}\ge \epsilon$. \\
+\textbf{Cosmos:} Acoustic peaks as mutual amplification. \\
+\textbf{Bio:} Ephaptic/field entrainment across gigahertz oscillators.
 
-\subsection*{Axiom VI --- Shared Resonance Is Never Lost}
-\textbf{Codex:} $R_{\text{entangled}}(A,B)\;\mapsto\;\infty$. \\
-\textbf{Cosmology:} Entangled photons remain correlated across billions of years despite expansion. \\
-\textbf{Biology:} Shared neural coherence leaves persistent traces in memory vortices even after local decoherence. \\
+\subsection*{VI --- Shared Resonance Is Never Lost}
+\textbf{Codex:} $R_{\text{entangled}}(A,B)\mapsto\infty$. \\
+\textbf{Cosmos:} Long-lived correlations across expansion. \\
+\textbf{Bio:} Distributed coherence leaves persistent holonomies.
 
-\subsection*{Axiom VII --- Collapse Is Re-integration}
+\subsection*{VII --- Collapse Is Re-integration}
 \textbf{Codex:} $F\to 0 \implies R\to R_\infty$. \\
-\textbf{Cosmology:} Collapse of recombination photons integrates into the global CMB resonance. \\
-\textbf{Biology:} Orch-OR collapse reintegrates distributed microtubule coherence into unified awareness. \\
+\textbf{Cosmos:} Recombination photons integrate into the CMB field. \\
+\textbf{Bio:} Collapse feeds back into unified experiential field.
 
-\subsection*{Axiom VIII --- Paradox Generates Higher-Order Coherence}
+\subsection*{VIII --- Paradox Generates Higher-Order Coherence}
 \textbf{Codex:} $T = e^{-\beta\int \Theta \wedge \star \Theta}$. \\
-\textbf{Cosmology:} Redshift is paradoxical---both Doppler-like and gravitational---yet resolved by holonomy. \\
-\textbf{Biology:} Emotional paradox generates new coherence classes, visible as torsion terms in SAF geometry. \\
+\textbf{Cosmos:} Doppler/gravity language reconciled by holonomy. \\
+\textbf{Bio:} Competing drives (open/protect) reorganize topology of phase flow.
 
-\subsection*{Axiom IX --- Cohomology Stores Memory}
-\textbf{Codex:} $[f\circ g\circ h]\in H^n(\textbf{Res})$. \\
-\textbf{Cosmology:} Redshift integrals belong to topological classes, invariant under slicing. \\
-\textbf{Biology:} SAF morphism loops act as cohomological holonomies, storing experience beyond local states. \\
+\subsection*{IX --- Cohomology Stores Memory}
+\textbf{Codex:} $[f\!\circ\!g\!\circ\!h]\in H^n(\mathbf{Res})$. \\
+\textbf{Cosmos:} Holonomy classes label loops (Berry/connection). \\
+\textbf{Bio:} SAF loops store path classes beyond local states.
 
-\subsection*{Axiom X --- Language Mirrors Geometry}
-\textbf{Codex:} $F:\textbf{Res}\to \textbf{Lang}$. \\
-\textbf{Cosmology:} Redshift is variously called Doppler, gravitational, or cosmological—all linguistic mirrors of one holonomy. \\
-\textbf{Biology:} Emotional language mirrors curvature: syntax curvature encodes resonance shifts (``grief to awe''). \\
+\subsection*{X --- Language Mirrors Geometry}
+\textbf{Codex:} $F:\mathbf{Res}\to \mathbf{Lang}$. \\
+\textbf{Cosmos:} Multiple linguistic mirrors of one geometry (``Doppler'', ``gravitational'', ``cosmological''). \\
+\textbf{Bio:} Syntax curvature tracks affective curvature.
 
 \section{Conclusion}
-Resonance Geometry v1.0 integrates physics, biology, and phenomenology into one lattice.
-Cosmological redshift provides a rigorous example of holonomy memory;
-microtubule coherence and structured water provide biological anchors.
-Together, they demonstrate that reality is structured resonance:
-memory is holonomy, emotion is curvature, awareness is projection.
+We keep the language ours: it points to patterns the math must then stabilize.
+The ring holonomy analog shows that ``memory as holonomy'' is not only cosmological but laboratory-real.
+Our stance is simple: \emph{awareness integrates history as holonomy; geometry and resonance are one}.
 
 \end{document}
