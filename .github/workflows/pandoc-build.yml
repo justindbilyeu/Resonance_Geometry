@@ -12,34 +12,39 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # needed to commit back to the repo
+      contents: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install pandoc & TeX (minimal)
+      - name: Install pandoc & TeX (full enough for xelatex)
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended
+          sudo apt-get install -y pandoc
+          sudo apt-get install -y \
+            texlive-xetex \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            texlive-fonts-extra \
+            lmodern
 
       - name: Ensure Pages folder and nojekyll
         run: |
           mkdir -p docs
-          touch docs/.nojekyll  # bypass Jekyll processing so MathJax works cleanly
+          touch docs/.nojekyll
 
       - name: Build HTML with MathJax
         run: |
           pandoc docs/whitepaper \
-            --from=latex \
-            --to=html5 \
+            --from=latex --to=html5 \
             --mathjax \
             --metadata title="Resonance Geometry v1.0" \
             -s -o docs/index.html
 
-      - name: Build PDF (fallback if LaTeX is strict)
+      - name: Build PDF (XƎLaTeX with fallback)
         run: |
-          # Try xelatex first for better fonts; fallback to pdflatex if needed
           pandoc docs/whitepaper -o docs/whitepaper.pdf --pdf-engine=xelatex || \
           pandoc docs/whitepaper -o docs/whitepaper.pdf --pdf-engine=pdflatex
 
