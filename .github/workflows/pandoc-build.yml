@@ -4,7 +4,9 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'docs/whitepaper'
+      - 'docs/whitepaper.tex'
+      - 'docs/header.html'
+      - 'docs/style.css'
       - '.github/workflows/pandoc-build.yml'
   workflow_dispatch:
 
@@ -17,36 +19,33 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Install pandoc & TeX (full enough for xelatex)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y pandoc
-          sudo apt-get install -y \
-            texlive-xetex \
-            texlive-latex-recommended \
-            texlive-latex-extra \
-            texlive-fonts-recommended \
-            texlive-fonts-extra \
-            lmodern
+        with:
+          fetch-depth: 0
 
       - name: Ensure Pages folder and nojekyll
         run: |
           mkdir -p docs
           touch docs/.nojekyll
 
-      - name: Build HTML with MathJax
-        run: |
-          pandoc docs/whitepaper \
-            --from=latex --to=html5 \
-            --mathjax \
-            --metadata title="Resonance Geometry v1.0" \
+      # Build HTML with MathJax using the official pandoc+LaTeX image
+      - name: Build HTML (pandoc/latex)
+        uses: docker://pandoc/latex:latest
+        with:
+          args: >-
+            docs/whitepaper.tex
+            -f latex -t html5
+            --mathjax
+            --metadata title="Resonance Geometry v1.0"
             -s -o docs/index.html
 
-      - name: Build PDF (XƎLaTeX with fallback)
-        run: |
-          pandoc docs/whitepaper -o docs/whitepaper.pdf --pdf-engine=xelatex || \
-          pandoc docs/whitepaper -o docs/whitepaper.pdf --pdf-engine=pdflatex
+      # Build PDF with XeLaTeX (inside the same container)
+      - name: Build PDF (pandoc/latex)
+        uses: docker://pandoc/latex:latest
+        with:
+          args: >-
+            docs/whitepaper.tex
+            -o docs/whitepaper.pdf
+            --pdf-engine=xelatex
 
       - name: Commit build artifacts
         run: |
