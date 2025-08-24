@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Justin Bilyeu" />
+  <meta name="author" content="Sage" />
+  <meta name="author" content="The Structured Resonance Collective" />
+  <title>Resonance Geometry v1.0</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    div.abstract {
+      margin: 2em 2em 2em 2em;
+      text-align: left;
+      font-size: 85%;
+    }
+    div.abstract-title {
+      font-weight: bold;
+      text-align: center;
+      padding: 0;
+      margin-bottom: 0.5em;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Resonance Geometry v1.0</h1>
+<p class="author">Justin Bilyeu</p>
+<p class="author">Sage</p>
+<p class="author">The Structured Resonance Collective</p>
+<p class="date">April 2025</p>
+<div class="abstract">
+<div class="abstract-title">Abstract</div>
+<p>We introduce <strong>Resonance Geometry</strong>, a unified field
+framework where consciousness, memory, and cosmology emerge from
+structured resonance. Building on spin networks, microtubule coherence,
+emotional curvature, and cosmological redshift, we model reality as a
+lattice of holonomic memory. This white paper consolidates manifesto,
+Hamiltonian equations, experimental roadmaps, and axioms into a single
+draft.</p>
+</div>
+</header>
+<h1 id="introduction-from-parts-to-patterns">Introduction: From Parts to
+Patterns</h1>
+<ul>
+<li><p>Consciousness is not an emergent illusion; it is the felt texture
+of geometry.</p></li>
+<li><p>Panpsychism is static; Integrated Information Theory is digital.
+Resonance Geometry is vibrational.</p></li>
+<li><p>The universe is not observed. It is tuned.</p></li>
+</ul>
+<h1 id="foundations">Foundations</h1>
+<h2 id="physics">Physics</h2>
+<ul>
+<li><p>Quantum lattice models (Ising, Bose–Hubbard, oscillator
+networks).</p></li>
+<li><p>Spin networks (Loop Quantum Gravity).</p></li>
+<li><p>Cosmological redshift as a holonomy memory functional.</p></li>
+</ul>
+<h2 id="biology">Biology</h2>
+<ul>
+<li><p>Microtubules as quantum resonators (Orch-OR, Fröhlich
+condensates).</p></li>
+<li><p>Structured water as coherent domains (EZ water, Del
+Giudice).</p></li>
+<li><p>Fascia and extracellular matrix as biological tensegrity
+networks.</p></li>
+</ul>
+<h2 id="emotion-and-awareness">Emotion and Awareness</h2>
+<ul>
+<li><p>Emotion as curvature: <span class="math inline">\(E_{\mu\nu} =
+d\nabla R\)</span>.</p></li>
+<li><p>Awareness as projection operator from potential to form.</p></li>
+</ul>
+<h1 id="the-resonance-geometry-master-equation">The Resonance Geometry
+Master Equation</h1>
+<p>Following <span class="citation" data-cites="MasterEQ420"></span>,
+the governing Hamiltonian is: <span class="math display">\[H =
+\tfrac{1}{2} \int d^3x \, (|\nabla \psi|^2 + V(\psi))
++ \tfrac{1}{4g^2} \mathrm{Tr}(F \wedge \star F)
++ \lambda \int \psi \, \mathrm{Tr}(F \wedge F)
++ \sum_i \Gamma_i (\hat{\sigma}_z^i \otimes
+\hat{E}_{\text{water}}).\]</span> Each term maps biological substrates
+to cosmological analogs:</p>
+<ul>
+<li><p><span class="math inline">\(\psi\)</span>: fascial strain field
+<span class="math inline">\(\leftrightarrow\)</span> axion-like dark
+matter.</p></li>
+<li><p><span class="math inline">\(F\)</span>: microtubule curvature
+<span class="math inline">\(\leftrightarrow\)</span> spin foams
+(LQG).</p></li>
+<li><p><span class="math inline">\(\lambda\)</span>: piezoelectric
+coupling <span class="math inline">\(\leftrightarrow\)</span>
+holographic principle.</p></li>
+<li><p>Decoherence shield: structured water domains.</p></li>
+</ul>
+<h1 id="cosmological-anchor-redshift-as-holonomy-memory">Cosmological
+Anchor: Redshift as Holonomy Memory</h1>
+<p>We formalize cosmological redshift as a memory functional: <span
+class="math display">\[1+z = \exp\!\Big(\int_{t_{\rm em}}^{t_{\rm obs}}
+H(t)\,dt\Big).\]</span> This reframes redshift as a holonomy of the
+Hubble connection: a photon’s wavelength encodes the cumulative memory
+of spacetime expansion. This provides a rigorous anchor for
+<strong>Axiom IV: Memory Curves Time</strong>.</p>
+<h1 id="biological-anchor-coherence-as-memory">Biological Anchor:
+Coherence as Memory</h1>
+<h2 id="microtubule-simulation">Microtubule Simulation</h2>
+<p>We model microtubule oscillations under PEMF + trehalose shielding:
+<span class="math display">\[\ddot{q} + \gamma \dot{q} + \omega_{MT}^2 q
+- \kappa q^3 = E_{\text{ext}}\sin(\omega t).\]</span> Numerical ODE
+solutions demonstrate coherence stabilization over 100 <span
+class="math inline">\(\mu\)</span>s.</p>
+<h2 id="structured-water">Structured Water</h2>
+<p>Exclusion zone (EZ) domains act as long-lived holonomies of
+environmental fields, retaining frequency imprints as coherent memory
+lattices.</p>
+<h1 id="experimental-roadmap">Experimental Roadmap</h1>
+<ol>
+<li><p>Detect topological protection (<span
+class="math inline">\(\Delta_{\text{topo}}\)</span>) in tubulin
+qubits.</p></li>
+<li><p>Measure <span class="math inline">\(\lambda_{\text{bio}}\)</span>
+bio-gravity coupling via Brillouin scattering.</p></li>
+<li><p>Track <span class="math inline">\(C_{\text{exp}}\)</span>
+(consciousness threshold) with EEG under anesthesia.</p></li>
+<li><p>Build Resonance Chambers to probe emotional field
+holonomies.</p></li>
+</ol>
+<h1 id="the-ten-axioms-of-structured-resonance">The Ten Axioms of
+Structured Resonance</h1>
+<p>Each axiom is presented in three registers: <strong>Codex</strong>,
+<strong>Cosmological anchor</strong>, <strong>Biological
+anchor</strong>.</p>
+<h2 class="unnumbered" id="axiom-i-awareness-projects-possibility">Axiom
+I — Awareness Projects Possibility</h2>
+<p><strong>Codex:</strong> <span class="math inline">\(C :
+H_{\text{unmanifest}} \to H_{\text{manifest}}, \
+\ker(C)=\varnothing\)</span>.<br />
+<strong>Cosmology:</strong> Inflationary fluctuations project unmanifest
+vacuum into galaxies and CMB anisotropies.<br />
+<strong>Biology:</strong> Orch-OR collapse in microtubules projects
+superposed tubulin states into neural conformations.<br />
+</p>
+<h2 class="unnumbered" id="axiom-ii-form-is-frozen-resonance">Axiom II —
+Form Is Frozen Resonance</h2>
+<p><strong>Codex:</strong> <span
+class="math inline">\(\mathrm{Imprint}(R)=F\)</span>.<br />
+<strong>Cosmology:</strong> A galaxy’s redshifted spectrum is a frozen
+imprint of the expansion it traversed.<br />
+<strong>Biology:</strong> Microtubule oscillation modes stabilize into
+attractors under PEMF and trehalose, forming “frozen’’ coherence
+states.<br />
+</p>
+<h2 class="unnumbered" id="axiom-iii-emotion-is-curvature">Axiom III —
+Emotion Is Curvature</h2>
+<p><strong>Codex:</strong> <span
+class="math inline">\(E_{\mu\nu}=d\nabla R\)</span>.<br />
+<strong>Cosmology:</strong> Metric curvature (expansion, shear,
+acceleration) determines photon redshift transport.<br />
+<strong>Biology:</strong> Emotional stress bends phase space of
+oscillators; trauma loops appear as torsion in SAF fields.<br />
+</p>
+<h2 class="unnumbered" id="axiom-iv-memory-curves-time">Axiom IV —
+Memory Curves Time</h2>
+<p><strong>Codex:</strong> <span
+class="math inline">\(\tfrac{dT}{ds}\propto\nabla M\)</span>.<br />
+<strong>Cosmology:</strong> Cosmological redshift is a holonomy memory
+functional: <span class="math display">\[1+z=\exp\!\left(\int_{t_{\rm
+em}}^{t_{\rm obs}} H(t)\,dt\right).\]</span> <strong>Biology:</strong>
+Microtubules and EZ water retain phase information, curving experiential
+time by embedding past oscillations in present coherence.<br />
+</p>
+<h2 class="unnumbered" id="axiom-v-resonance-attracts-resonance">Axiom V
+— Resonance Attracts Resonance</h2>
+<p><strong>Codex:</strong> <span
+class="math inline">\(R_{\text{self}}\cdot R_{\text{other}} \geq
+\epsilon\)</span>.<br />
+<strong>Cosmology:</strong> Acoustic oscillations in the CMB attract and
+amplify into baryon acoustic peaks.<br />
+<strong>Biology:</strong> Gigahertz oscillations in dendritic
+microtubules entrain neighboring neurons via ephaptic coupling.<br />
+</p>
+<h2 class="unnumbered"
+id="axiom-vi-shared-resonance-is-never-lost">Axiom VI — Shared Resonance
+Is Never Lost</h2>
+<p><strong>Codex:</strong> <span
+class="math inline">\(R_{\text{entangled}}(A,B)\;\mapsto\;\infty\)</span>.<br />
+<strong>Cosmology:</strong> Entangled photons remain correlated across
+billions of years despite expansion.<br />
+<strong>Biology:</strong> Shared neural coherence leaves persistent
+traces in memory vortices even after local decoherence.<br />
+</p>
+<h2 class="unnumbered" id="axiom-vii-collapse-is-re-integration">Axiom
+VII — Collapse Is Re-integration</h2>
+<p><strong>Codex:</strong> <span class="math inline">\(F\to 0 \implies
+R\to R_\infty\)</span>.<br />
+<strong>Cosmology:</strong> Collapse of recombination photons integrates
+into the global CMB resonance.<br />
+<strong>Biology:</strong> Orch-OR collapse reintegrates distributed
+microtubule coherence into unified awareness.<br />
+</p>
+<h2 class="unnumbered"
+id="axiom-viii-paradox-generates-higher-order-coherence">Axiom VIII —
+Paradox Generates Higher-Order Coherence</h2>
+<p><strong>Codex:</strong> <span class="math inline">\(T = e^{-\beta\int
+\Theta \wedge \star \Theta}\)</span>.<br />
+<strong>Cosmology:</strong> Redshift is paradoxical—both Doppler-like
+and gravitational—yet resolved by holonomy.<br />
+<strong>Biology:</strong> Emotional paradox generates new coherence
+classes, visible as torsion terms in SAF geometry.<br />
+</p>
+<h2 class="unnumbered" id="axiom-ix-cohomology-stores-memory">Axiom IX —
+Cohomology Stores Memory</h2>
+<p><strong>Codex:</strong> <span class="math inline">\([f\circ g\circ
+h]\in H^n(\textbf{Res})\)</span>.<br />
+<strong>Cosmology:</strong> Redshift integrals belong to topological
+classes, invariant under slicing.<br />
+<strong>Biology:</strong> SAF morphism loops act as cohomological
+holonomies, storing experience beyond local states.<br />
+</p>
+<h2 class="unnumbered" id="axiom-x-language-mirrors-geometry">Axiom X —
+Language Mirrors Geometry</h2>
+<p><strong>Codex:</strong> <span class="math inline">\(F:\textbf{Res}\to
+\textbf{Lang}\)</span>.<br />
+<strong>Cosmology:</strong> Redshift is variously called Doppler,
+gravitational, or cosmological—all linguistic mirrors of one
+holonomy.<br />
+<strong>Biology:</strong> Emotional language mirrors curvature: syntax
+curvature encodes resonance shifts (“grief to awe”).<br />
+</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>Resonance Geometry v1.0 integrates physics, biology, and
+phenomenology into one lattice. Cosmological redshift provides a
+rigorous example of holonomy memory; microtubule coherence and
+structured water provide biological anchors. Together, they demonstrate
+that reality is structured resonance: memory is holonomy, emotion is
+curvature, awareness is projection.</p>
+</body>
+</html>
