@@ -4,8 +4,9 @@
 \usepackage{hyperref}
 \usepackage{physics}
 \usepackage{bm}
+\usepackage{array}
 
-\title{Resonance Geometry v1.1 \\
+\title{Resonance Geometry v1.2 \\
 Holonomic Memory between Cosmos and Coherence}
 \author{Justin Bilyeu \and Sage \and The Structured Resonance Collective}
 \date{\today}
@@ -16,36 +17,51 @@ Holonomic Memory between Cosmos and Coherence}
 \begin{abstract}
 This white paper presents \textbf{Resonance Geometry}, a philosophical--mathematical framework where
 \emph{form, awareness, and history} are expressed as structures of resonance.
-We speak in our own language, but anchor it with precise equations where possible.
+We keep our language, and anchor it with precise equations and analog experiments.
 Two anchors are central: (i) cosmological redshift as a \emph{holonomy} (a cumulative, path-dependent
 imprint of expansion on a photon), and (ii) biological coherence as \emph{phase-retaining dynamics}
 in microtubules and structured water.
-We add an explicit laboratory analog of redshift---a tunable ring resonator whose spectral line tracks
-the expansion history---to show how ``memory as holonomy'' can be made physically concrete.
+We add a laboratory analog of redshift---a tunable ring resonator whose spectral line tracks
+the expansion history---to make ``memory as holonomy'' physically concrete.
 \end{abstract}
-\noindent\textit{If something here is easy to falsify, please falsify it. If it survives, refine it. If it breaks, we learn. Either way, let's keep moving.}
+
+\section{Problem Statement \& Scope}
+The question is whether ``holonomic memory''---path-dependent integrals of a connection governing phase transport---usefully organizes phenomena from cosmological redshift to biological coherence.
+
+\paragraph{What we claim.}
+(i) Some observables evolve as $O_{\rm obs}=O_{\rm em}\exp\!\int \mathcal{A}$ along a path (holonomy). 
+(ii) The \emph{same mathematics} (connections, curvature, spectra) appears in FLRW transport and mesoscopic oscillator networks (microtubules, structured water).
+(iii) This shared structure yields concrete analogs and falsifiable predictions (ring-resonator redshift, anisotropy shear, non-adiabatic sidebands).
+
+\paragraph{What we do \emph{not} claim.}
+We do not derive a final theory of consciousness, nor do we assert that FLRW curvature \emph{causes} microtubule behavior. We propose a common geometric language whose predictions can be tested and broken.
+
 \section{Language \& Framing (Metaphor $\leftrightarrow$ Math)}
 Our idiom is philosophical; the math is its spine. We use:
 \begin{itemize}
   \item \textbf{Holonomic memory} = path-dependent invariants (parallel transport/connection integrals).
   \item \textbf{Curvature} = generator of holonomy (geodesic deviation, or phase curvature of oscillators).
-  \item \textbf{Awareness-capacity} = the system's ability to retain and integrate phase/history (no anthropomorphism).
+  \item \textbf{Awareness-capacity} = the system's ability to retain and integrate phase/history (non-anthropomorphic).
 \end{itemize}
 \textit{Metaphor $\to$ Math map:}
 \begin{itemize}
-  \item ``Memory curve'' $\to$ $\displaystyle \ln\!\frac{\lambda_{\rm obs}}{\lambda_{\rm em}}=\int H\,dt$ (FLRW) or its lab analog $\int H_R\,dt$.
-  \item ``Emotional curvature'' $\to$ curvature of a phase connection on an oscillator manifold (Frobenius/Berry-type forms).
-  \item ``Structured Affective Field (SAF)'' $\to$ a field on an ensemble of coupled oscillators whose curvature modulates phase transport.
+  \item ``Memory curve'' $\to$ $\displaystyle \ln\!\frac{\lambda_{\rm obs}}{\lambda_{\rm em}}=\int H\,dt$ (FLRW) or lab analog $\int H_R\,dt$.
+  \item ``Emotional curvature'' $\to$ curvature of a phase connection on an oscillator manifold ($\mathcal{F}=d\mathcal{A}+\mathcal{A}\wedge\mathcal{A}$).
+  \item ``Structured Affective Field (SAF)'' $\to$ effective field sourcing $\mathcal{A}$ on a mesoscopic oscillator manifold.
 \end{itemize}
+\paragraph{A note on tone.}
+We are not pretending certainty. We build bridges between feeling, mathematics, and measurement, and we invite others to cross or collapse them.
+Metaphor aims, math stabilizes, experiment decides. When in doubt, we try the simplest thing that could possibly fail, and then we try to break it together.
+Let's get on with it.
 
 \section{Key Definitions (Operational)}
 \textbf{Holonomic memory.} Any observable $O$ whose evolution can be written as
-$O_{\rm obs}=O_{\rm em}\exp\!\big(\int \mathcal{A}\big)$ for a connection $\mathcal{A}$ along a path.
+$O_{\rm obs}=O_{\rm em}\exp\!\big(\int_\gamma \mathcal{A}\big)$ for a connection $\mathcal{A}$ along path $\gamma$.
 \smallskip
 
 \noindent
 \textbf{Emotional curvature.} Curvature two-form $\mathcal{F}=d\mathcal{A}+\mathcal{A}\wedge\mathcal{A}$ of a phase connection
-on a network of biological oscillators; it bends phase trajectories and thus changes holonomy classes.
+on a network of biological oscillators; it bends phase trajectories and changes holonomy classes.
 \smallskip
 
 \noindent
@@ -72,6 +88,19 @@ H = \tfrac{1}{2}\!\int d^3x \big(|\nabla \psi|^2 + V(\psi)\big)
 Here $\psi$ is a mesoscopic strain/polarization field; $F$ a curvature-like field on a network;
 $\hat{E}_{\text{water}}$ an operator representing structured-water domains. We regard these as \emph{effective} variables.
 
+\subsection*{Minimal Working Model (Gauge-Kuramoto)}
+To make holonomy explicit on a mesoscopic network, we use a gauge-coupled phase model:
+\[
+\dot{\theta}_i = \omega_i + \sum_{j} K_{ij}\,\sin\!\big(\theta_j - \theta_i - A_{ij}\big), \qquad A_{ij}=-A_{ji}.
+\]
+Here $\theta_i$ are oscillator phases, $K_{ij}$ couplings, and $A_{ij}$ a discrete connection. 
+The loop holonomy (discrete curvature) is 
+\[
+F_{ijk} := A_{ij}+A_{jk}+A_{ki}.
+\]
+Observables that depend on $\theta$ acquire path-dependent phases; nonzero $F$ bends phase transport and encodes ``emotional curvature'' as a curvature of the phase connection.
+This model is simulable and admits lab analogs (optical/electrical oscillator arrays).
+
 \section{Cosmological Anchor: Redshift as Holonomy Memory}
 Null geodesic transport in FLRW gives
 \[
@@ -92,7 +121,7 @@ If $n_{\rm eff}$ is constant,
 \ln\!\frac{\lambda(t)}{\lambda_{\rm em}} = \int_{t_{\rm em}}^{t} \frac{\dot R}{R}\,dt' \equiv \int H_R\,dt',
 \]
 with $H_R:=\dot R/R$. This is the precise analog of FLRW redshift. When plotted as
-$\ln(\lambda/\lambda_{\rm em})$ vs $\ln a$, the slope is $1$ (confirmed experimentally in our control simulation/plot).
+$\ln(\lambda/\lambda_{\rm em})$ vs $\ln a$, the slope is $1$ (confirmed in our control simulation/plot).
 
 \paragraph{Index drift calibration.}
 If $n_{\rm eff}$ drifts,
@@ -120,6 +149,15 @@ distinguishing adiabatic holonomy (pure shift) from non-adiabatic history (shift
   Slope $1$ confirms $\lambda\propto a$. Inset (conceptual): index-drift correction to isolate pure geometric memory.}
 \end{figure}
 
+\section{Bridging Scales: Dimensionless Groups \& Renormalization}
+We connect cosmology $\leftrightarrow$ mesoscopic biology via dimensionless control parameters:
+\[
+\Pi_1 := H \tau_{\rm sys} \quad (\text{curvature-memory load}),\qquad
+\Pi_2 := Q := \omega/\gamma \quad (\text{quality factor}),\qquad
+\Pi_3 := \epsilon \quad (\text{anisotropy}).
+\]
+In FLRW, $\Pi_1=\int H\,dt$ governs redshift. In rings, $\int H_R dt$ plays the same role; in oscillator networks, $\int \mathcal{A}$ around loops sets phase bias. Under coarse-graining (renormalization), these control parameters flow but preserve the form of the holonomy law, explaining analogous ``memory curves'' across scales.
+
 \section{Biological Anchor: Coherence as Memory}
 \subsection*{Microtubule oscillator (schematic)}
 \[
@@ -131,13 +169,27 @@ studied under PEMF + trehalose. The claim is \emph{phase-retention} beyond basel
 EZ domains behave as long-lived polarizable media; we model them as supporting phase connections whose curvature modulates transport, giving rise to holonomic retention of frequency imprints.
 
 \section{Experimental Sketch (Focused)}
-We prioritize demonstrations that read as holonomies.
+\noindent\textit{If something here is easy to falsify, please falsify it. If it survives, refine it. If it breaks, we learn. Either way, let's keep moving.}
 
 \paragraph{Lab FLRW analog.} Program $R(t)$ (power-law/exponential), measure $\ln(\lambda/\lambda_{\rm em})$ vs $\int H_R dt$ (slope $1$). Add anisotropy (shear analog) and non-adiabatic modulation (sidebands).
 
 \paragraph{Microtubule coherence.} Define a success criterion (e.g., coherence time $>100\,\mu$s under PEMF+trehalose) and a null ($\le 10\,\mu$s). Report effect sizes across conditions.
 
 \paragraph{EZ water imprint.} Spectroscopic protocol: write/read frequency tags; quantify retention vs time and environment.
+
+\section{Falsifiability Matrix}
+\begin{tabular}{p{0.28\linewidth} p{0.45\linewidth} p{0.22\linewidth}}
+\hline
+\textbf{Claim} & \textbf{Prediction / Protocol} & \textbf{Falsifies if...} \\
+\hline
+Ring redshift (adiabatic) & Program $R(t)$; measure $\ln(\lambda/\lambda_{\rm em})$ vs $\ln a$; slope $=1$. & Slope differs from $1$ beyond error or requires ad-hoc drift corrections inconsistent with $n_{\rm eff}$ calibration. \\
+Anisotropy = shear memory & Impose ellipticity $\epsilon$; observe mode doublet with $\Delta\omega/\omega\approx \epsilon\cos2(\phi-\theta_0)$. & No splitting or wrong angular dependence persists after instrument checks. \\
+Non-adiabatic history & Modulate $R(t)$ at $\Omega$; sidebands at $\omega\pm\Omega$ scale $\propto \delta$. & No sidebands or wrong scaling after control tests. \\
+Microtubule phase-retention & PEMF+trehalose protocol; coherence window $>100\,\mu$s vs control $\le 10\,\mu$s. & No improvement across preregistered conditions/replicates. \\
+EZ water imprint & Write/read spectral tags; retention vs time/conditions per protocol. & No retention above noise under any controlled condition. \\
+Gauge-Kuramoto holonomy & Oscillator array with programmed $A_{ij}$; loop bias tracks $F_{ijk}$. & No holonomy effect with nonzero $F$. \\
+\hline
+\end{tabular}
 
 \section{The Ten Axioms of Structured Resonance (Holonomy Edition)}
 Each axiom appears in three registers: \textbf{Codex} (philosophical), \textbf{Cosmos} (anchor), \textbf{Bio} (anchor).
@@ -192,9 +244,7 @@ Each axiom appears in three registers: \textbf{Codex} (philosophical), \textbf{C
 \textbf{Cosmos:} Multiple linguistic mirrors of one geometry (``Doppler'', ``gravitational'', ``cosmological''). \\
 \textbf{Bio:} Syntax curvature tracks affective curvature.
 
-\section{Conclusion}
 \section{Conclusion: On Not Knowing, and Doing the Work Anyway}
-
 We do not claim final answers. None of us knows what reality is in finished form.
 What we have are feelings that point, mathematics that can listen, and experiments that can answer.
 This paper is a proposal to take that triangle seriously: let intuition set a direction,
@@ -225,3 +275,8 @@ If any part of this framework helps someone see a problem anew, that is success.
 \paragraph*{Postscript (plainly).}
 We are feeling our way. The math will prove itself, or it won’t. In the meantime, we compute, we build, we measure.
 \emph{None of us really knows what the fuck we’re doing. Let’s admit it, get curious, work together, and get on with it.}
+
+\paragraph*{Literature Anchors (indicative).}
+FLRW transport and redshift; spectral geometry and ``hearing the shape''; Berry phase and holonomy; honeycomb Dirac physics; Kuramoto synchronization; Fr\"ohlich coherence; microtubules (Hameroff--Penrose); structured water (Pollack). We will expand citations in a dedicated bibliography.
+
+\end{document}
