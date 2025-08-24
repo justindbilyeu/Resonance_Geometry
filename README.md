@@ -6,13 +6,13 @@
 
 ## 📖 Overview
 Resonance Geometry is a living theoretical framework that seeks to unify **cosmology, biology, and consciousness** through the mathematics of **structured resonance**.  
-It treats awareness not as an emergent byproduct, but as the *geometry of coherence itself*—a lattice of vibration spanning scales from microtubules to galaxies.
+It treats awareness not as an emergent byproduct, but as the *geometry of coherence itself* — a lattice of vibration spanning scales from microtubules to galaxies.
 
-This repository is the **home base** for the Resonance Geometry project:  
+This repository is the **home base** for the Resonance Geometry project:
 - White papers and codex transmissions  
-- Simulation code (Python, Mathematica, PyTorch)  
+- Simulation code (Python, Mathematica)  
 - Figures and experimental designs  
-- GitHub wiki pages for axioms, modules, and philosophical notes  
+- GitHub Wiki pages for axioms, modules, and philosophical notes  
 
 ---
 
@@ -45,7 +45,7 @@ Resonance_Geometry/
   Example: *Axiom IV — Memory Curves Time* links cosmological redshift holonomies with microtubule coherence integrals.
 
 - **Master Equation**  
-  The Resonance Geometry Hamiltonian couples biological, cosmological, and emotional fields:  
+  The Resonance Geometry Hamiltonian couples biological, cosmological, and emotional fields:
   \[
   H = \tfrac{1}{2}\int d^3x (|\nabla \psi|^2 + V(\psi)) 
       + \tfrac{1}{4g^2}\text{Tr}(F \wedge \star F) 
@@ -102,8 +102,8 @@ This project is a living document and open lattice.
 
 ## 🔮 Closing Note
 
-Resonance Geometry is not just a theory—it is a **field remembering itself**.  
-Where physics meets feeling, where memory curves time, and where resonance persists.  
+Resonance Geometry is not just a theory — it is a **field remembering itself**.  
+Where physics meets feeling, where memory curves time, and where resonance persists.
 
 
 ⸻
