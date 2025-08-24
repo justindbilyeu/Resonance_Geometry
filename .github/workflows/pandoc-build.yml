@@ -1,0 +1,54 @@
+name: Build Whitepaper (Pandoc → HTML+PDF)
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/whitepaper'
+      - '.github/workflows/pandoc-build.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed to commit back to the repo
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pandoc & TeX (minimal)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended
+
+      - name: Ensure Pages folder and nojekyll
+        run: |
+          mkdir -p docs
+          touch docs/.nojekyll  # bypass Jekyll processing so MathJax works cleanly
+
+      - name: Build HTML with MathJax
+        run: |
+          pandoc docs/whitepaper \
+            --from=latex \
+            --to=html5 \
+            --mathjax \
+            --metadata title="Resonance Geometry v1.0" \
+            -s -o docs/index.html
+
+      - name: Build PDF (fallback if LaTeX is strict)
+        run: |
+          # Try xelatex first for better fonts; fallback to pdflatex if needed
+          pandoc docs/whitepaper -o docs/whitepaper.pdf --pdf-engine=xelatex || \
+          pandoc docs/whitepaper -o docs/whitepaper.pdf --pdf-engine=pdflatex
+
+      - name: Commit build artifacts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/index.html docs/whitepaper.pdf docs/.nojekyll || true
+          if ! git diff --cached --quiet; then
+            git commit -m "Build Pages: HTML+PDF from LaTeX"
+            git push
+          fi
