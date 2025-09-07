@@ -1,22 +1,65 @@
 # Resonance Geometry
 
-**Resonance Geometry** is a unifying framework where consciousness, memory, and cosmology emerge from structured resonance.  
-It combines quantum gravity, quantum biology, emotional field theory, and category-theoretic codices into one lattice of holonomic memory.
+**Resonance Geometry** is a research program on how **information flow sculpts structure**.  
+At its core are two coupled ideas:
 
-## Contents
-- **docs/** → White Paper v1.0 (`.tex`, `.pdf`, GitHub Pages HTML)
-- **codex/** → Structured Resonance Codex (axioms, cohomology, emotional G.R.)
-- **hamiltonian/** → Hamiltonian Addenda & Master Equation
-- **simulations/** → Python models (spin foam MC, microtubule coherence ODEs, SAF prototypes)
-- **supporting/** → Supplemental PDFs (EPS-QC, earlier drafts, thread summaries)
+- **Resonant Witness Postulate (RWP):** environments preferentially copy (“witness”) stable variables, creating **redundant records**.
+- **Geometric Plasticity (GP):** the **coupling geometry adapts** in proportion to the witnesses it carries, closing a feedback loop between **signal and structure**.
 
-## Live White Paper
-👉 [Read the White Paper](https://justindbilyeu.github.io/Resonance_Geometry/)
+This repo houses the theory, simulations, diagnostics, and hardware notes that turn those ideas into testable science.
 
-## Build Pipeline
-- GitHub Actions (`pandoc-build.yml`) automatically builds:
-  - `docs/index.html` (HTML with MathJax)
-  - `docs/whitepaper.pdf` (PDF)
+---
 
-## License
-TBD — all files © Justin Bilyeu & Resonance Geometry Collective, 2025.
+## What’s new (TL;DR)
+
+- **Ringing boundary**: a gain-controlled transition (smooth → underdamped) in redundancy dynamics.  
+- **Hysteresis resonance**: loop area peaks at drive period \(T \approx 2\pi \tau_{\text{geom}}\).  
+- **Motif selection**: budget & smoothness trade-offs yield **broadcast** vs **modular** coupling motifs.  
+- **Fast surrogate**: AR(2) phase-map script for quick ringing scans (100× faster than full sims).  
+- **ITPU concept**: hardware notes for an **Information-Theoretic Processing Unit** (mutual-info & entropy acceleration).
+
+---
+
+## Repo layout
+
+- **docs/**
+  - **whitepaper/** — *Adaptive Information Networks / Geometric Plasticity* draft(s)
+  - **experiments/** — protocol notes (phase map, hysteresis, motifs, surrogate)
+  - **hardware/** — `ITPU.md` (custom silicon concept & specs)
+- **src/** — core library (RWP system, plasticity rules, metrics, utils)
+- **scripts/** — reproducible runners:
+  - `run_phase_sweep.py` — full RWP ringing boundary (α×η grid)
+  - `run_hysteresis.py` — loop-area vs period with plasticity ON/OFF
+  - `run_motif_sweep.py` — broadcast↔modular classification
+  - `run_phase_map_surrogate.py` — AR(2) fast proxy for ringing map
+- **tests/** — unit & smoke tests for diagnostics and runners
+- **results/** — generated CSVs/PNGs (phase/, hysteresis/, motif/, …)
+
+> Live docs & PDFs (if GH Pages is enabled): `docs/` → site build.
+
+---
+
+## Quick start
+
+```bash
+# 1) env
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt   # numpy, scipy, matplotlib, pandas, pytest, etc.
+
+# 2) phase map (full RWP)
+python scripts/run_phase_sweep.py \
+  --alphas "0.1,0.3,0.6,0.9" --etas "0.01,0.03,0.05,0.08" \
+  --T 150 --M 20 --out_dir results/phase
+
+# 3) hysteresis resonance
+python scripts/run_hysteresis.py \
+  --alpha 0.4 --eta 0.06 --lam 0.01 --T 200 --amplitude 0.02 \
+  --out_dir results/hysteresis
+
+# 4) motif sweep
+python scripts/run_motif_sweep.py --out_dir results/motif
+
+# 5) FAST surrogate (AR(2) proxy)
+python scripts/run_phase_map_surrogate.py \
+  --alphas "0.1,0.4,0.8" --etas "0.02,0.05,0.08" --T 150 \
+  --out_dir results/phase_map_surrogate
