@@ -1,7 +1,3 @@
-Here’s a cleaned-up, field-ready README you can drop in.
-
-⸻
-
 Resonance Geometry
 
 Tagline: How information flow sculpts structure.
