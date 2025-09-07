@@ -1,54 +1,169 @@
 # Information-Theoretic Processing Unit (ITPU)
-**Purpose:** Accelerate *witness-driven adaptation* in Adaptive Information Networks: fast mutual information, entropy/divergence, Fisher metrics, and plasticity updates in real time.
-
-## 1) Why this, why now
-- Bottleneck: MI/entropy/divergence & Fisher/QFI are compute- and memory-bound, poorly matched to GEMM-centric GPUs.
-- Need: Closed-loop **measure→adapt** at sub-ms scales for geometric plasticity (GP) and dynamic topology.
-- Thesis: A heterogeneous dataflow design beats GPUs by 10–100× on MI/entropy workloads and enables *new* algorithms (online redundancy control, witness flux, natural gradients).
-
-## 2) Core kernels (cover exact + bounds)
-- **Divergence ALU:** KL, JS, Rényi, χ²; f-divergence pipeline with log/exp/sum-exp units (LSE/LME).
-- **Contrastive Engine:** InfoNCE / NCE / Barber-Agakov bounds; negative-queue manager; large-K batched similarity with importance sampling.
-- **Entropy/MI Suite:** 
-  - Discrete: streaming histograms + bias-corrected entropy; sketching (CountSketch/CM) for high-cardinality.
-  - Continuous: KDE/Parzen (Gaussian & Epanechnikov), kNN-MI (Kraskov), variational MI (MINE) with stabilized log-sum-exp.
-- **Fisher/NatGrad Block:** empirical Fisher via per-sample grads; block-diag & low-rank updates (Woodbury paths).
-- **Plasticity Controller:** ∆g = η Ī − λg − β(Lg): EMA, budget projection, Laplacian ops; line-rate updates (≤1 ms loop).
-
-## 3) Memory & numerics
-- **SRAM scratch** for PDFs, queues, sketches; **HBM** for sample buffers.
-- Log-domain math, configurable fp16/bf16/fp32; Kahan-style compensated sums; deterministic RNG for Monte-Carlo bounds.
-- On-die calibration & range tracking for tails (entropy/MI are tail-sensitive).
-
-## 4) Programming model
-- **ITX API** (C++/Python): `mi()`, `entropy()`, `fisher()`, `natgrad()`, `adapt_step()`.
-- PyTorch/JAX plugins; graph runtime schedules measure/adapt passes; stream in events, stream out ∆g and metrics (Φ_wit, R_X^δ).
-
-## 5) Benchmarks (must-win)
-1. **MI-Matrix (1k×1k):** discrete MI across features; target **50×** vs A100 at 32-bit, matched accuracy.
-2. **Online Witness Flux:** M=100 fragments, 10 kHz updates; end-to-end loop latency **<1 ms**; jitter <100 µs.
-3. **NatGrad Precond:** 10M params (block-diag Fisher) at 100 Hz; **10×** energy efficiency vs GPU.
-4. **kNN-MI (Kraskov):** 1M samples, 128-D; **20×** speedup, bounded bias.
-5. **InfoNCE (K=4096):** contrastive throughput **>5×** vs GPU at equal power.
-
-## 6) Milestones & go/no-go
-- **Phase 0 (0–6 mo, <$2M):** Software kernels + CUDA/ROCm baselines; publish MI-bench suite; show ≥10× on FPGA for 2 kernels.
-- **Phase 1 (6–12 mo, +$6M):** FPGA overlay card (PCIe); demo closed-loop GP at 1 ms; land 2 design-partner letters.
-- **Phase 2 (12–24 mo, +$40M):** Tapeout A0 (≤65 W, HBM2e); ship SDK; hit ≥10× win on 3/5 benchmarks.
-- **Phase 3 (24–36 mo, +$150M):** A1 silicon, cluster ref design; early access deployments.
-
-**Kill criteria:** <5× vs top GPU on ≥3 benchmarks **or** closed-loop latency >5 ms at M=100 after Phase 1.
-
-## 7) Partnerships & IP
-- Cloud: AWS/Google/Azure research teams for hosted trials.
-- Labs: quantum (superconducting qubit readout teams), neuromorphic groups for STDP analogs.
-- IP: (i) divergence ALU with stabilized log-domain pipelines, (ii) MI-sketch compression for streaming entropy, (iii) plasticity controller with budget-projection in hardware.
-
-## 8) Risks & mitigations
-- **Algorithm drift:** Support exact + bounds + learnable estimators; keep reconfigurable overlay in early gens.
-- **Sample complexity/bias:** On-chip calibration, variance-reduction, confidence reporting with CI bands.
-- **Ecosystem inertia:** Ship **ITX** as a software library first; drop-in speedups before silicon.
+**Status:** Draft v0.2 • **Owners:** @justindbilyeu, @Sage • **Last updated:** 2025-09-07  
+**Scope:** Architecture and validation plan for a specialized accelerator for information-theoretic workloads (MI/entropy/plasticity).
 
 ---
 
-**Tagline:** *Make information a first-class hardware primitive; close the loop at the speed of learning.*
+## 1) Why the ITPU
+Modern accelerators (GPU/TPU/NPU) are optimized for dense linear algebra. Information-theoretic primitives—mutual information (MI), (differential) entropy, density estimation, and witness-driven plasticity—map poorly to these datapaths, causing severe throughput/latency penalties.  
+**ITPU goal:** make MI/entropy first-class ops with deterministic, low-latency kernels and on-chip memory layouts aligned to probability workflows.
+
+---
+
+## 2) Design Goals & Non-Goals
+**Goals**
+- Real-time MI at scale: **<100 μs** p50 latency for MI(X;Y) across 1k pairs; linear multi-die scaling.
+- Entropy throughput: **≥50 TOPS** equiv. on H[p] / H_α[p] / H_cont via KDE/NE.
+- Plasticity in the loop: sub-ms structural updates for closed-loop adaptation (RWP/GP).
+- Numerics that don’t lie: stable log/exp and safe low-probability handling.
+
+**Non-Goals (v1)**
+- Full DL training replacement—matrix engines stay off-chip.
+- Exact symbolic MI for arbitrary continuous distributions (we target estimators).
+- On-chip compilation; we ship a runtime+IR, compilers live in the SDK.
+
+---
+
+## 3) Architecture (at a glance)
+```
+                ┌────────────────────────────────────────────────────┐
+ Host CPU <---> │  ITPU Runtime & Command Queue (CQ)                 │
+                ├────────────────────────────────────────────────────┤
+                │  On-Chip Network / Crossbar                        │
+                ├────────────┬──────────────┬──────────────┬─────────┤
+                │   MIEU x N │    ECU x M   │   SPC x P    │  DMA    │
+                │ (MI units) │ (Entropy)    │ (Plasticity) │ Engines │
+                ├────────────┴──────────────┴──────────────┴─────────┤
+                │   L1/L2 Scratch (pdf caches, histograms, KDE grids)│
+                │   Assoc. Prob Cache (APC) + LogMath LUTs           │
+                ├────────────────────────────────────────────────────┤
+                │   HBM/GDDR (global)  │  Chip-to-Chip Links         │
+                └────────────────────────────────────────────────────┘
+```
+
+- **MIEU (Mutual Information Estimation Unit):** parallel estimators (KSG/NN-MI, histogram, variational NE), fused log math, tail-safe accumulation.
+- **ECU (Entropy Calculation Unit):** Shannon/Rényi/Tsallis entropy, discrete & differential; plug-in kernels for KDE bandwidth scans.
+- **SPC (Structural Plasticity Controller):** implements **Δg ∝ Ĩ − λg − β(Lg)** with EMA, budget projection, optional Fisher/QFI preconditioning.
+- **APC (Assoc. Prob Cache):** keyed by feature-pair signatures; avoids recomputing densities.
+- **Numerics:** configurable FP16/FP32 (stochastic rounding), block-fp log domain, Kahan/Babushka compensated sums.
+
+---
+
+## 4) Programming Model (IR & Ops)
+The host submits **graphs** of ITPU kernels via a compact IR. Minimal op set:
+
+- `itpu.kde_pdf(buf, grid, bandwidth, out_pdf)`
+- `itpu.entropy(pdf|samples, mode='shannon|renyi|tsallis', alpha, out_H)`
+- `itpu.mi(x, y, estimator='ksg|hist|npe', k|bins|model, out_I)`
+- `itpu.batch_mi(tensor_list, pairing='all|bands|custom', out_mat)`
+- `itpu.plasticity_step(I_bar, g, lambda, beta, L, budget, precond?, out_g)`
+- `itpu.reduce(stats, op='mean|max|p95', out)`
+- `itpu.copy/dma(...)`
+
+**Kernel descriptor (JSON)**
+```json
+{
+  "op": "mi",
+  "inputs": ["x_buf", "y_buf"],
+  "estimator": "ksg",
+  "params": {"k": 8, "epsilon": 1e-9},
+  "outputs": ["I_xy"]
+}
+```
+
+**Python host stub (SDK)**
+```python
+from itpu import Graph, Buf
+g = Graph()
+x = Buf.from_numpy(X)  # [B, d_x]
+y = Buf.from_numpy(Y)  # [B, d_y]
+I = g.mi(x, y, estimator="ksg", k=8)
+H = g.entropy(x, mode="shannon")
+g.run()
+print(I.numpy(), H.numpy())
+```
+
+---
+
+## 5) Estimators (v1 support matrix)
+| Primitive | Discrete | Continuous | Notes |
+|---|---|---|---|
+| Entropy H | ✓ (hist) | ✓ (KDE, variational) | Rényi α, Tsallis q |
+| MI(X;Y)   | ✓ (joint hist) | ✓ (KSG, MINE/NPE) | Tail-safe log |
+| Witness Φ | — | ✓ (streamed ΔΣI) | On-device counter |
+| Plasticity | ✓ | ✓ | EMA + budget + Laplacian |
+
+---
+
+## 6) KPIs (pass/fail)
+- **Latency:** MI(X;Y) p50 < **100 μs**, p99 < **300 μs** for B=1e5 samples, k=8.
+- **Throughput:** ≥ **1000** MI pairs/ms sustained (multi-MIEU).
+- **Stability:** rel. error < **1%** vs. 64-bit ref on calibrated dists.
+- **Energy:** **≤150 W** board power @ rated throughput.
+- **Plasticity loop:** ≤ **1 ms** end-to-end Δg update (1k edges).
+
+---
+
+## 7) Validation Plan
+**Golden suites**
+- Synthetic: Gaussians (corr sweep), mixtures, anisotropic, heavy-tail; known MI/entropy.
+- Real: CIFAR embeddings, speech MFCCs, fMRI ROIs.
+
+**Acceptance tests**
+- Bias/variance curves vs. sample size.
+- Robustness: missing data, outliers, skew, dim. curse stress.
+- Plasticity closed-loop: reproduce GP ringing boundary (K≈1) & hysteresis peak (T≈2πτ_geom).
+
+**Artifacts**
+- `/benchmarks` notebooks + CSVs, deterministic seeds.
+- Bit-accurate sim vs. HDL/FPGA prototype.
+
+---
+
+## 8) Security & Privacy
+- On-device DP noise for MI/entropy (ε,δ budgets).
+- Zeroization on context free; encrypted DMA channels.
+- Side-channel mitigations for log/exp units.
+
+---
+
+## 9) Risks & Mitigations
+1. **Estimator drift on long runs** → periodic renorm; compensated sums; online calibration.
+2. **Algorithm churn** → microcode-updatable kernel slots; spare gates for new ops.
+3. **Ecosystem inertia** → PyTorch/TensorFlow bridges; drop-in metrics API.
+4. **Manufacturing yield** → binning; disabling faulty MIEUs; graceful perf scaling.
+
+---
+
+## 10) Roadmap (high-level)
+- **P0 (now → +6 wks):** IR v0.1, software simulator, golden tests ✅
+- **P1 (+3–6 mo):** FPGA proto of MIEU/ECU/SPC, end-to-end GP demo
+- **P2 (+12–18 mo):** A-silicon (7/5nm), SDK v1.0, cloud PoC
+- **P3 (+24–36 mo):** Production board, partner deployments
+
+**Repo tasks**
+- [ ] `itpu-sim/` (Python/C++) with IR executor  
+- [ ] `benchmarks/` + metrics harness (latency/energy/accuracy)  
+- [ ] `docs/api/` (host SDK), `docs/ir/` (schema)  
+- [ ] `rtl/` (verilog or chisel) stubs for MIEU/ECU/SPC
+
+---
+
+## 11) Open Questions (R&D)
+- Best default MI estimator for low-sample/high-dim regimes?
+- Dynamic precision schedules (block-fp) for tails—worth the area?
+- On-chip variational MI (MINE) accelerators: memory vs. gain trade-off?
+- Fisher/QFI preconditioning microcode interface for GP loops?
+
+---
+
+## 12) Glossary
+**MI:** mutual information; **KDE:** kernel density estimation; **KSG:** Kraskov–Stögbauer–Grassberger estimator; **MINE/NPE:** neural MI estimators; **EMA:** exponential moving average; **GP:** geometric plasticity; **Laplacian L:** graph smoothness operator.
+
+---
+
+## 13) References (selected)
+1. Kraskov et al., *Estimating mutual information*, PR E (2004)  
+2. Goldfeld et al., *KDE MI estimators*, IEEE TIT (2020)  
+3. Belghazi et al., *MINE*, ICML (2018)  
+4. Zurek, *Quantum Darwinism*, RMP (2003); follow-ups
