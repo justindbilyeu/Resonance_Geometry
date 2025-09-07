@@ -1,0 +1,35 @@
+# .github/workflows/rwp-ci.yml
+name: rwp-core CI
+on:
+  push: { paths: ["rwp/**", "configs/**", "results/**", ".github/workflows/rwp-ci.yml"] }
+  pull_request: { paths: ["rwp/**", "configs/**"] }
+jobs:
+  test-and-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Install
+        run: |
+          python -m pip install -U pip
+          pip install -e . || true
+          pip install numpy scipy matplotlib pytest
+      - name: Unit tests
+        run: pytest -q
+      - name: Smoke experiment (ringing tiny)
+        run: |
+          python - <<'PY'
+          import os, numpy as np
+          from pathlib import Path
+          # replace with your callable once rwp.experiments.ringing exists
+          Path("results/ci/").mkdir(parents=True, exist_ok=True)
+          import json
+          json.dump({"ok": True, "note": "placeholder until experiments wired"}, open("results/ci/smoke.json","w"))
+          print("Wrote results/ci/smoke.json")
+          PY
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: rwp-results
+          path: results/**
