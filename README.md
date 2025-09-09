@@ -1,5 +1,225 @@
 # Resonance Geometry + Geometric Plasticity
+# Geometric Plasticity (GP)
 
+**An attempt to formalize the idea that information flow shapes structure.**
+
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Status](https://img.shields.io/badge/status-experimental-orange.svg)](https://github.com)
+
+-----
+
+## What’s Established (Mathematical Backbone)
+
+### ✅ Variational Principle
+
+We’ve written down an action that generates self-consistent equations of motion for a coupling field **g** and a witness field **Ī**. With Rayleigh/Onsager dissipation, the formalism yields first-order adaptive flows.
+
+### ✅ Stability Analysis
+
+A block Hessian construction provides computable instability thresholds. The **ringing boundary** appears where the smallest eigenvalue approaches zero, marking a transition from smooth decay to oscillatory behavior.
+
+### ✅ Field Extensions
+
+The same equations generalize to PDEs that can behave in two regimes:
+
+- **Wave-like** (conservative track): coherence propagation
+- **Reaction-diffusion** (dissipative track): pattern formation
+
+### ✅ Simulations
+
+Toy models (graph flows, field PDEs, microtubule oscillators) reproduce the theoretical predictions in controlled cases.
+
+-----
+
+## What’s Unclear (Conceptual Gaps)
+
+### ❓ Meaning of “Information Coupling”
+
+Sometimes we use Shannon’s mutual information (precise, measurable), other times a looser sense of “meaningful flow.” The bridge between these remains unproven.
+
+### ❓ Choice of Action
+
+We’ve assumed one particular variational form. Why nature should follow this principle, and not an alternative, is still an open question.
+
+### ❓ Predictive Advantage
+
+Many adaptive systems are already modeled with control theory, statistical physics, or machine learning. GP must eventually show it predicts different outcomes to be scientifically valuable.
+
+-----
+
+## What Would Count as Progress
+
+### 1. Operationalization
+
+Define exactly what **g(x,t)** and **Ī** correspond to in experiments (e.g., coupling strengths in a network, conformational modes in a biomolecule).
+
+### 2. Comparative Testing
+
+Run scenarios where GP’s Hessian-based instability criteria can be compared head-to-head with existing tools.
+
+### 3. Failure Criteria
+
+Spell out what experimental results would falsify GP (e.g., if the Hessian threshold consistently fails to anticipate instabilities).
+
+-----
+
+## Repository Structure
+
+```
+theory/
+├── variational_formulation.md    # Action principle, Euler-Lagrange equations
+├── stability_analysis.md         # Hessian construction, ringing boundaries
+└── field_extensions.md          # PDE formulations, wave vs RD regimes
+
+simulations/
+├── graph_dynamics/              # Network coupling flows
+├── field_models/               # 1D/2D PDE demonstrations
+└── microtubule_toy/            # Biological test case
+
+experiments/
+├── protocols/                  # Experimental validation designs
+└── data/                      # Results and analysis
+
+docs/
+├── mathematical_framework.md   # Complete derivations
+├── comparison_study.md        # GP vs existing methods
+└── roadmap.md                # Research priorities
+```
+
+-----
+
+## Quick Start
+
+### Installation
+
+```bash
+git clone https://github.com/your-org/geometric-plasticity.git
+cd geometric-plasticity
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### Run Basic Simulations
+
+```bash
+# Graph dynamics with stability analysis
+python simulations/graph_dynamics/run_stability_scan.py
+
+# Field model demonstrations
+python simulations/field_models/run_wave_vs_rd.py
+
+# Generate stability diagrams
+python simulations/generate_phase_diagrams.py
+```
+
+-----
+
+## Honest Assessment
+
+|**Aspect**                |**Status**       |**Details**                                                                           |
+|--------------------------|-----------------|--------------------------------------------------------------------------------------|
+|**Mathematical Framework**|✅ **Established**|Coherent variational/dissipative formulation with working simulation code             |
+|**Empirical Relevance**   |❓ **Unproven**   |Don’t yet know if physical systems actually follow these equations                    |
+|**Practical Applications**|🎯 **ITPU Anchor**|Fast mutual-information computation has clear applications regardless of GP validation|
+
+-----
+
+## Core Equations
+
+### Energy Functional
+
+```
+V(g,Ī) = -Ī^T g + (λ/2) g^T g + (β/2) g^T L g + (A/2) ||Ī - I(g,t)||²
+```
+
+### Dissipative Flows
+
+```
+η ġ = -∂V/∂g = Ī - λg - βLg
+A İ̄ = -∂V/∂Ī = I - Ī
+```
+
+### Stability Criterion
+
+**Ringing boundary** occurs when the smallest eigenvalue of the Hessian matrix crosses zero:
+
+```
+H_gg = (λ + Aγ²)I + βL
+```
+
+-----
+
+## Research Priorities
+
+### Phase 1: Foundation (Months 1-6)
+
+- [ ] Complete operational definitions for experimental variables
+- [ ] Develop comparative testing protocols
+- [ ] Establish clear falsification criteria
+
+### Phase 2: Validation (Months 7-12)
+
+- [ ] Execute controlled experiments comparing GP predictions to established models
+- [ ] Analyze failure modes and boundary conditions
+- [ ] Refine theoretical framework based on empirical results
+
+### Phase 3: Applications (Months 13-18)
+
+- [ ] Develop practical applications where GP provides clear advantages
+- [ ] Integration with ITPU hardware development
+- [ ] Documentation and dissemination
+
+-----
+
+## Contributing
+
+We welcome contributions that help bridge the theory-experiment gap:
+
+- **Experimental protocols** for testing GP predictions
+- **Comparative studies** with existing adaptive system models
+- **Code improvements** for simulation reliability and performance
+- **Documentation** clarifying conceptual foundations
+
+### Guidelines
+
+- All contributions must include clear falsification criteria
+- Experimental proposals should specify measurable outcomes
+- Code changes require accompanying tests and documentation
+
+-----
+
+## License
+
+This project is licensed under the Apache License 2.0 - see the <LICENSE> file for details.
+
+-----
+
+## Citation
+
+```bibtex
+@misc{geometric_plasticity_2025,
+  title={Geometric Plasticity: Mathematical Framework for Information-Driven Structural Adaptation},
+  author={[Authors]},
+  year={2025},
+  note={Experimental validation in progress},
+  url={https://github.com/your-org/geometric-plasticity}
+}
+```
+
+-----
+
+## Summary
+
+**GP is rigorous mathematics wrapped around a provocative hypothesis** — that systems adapt their geometry in proportion to the information they carry. Whether this maps onto the real world remains an open, testable question.
+
+The framework provides:
+
+- **Mathematical rigor**: Well-defined equations with clear stability criteria
+- **Testable predictions**: Specific thresholds and behaviors that can be experimentally verified
+- **Practical tools**: ITPU development offers immediate applications regardless of theoretical validation
+
+**Next milestone**: Demonstrate that GP makes different, verifiable predictions compared to existing frameworks for at least one class of adaptive systems.
 **How information flow sculpts structure.**
 
 We study closed-loop dynamics where environments witness (copy) stable variables and systems adapt their coupling geometry to maximize useful records. The result is a feedback loop between signal and structure that leaves measurable, testable fingerprints in time-series, spectra, and spatial patterns.
