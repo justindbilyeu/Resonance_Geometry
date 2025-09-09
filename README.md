@@ -1,5 +1,4 @@
-# Resonance Geometry + Geometric Plasticity
-# Geometric Plasticity (GP)
+# Resonance Geometry + Geometric Plasticity (GP)
 
 **An attempt to formalize the idea that information flow shapes structure.**
 
