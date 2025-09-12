@@ -12,5 +12,5 @@ Outputs:
 	•	results/gp_demo/lambda_schedule.png
 	•	results/gp_demo/hysteresis_curve.png
 	•	results/gp_demo/summary.json (contains alpha_power_MI)
-## 6) (optional) `.gitignore` additions
+
 
