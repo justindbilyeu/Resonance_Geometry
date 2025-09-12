@@ -1,7 +1,5 @@
 Resonance Geometry (RG) & Geometric Plasticity (GP)
 
-https://github.com/justindbilyeu/Resonance_Geometry/actions/workflows/gp-demo.yml/badge.svg https://img.shields.io/badge/License-Apache--2.0-blue.svg
-
 A testable framework for adaptive systems.
 Coupling geometry changes track information flow—constrained by costs like energy, sparsity, and latency. We publish falsifiable predictions and ship runnable demos.
 
