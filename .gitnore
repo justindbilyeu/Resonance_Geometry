@@ -1,0 +1,56 @@
+# path: .gitignore
+
+# --- Python build & bytecode ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.so
+*.egg
+*.egg-info/
+.eggs/
+build/
+dist/
+wheels/
+
+# --- Virtual envs & tooling ---
+.venv/
+venv/
+env/
+ENV/
+.python-version
+.conda/
+pip-wheel-metadata/
+
+# --- Notebooks & caches ---
+.ipynb_checkpoints/
+.mypy_cache/
+.pytype/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# --- Local configs & secrets ---
+.env
+.env.*
+*.secret
+*.key
+
+# --- Results / data artifacts ---
+results/
+**/results/
+logs/
+**/*.log
+data/raw/
+data/tmp/
+tmp/
+*.tmp
+
+# --- OS / Editor junk ---
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
