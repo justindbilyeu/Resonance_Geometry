@@ -1,3 +1,13 @@
+[![GP ringing demo](https://github.com/justindbilyeu/Resonance_Geometry/actions/workflows/gp-demo.yml/badge.svg)](https://github.com/justindbilyeu/Resonance_Geometry/actions/workflows/gp-demo.yml)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
+
+```bash
+# Quick run (Linux/macOS; Windows PowerShell similar)
+python -m venv .venv && source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r experiments/requirements.txt
+python experiments/gp_ringing_demo.py
+
 # Resonance Geometry (RG) & Geometric Plasticity (GP)
 
 **A testable framework for adaptive systems.**  
