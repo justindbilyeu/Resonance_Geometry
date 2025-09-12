@@ -1,5 +1,5 @@
 # path: .github/workflows/gp-demo.yml
-name: GP ringing demo
+name: gp ringing demo
 
 on:
   push:
