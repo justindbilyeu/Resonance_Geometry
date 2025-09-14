@@ -1,132 +1,134 @@
-```markdown
-# Resonance Geometry (RG) & Geometric Plasticity (GP)
+Resonance Geometry (RG) & Geometric Plasticity (GP)
 
-[![CI](https://github.com/justindbilyeu/Resonance_Geometry/actions/workflows/gp-demo.yml/badge.svg)](https://github.com/justindbilyeu/Resonance_Geometry/actions/workflows/gp-demo.yml)
-[![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+https://github.com/justindbilyeu/Resonance_Geometry/actions/workflows/gp-demo.yml/badge.svg https://img.shields.io/badge/License-Apache--2.0-blue.svg
 
-**A testable framework for adaptive systems that tracks how coupling geometry changes with information flow.**
+A computational framework for adaptive networks, formalizing how systems reshape their internal geometry to optimize information flow.
 
 ---
 
-## Overview
+Overview
 
-Many systems "re-wire" themselves as they learn: neurons synchronize, modules form, signals pass through preferred pathways. **Geometric Plasticity (GP)** models this by letting a network's coupling geometry `g` evolve to align with measured information flow `Ī` while paying penalties for complexity and delay.
+Biological and artificial systems continuously rewire their internal connections to improve function—neurons synchronize, modules emerge, and signals find efficient pathways. Geometric Plasticity (GP) provides a testable mathematical model for this process, where a network's coupling geometry (g) evolves to align with actual information flow (Ī), while being constrained by complexity, modularity, and fidelity.
 
-**The GP potential:**
+The framework is centered around a variational potential V(g; Ī):
+
 ```
-
 V(g; Ī) = -Īᵀg + (λ/2)‖g‖² + (β/2)gᵀLg + (A/2)‖Ī - I(g,t)‖²
-
 ```
-with gradient-flow dynamics `ġ = -η∇gV`. Here, `I(g,t)` is measured information (e.g., windowed mutual information), `L` encourages smooth structure, and `λ,β,A` trade off simplicity, modularity, and fidelity.
 
-**Focus:** Empirical, falsifiable predictions with end-to-end runnable code.
+governed by gradient-flow dynamics \dot{g} = -\eta \nabla_g V. Here:
 
----
+· I(g,t) is measured information (e.g., windowed mutual information)
+· L is a Laplacian encouraging smooth or modular structure
+· λ, β, A control penalties for complexity, structure, and tracking fidelity
 
-## Status (Sept 2025)
-
-- ✅ **Pre-registered prediction (P1):** Sharp rise in alpha-band MI power at coupling `λ*` with hysteresis under sweeps
-- ✅ **Runnable synthetic demo:** `gp_ringing_demo.py` produces MI time-series, hysteresis curves, and JSON summaries  
-- ✅ **Reproducibility safeguards:** Fixed parameters, seeded RNG, surrogate nulls, multiple-comparisons control
-- 🧪 **Next:** Replication on small EEG datasets using locked analysis protocol
-
-*Note: Earlier cosmological analogies are marked non-essential. Core focus is GP variational model + measurable information dynamics.*
+This repository focuses on empirical predictions and reproducible experiments—bridging theory with measurable dynamics.
 
 ---
 
-## Quick Start
+🔬 Current Status (September 2025)
+
+· ✅ Pre-registered prediction P1: Demonstrated threshold-triggered rise in alpha-band mutual information and hysteresis under parameter sweeps
+· ✅ Functional synthetic demo: gp_ringing_demo.py generates time-series, hysteresis curves, and structured results
+· ✅ Rigor-enforced testing: Fixed parameters, seeded RNG, surrogate testing, and multiple-comparisons correction
+· 🧪 Next step: Replication on small EEG datasets using a locked analysis protocol
+
+🔍 Note: Earlier cosmological analogies are deprecated. Focus is on the GP variational principle and measurable dynamics.
+
+---
+
+🚀 Quick Start
 
 ```bash
-# Clone and setup
+# Clone the repository
 git clone https://github.com/justindbilyeu/Resonance_Geometry
 cd Resonance_Geometry
 
-# Create virtual environment
-python -m venv .venv && source .venv/bin/activate  # Linux/macOS
-# .venv\Scripts\Activate.ps1  # Windows PowerShell
+# Create and activate a virtual environment
+python -m venv .venv
+source .venv/bin/activate  # Linux/macOS
+# .venv\Scripts\activate   # Windows
 
 # Install dependencies
 pip install --upgrade pip
 pip install -r experiments/requirements.txt
 
-# Run demo
+# Run the core demonstration
 python experiments/gp_ringing_demo.py
 ```
 
-**Outputs** (in `results/gp_demo/`):
+📊 Outputs (saved to results/gp_demo/)
 
-- `mi_timeseries.png` - MI over time with alpha-band highlighting
-- `lambda_schedule.png` - Coupling parameter sweep
-- `hysteresis_curve.png` - Alpha-band MI power vs λ (up vs down)
-- `summary.json` - Metrics (λ*, loop area, p-values)
+· mi_timeseries.png – Mutual information over time with alpha-band emphasis
+· lambda_schedule.png – Coupling parameter sweep protocol
+· hysteresis_curve.png – Alpha-band power vs. λ (showing hysteresis)
+· summary.json – Quantitative results (λ*, loop area, p-values)
 
------
+---
 
-## Predictions (v1.2)
+📋 Predictions (v1.2)
 
-|Prediction                             |Description                                        |
-|---------------------------------------|---------------------------------------------------|
-|**P1** - Ringing threshold & hysteresis|Sharp MI power rise at λ* with hysteresis loop     |
-|**P2** - Drive–timescale matching      |Max response when drive matches intrinsic timescale|
-|**P3** - Motif selection               |Geometry prefers broadcast vs modular motifs       |
+ID Prediction Description
+P1 Ringing threshold & hysteresis Sharp increase in MI power at critical λ*, with hysteresis under sweeps
+P2 Drive–timescale matching Maximal response when external drive matches intrinsic timescale
+P3 Motif selection Structural preference for broadcast vs. modular motifs under different constraints
 
-**Details:** [`docs/predictions.md`](docs/predictions.md)
+Full details: docs/predictions.md
 
------
+---
 
-## Experimental Rigor
+🧪 Experimental Rigor
 
-**Preregistration & safeguards:**
+This project emphasizes reproducibility and falsifiability:
 
-- Locked parameters (window size, alpha band, estimators)
-- Surrogate nulls (IAAFT/AR) preserving temporal structure
-- Multiple-comparisons control
-- Blinding and publish-on-fail criteria
+· 🔒 Locked analysis parameters: Pre-registered window sizes, frequency bands, and estimators
+· 🎲 Surrogate testing: Using IAAFT/AR null models to preserve temporal structure
+· 📉 Multiple-comparisons control: Corrected significance testing
+· 👁️ Blinding & publish-on-fail: Predefined success criteria and avoidance of p-hacking
 
-**Full plan:** [`docs/prereg_P1.md`](docs/prereg_P1.md)
+Pre-registration plan: docs/prereg_P1.md
 
------
+---
 
-## Repository Structure
+📁 Repository Structure
 
 ```
 Resonance_Geometry/
 ├── experiments/
-│   ├── gp_ringing_demo.py    # Main demonstration
-│   └── requirements.txt      # Python dependencies
+│   ├── gp_ringing_demo.py       # Main demonstration script
+│   └── requirements.txt          # Python dependencies
 ├── docs/
-│   ├── predictions.md        # Detailed predictions
-│   └── prereg_P1.md         # Experimental protocol
-├── results/                  # Generated outputs
-└── .github/workflows/        # Continuous integration
+│   ├── predictions.md            # Prediction specifications
+│   └── prereg_P1.md             # Pre-registration protocol
+├── results/                      # Generated outputs (not in version control)
+└── .github/workflows/            CI configuration
 ```
 
------
+---
 
-## ITPU Integration
+🔌 ITPU Integration
 
-This project uses the [Information-Theoretic Processing Unit (ITPU)](https://github.com/justindbilyeu/ITPU) for accelerated MI/CMI/TE measurements. Current Python baselines will later run on ITPU hardware for real-time experiments.
+This project leverages the Information-Theoretic Processing Unit (ITPU) for high-performance estimation of mutual information, transfer entropy, and other information dynamics. Python reference implementations are provided, with future support for real-time ITPU hardware acceleration.
 
------
+---
 
-## Contributing
+🤝 Contributing
 
-We welcome:
+We welcome contributions in the following areas:
 
-- Replication PRs with different seeds
-- Surrogate implementations (AR/IAAFT)
-- EEG pilot studies with public datasets
-- Documentation improvements
+· Replication attempts with novel random seeds
+· New surrogate data implementations (AR, IAAFT)
+· Pilot studies using public EEG/MEG datasets
+· Documentation improvements and typo fixes
 
-Please open an Issue first for coordination.
+Please open an issue before submitting a pull request to coordinate efforts.
 
------
+---
 
-## License
+📄 License
 
-Apache 2.0 - See <LICENSE> for details.
+Apache 2.0 – see LICENSE for details.
 
-```
+---
 
-```
+💡 This README is designed for clarity and scannability. For deeper engagement, see the pre-registrations and demo code.
