@@ -1,11 +1,20 @@
 #!/usr/bin/env python3
+import argparse
+import os
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+import matplotlib.pyplot as plt
 import numpy as np
 from scipy.fft import rfftfreq, rfft
 from scipy.signal import find_peaks, hilbert, lfilter
 from scipy.stats import linregress
-import matplotlib.pyplot as plt
+
 import pandas as pd
-import argparse, os
 
 def psd_peak(signal, fs=1.0):
     signal = signal - np.mean(signal)
