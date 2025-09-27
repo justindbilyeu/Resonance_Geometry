@@ -1,0 +1,1 @@
+Background research digests, literature matrices, and citation trails accumulate here to keep the Resonance Geometry program grounded; consult [RG_PROMPT.md](../../RG_PROMPT.md) for mission alignment.

@@ -1,0 +1,1 @@
+This folder houses working specifications for tooling, experiments, and integrations that support Resonance Geometry objectives; to align on overarching principles review [RG_PROMPT.md](../../RG_PROMPT.md).
