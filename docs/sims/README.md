@@ -1,0 +1,1 @@
+Simulation design notes and outcome summaries land here to capture how Resonance Geometry hypotheses get exercised computationally; for full program context refer to [RG_PROMPT.md](../../RG_PROMPT.md).

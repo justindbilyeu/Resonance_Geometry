@@ -1,0 +1,1 @@
+This directory gathers draft and finalized axiom review notes that contextualize the Resonance Geometry framework; for broader guidance on intent and scope, see the root-level [RG_PROMPT.md](../../RG_PROMPT.md).
