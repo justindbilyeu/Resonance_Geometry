@@ -53,6 +53,7 @@ source .venv/bin/activate  # Linux/macOS
 # Install dependencies
 pip install --upgrade pip
 pip install -r requirements.txt
+# Optional GPU accel: `pip install '.[torch]'`
 
 # Run the core demonstration
 python experiments/gp_ringing_demo.py
