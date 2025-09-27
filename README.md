@@ -52,7 +52,7 @@ source .venv/bin/activate  # Linux/macOS
 
 # Install dependencies
 pip install --upgrade pip
-pip install -r experiments/requirements.txt
+pip install -r requirements.txt
 
 # Run the core demonstration
 python experiments/gp_ringing_demo.py
@@ -96,20 +96,19 @@ This project emphasizes reproducibility and falsifiability:
 
 ```
 Resonance_Geometry/
-├── experiments/
-│   ├── gp_ringing_demo.py       # Main demonstration script
-│   └── requirements.txt         # Python dependencies
 ├── docs/
-│   ├── codex/
-│   │   ├── policies/prereg_P1.md  # Pre-registration protocol
-│   │   └── policies/predictions.md
-│   ├── history/                  # Roadmap, import logs, etc.
-│   ├── philosophy/               # Conceptual framing
-│   └── white-papers/             # Drafts, appendices, compiled PDFs
+│   ├── philosophy/               # Conceptual framing and essays
+│   ├── white-papers/             # Drafts, appendices, compiled PDFs
+│   ├── codex/                    # Resonance codex variants & policies
+│   └── history/                  # Provenance logs, inventories, lineage
+├── simulations/                 # Simulation modules (headless)
 ├── figures/                     # Generated figures (tracked outputs)
-├── simulations/                 # Simulation modules
+├── archive/                     # Legacy repositories (REAL/GP/RG)
+├── experiments/
+│   └── gp_ringing_demo.py       # Main demonstration script
+├── scripts/                     # Utility helpers (inventory generation, etc.)
 ├── results/                     # Legacy outputs (gitignored)
-└── .github/workflows/           # CI configuration
+└── .github/workflows/           # CI configuration (sims.yml, etc.)
 ```
 
 -----
@@ -136,3 +135,21 @@ Please open an issue before submitting a pull request to coordinate efforts.
 ## License
 
 Apache 2.0 – see <LICENSE> for details.
+
+-----
+
+## Repository Lineage
+
+This canonical hub intentionally preserves the provenance of three legacy efforts:
+
+- [`REAL`](https://github.com/justindbilyeu/REAL)
+- [`Geometric-Plasticity-`](https://github.com/justindbilyeu/Geometric-Plasticity-)
+- [`ResonanceGeometry`](https://github.com/justindbilyeu/ResonanceGeometry)
+
+The `/archive/` directory houses frozen snapshots (or placeholders when network
+access is unavailable) for each source. Provenance, deduplication notes, and
+follow-up actions are tracked in [`docs/history/HISTORY.md`](docs/history/HISTORY.md).
+
+For a guided tour of the merged documentation set, start with
+[`docs/README_bundle.md`](docs/README_bundle.md) and the epistemic-status context
+in [`docs/Epistemic_Status_Box.md`](docs/Epistemic_Status_Box.md).

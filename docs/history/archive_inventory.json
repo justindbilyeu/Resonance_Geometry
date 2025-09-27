@@ -1,59 +1,57 @@
 {
-  "docs/white-papers": {
-    ".tex": [
-      "docs/white-papers/resonance_geometry_whitepaper.tex",
-      "docs/white-papers/resonance_geometry_integration.tex"
+  "docs": {
+    ".html": [
+      "docs/history/index.html"
+    ],
+    ".json": [
+      "docs/history/archive_inventory.json"
+    ],
+    ".md": [
+      "docs/Epistemic_Status_Box.md",
+      "docs/README_bundle.md",
+      "docs/codex/experiments/phase_surrogate.md",
+      "docs/codex/hardware/ITPU.md",
+      "docs/codex/itpu-sim/README.md",
+      "docs/codex/policies/predictions.md",
+      "docs/codex/policies/prereg_P1.md",
+      "docs/history/HISTORY.md",
+      "docs/history/ROADMAP.md",
+      "docs/history/import_log.md",
+      "docs/philosophy/RG_GP_Preface.md",
+      "docs/white-papers/appendices/appendix_ringing_threshold.md",
+      "docs/white-papers/draft/sections/00_preface.md"
     ],
     ".pdf": [
       "docs/white-papers/resonance_geometry_whitepaper.pdf"
     ],
-    ".md": [
-      "docs/white-papers/appendices/appendix_ringing_threshold.md",
-      "docs/white-papers/draft/sections/00_preface.md"
-    ]
-  },
-  "docs/codex": {
-    ".md": [
-      "docs/codex/policies/predictions.md",
-      "docs/codex/policies/prereg_P1.md",
-      "docs/codex/experiments/phase_surrogate.md",
-      "docs/codex/hardware/ITPU.md",
-      "docs/codex/itpu-sim/README.md"
-    ]
-  },
-  "docs/history": {
-    ".md": [
-      "docs/history/ROADMAP.md",
-      "docs/history/import_log.md"
+    ".tex": [
+      "docs/white-papers/resonance_geometry_integration.tex",
+      "docs/white-papers/resonance_geometry_whitepaper.tex"
     ],
-    ".html": [
-      "docs/history/index.html"
-    ]
-  },
-  "docs/philosophy": {
-    ".md": [
-      "docs/philosophy/RG_GP_Preface.md"
+    "<noext>": [
+      "docs/.nojekyll"
     ]
   },
   "simulations": {
     ".py": [
+      "simulations/__init__.py",
       "simulations/ringing_threshold.py"
     ]
   },
   "figures": {
-    ".gitkeep": [
+    "<noext>": [
       "figures/.gitkeep"
     ]
   },
   "archive": {
-    "REAL": {
-      ".md": [
-        "archive/REAL/IMPORT_NOTES.md"
-      ]
-    },
     "Geometric-Plasticity-": {
       ".md": [
         "archive/Geometric-Plasticity-/IMPORT_NOTES.md"
+      ]
+    },
+    "REAL": {
+      ".md": [
+        "archive/REAL/IMPORT_NOTES.md"
       ]
     },
     "ResonanceGeometry": {
