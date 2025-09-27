@@ -72,7 +72,7 @@ def main():
     p.add_argument("--alphas", default="0.1,0.4,0.8")
     p.add_argument("--etas",   default="0.02,0.05,0.08")
     p.add_argument("--T", type=int, default=150)
-    p.add_argument("--out_dir", default="results/phase_map_surrogate")
+    p.add_argument("--out_dir", default="figures/phase_map_surrogate")
     p.add_argument("--psd_db", type=float, default=6.0)
     p.add_argument("--overs", type=int, default=2)
     args = p.parse_args()

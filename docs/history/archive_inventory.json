@@ -1,0 +1,65 @@
+{
+  "docs/white-papers": {
+    ".tex": [
+      "docs/white-papers/resonance_geometry_whitepaper.tex",
+      "docs/white-papers/resonance_geometry_integration.tex"
+    ],
+    ".pdf": [
+      "docs/white-papers/resonance_geometry_whitepaper.pdf"
+    ],
+    ".md": [
+      "docs/white-papers/appendices/appendix_ringing_threshold.md",
+      "docs/white-papers/draft/sections/00_preface.md"
+    ]
+  },
+  "docs/codex": {
+    ".md": [
+      "docs/codex/policies/predictions.md",
+      "docs/codex/policies/prereg_P1.md",
+      "docs/codex/experiments/phase_surrogate.md",
+      "docs/codex/hardware/ITPU.md",
+      "docs/codex/itpu-sim/README.md"
+    ]
+  },
+  "docs/history": {
+    ".md": [
+      "docs/history/ROADMAP.md",
+      "docs/history/import_log.md"
+    ],
+    ".html": [
+      "docs/history/index.html"
+    ]
+  },
+  "docs/philosophy": {
+    ".md": [
+      "docs/philosophy/RG_GP_Preface.md"
+    ]
+  },
+  "simulations": {
+    ".py": [
+      "simulations/ringing_threshold.py"
+    ]
+  },
+  "figures": {
+    ".gitkeep": [
+      "figures/.gitkeep"
+    ]
+  },
+  "archive": {
+    "REAL": {
+      ".md": [
+        "archive/REAL/IMPORT_NOTES.md"
+      ]
+    },
+    "Geometric-Plasticity-": {
+      ".md": [
+        "archive/Geometric-Plasticity-/IMPORT_NOTES.md"
+      ]
+    },
+    "ResonanceGeometry": {
+      ".md": [
+        "archive/ResonanceGeometry/IMPORT_NOTES.md"
+      ]
+    }
+  }
+}

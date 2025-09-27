@@ -37,4 +37,4 @@ Simulations indicate \(\sim\)±20% accuracy; our benchmarks (Sec. 4) show ≤10%
 **Practical recipe (time-series).**
 1) Small step/impulse; 2) find peaks \(g_0,\ldots,g_n\); 3) \(\delta=\frac{1}{n}\ln(g_0/g_n)\); 4) \(\zeta=\delta/\sqrt{4\pi^2+\delta^2}\). The smallest \(K\) with \(\zeta<1\) marks ringing onset.
 
-We ship a reference implementation (`src/analysis/ringing_threshold.py`) and tests reproducing the DeepSeek table.
+We ship a reference implementation (`simulations/ringing_threshold.py`) and tests reproducing the DeepSeek table.
