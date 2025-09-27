@@ -26,4 +26,4 @@ We treat GP as gradient flow on an information manifold. Couplings **g** adapt t
 - Task-matched controls when applicable.
 - Multiple comparison correction (FDR).
 
-See `docs/prereg_P1.md` for the full analysis plan and failure criteria.
+See `docs/codex/policies/prereg_P1.md` for the full analysis plan and failure criteria.

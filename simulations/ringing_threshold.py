@@ -1,4 +1,4 @@
-# src/analysis/ringing_threshold.py
+# simulations/ringing_threshold.py
 import numpy as np
 from dataclasses import dataclass
 from typing import Tuple, Dict, List, Optional

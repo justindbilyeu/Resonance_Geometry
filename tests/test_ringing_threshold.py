@@ -1,6 +1,6 @@
 # tests/test_ringing_threshold.py
 import numpy as np
-from src.analysis.ringing_threshold import GPParams, kc_engineering, solve_omega_c
+from simulations.ringing_threshold import GPParams, kc_engineering, solve_omega_c
 
 def test_kc_engineering_monotone_in_delay():
     p = GPParams(A=0.5, B=1.0, Delta=0.05)

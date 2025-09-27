@@ -1,6 +1,6 @@
 # scripts/sweep_kc.py
 import csv, argparse, numpy as np
-from src.analysis.ringing_threshold import GPParams, kc_engineering
+from simulations.ringing_threshold import GPParams, kc_engineering
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--A", type=float, nargs=3, default=[0.1, 1.0, 0.1], help="start stop step")

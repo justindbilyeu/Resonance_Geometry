@@ -58,7 +58,7 @@ pip install -r experiments/requirements.txt
 python experiments/gp_ringing_demo.py
 ```
 
-**Outputs** (saved to `results/gp_demo/`):
+**Outputs** (saved to `figures/gp_demo/`):
 
 - `mi_timeseries.png` – Mutual information over time with alpha-band emphasis
 - `lambda_schedule.png` – Coupling parameter sweep protocol
@@ -75,7 +75,7 @@ python experiments/gp_ringing_demo.py
 |**P2**|Drive–timescale matching      |Maximal response when external drive matches intrinsic timescale                  |
 |**P3**|Motif selection               |Structural preference for broadcast vs. modular motifs under different constraints|
 
-**Full details:** [`docs/predictions.md`](docs/predictions.md)
+**Full details:** [`docs/codex/policies/predictions.md`](docs/codex/policies/predictions.md)
 
 -----
 
@@ -88,7 +88,7 @@ This project emphasizes reproducibility and falsifiability:
 - **Multiple-comparisons control:** Corrected significance testing
 - **Blinding & publish-on-fail:** Predefined success criteria and avoidance of p-hacking
 
-**Pre-registration plan:** [`docs/prereg_P1.md`](docs/prereg_P1.md)
+**Pre-registration plan:** [`docs/codex/policies/prereg_P1.md`](docs/codex/policies/prereg_P1.md)
 
 -----
 
@@ -100,9 +100,15 @@ Resonance_Geometry/
 │   ├── gp_ringing_demo.py       # Main demonstration script
 │   └── requirements.txt         # Python dependencies
 ├── docs/
-│   ├── predictions.md           # Prediction specifications
-│   └── prereg_P1.md            # Pre-registration protocol
-├── results/                     # Generated outputs (not in version control)
+│   ├── codex/
+│   │   ├── policies/prereg_P1.md  # Pre-registration protocol
+│   │   └── policies/predictions.md
+│   ├── history/                  # Roadmap, import logs, etc.
+│   ├── philosophy/               # Conceptual framing
+│   └── white-papers/             # Drafts, appendices, compiled PDFs
+├── figures/                     # Generated figures (tracked outputs)
+├── simulations/                 # Simulation modules
+├── results/                     # Legacy outputs (gitignored)
 └── .github/workflows/           # CI configuration
 ```
 

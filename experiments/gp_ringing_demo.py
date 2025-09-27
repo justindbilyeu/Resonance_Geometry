@@ -59,7 +59,7 @@ def alpha_power(signal, fs=128, band=(8,12)):
     idx = (f >= band[0]) & (f <= band[1])
     return float(np.trapz(Pxx[idx], f[idx]))
 
-def main(outdir="results/gp_demo", show=False):
+def main(outdir="figures/gp_demo"):
     os.makedirs(outdir, exist_ok=True)
     fs = 128
     lam, x, y = simulate_coupled(fs=fs, dur_up=60, dur_dn=60, lam_max=0.9, seed=7)
@@ -94,7 +94,7 @@ def main(outdir="results/gp_demo", show=False):
     plt.title("Windowed MI(t)")
     plt.tight_layout()
     plt.savefig(os.path.join(outdir, "mi_timeseries.png"), dpi=140)
-    if show: plt.show(); plt.close()
+    plt.close()
 
     plt.figure(figsize=(10,4))
     plt.plot(np.arange(len(lam))/fs, lam, lw=1.0, color='gray')
