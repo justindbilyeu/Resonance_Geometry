@@ -1,5 +1,7 @@
 # ROADMAP.md
 
+> For a directory-level overview of related philosophy, white paper, codex, simulation, and history materials, see [`README_bundle.md`](README_bundle.md).
+
 ## v0.1 (2–3 days): Baseline + CI + Results Seed
 - [ ] Package `rwp-core` (GP engine + metrics) and wire tests
 - [ ] Reproduce **three minimal demos** with fixed seeds:

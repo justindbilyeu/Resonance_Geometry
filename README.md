@@ -106,6 +106,11 @@ Resonance_Geometry/
 └── .github/workflows/           # CI configuration
 ```
 
+## Documentation Bundle
+
+- [`docs/README_bundle.md`](docs/README_bundle.md) – Orientation guide for the Philosophy, White Papers, Codex, Simulations, and History collections.
+- [`docs/Epistemic_Status_Box.md`](docs/Epistemic_Status_Box.md) – Boilerplate table for communicating confidence, cadence, and validation across long-form docs.
+
 -----
 
 ## ITPU Integration
