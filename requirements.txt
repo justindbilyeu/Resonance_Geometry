@@ -1,6 +1,5 @@
-# Consolidated dependency list for experiments and simulations
-numpy>=1.23
+numpy>=1.24
 scipy>=1.10
 matplotlib>=3.7
-pandas>=1.5
+pandas>=2.0
 pytest>=7.4
