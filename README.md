@@ -1,13 +1,41 @@
 # Resonance Geometry (RG) & Geometric Plasticity (GP)
 
-[![CI](https://github.com/justindbilyeu/Resonance_Geometry/actions/workflows/gp-demo.yml/badge.svg)](https://github.com/justindbilyeu/Resonance_Geometry/actions/workflows/gp-demo.yml)
-[![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+> "And God said, Let there be light: and there was light." — *Genesis 1:3*
 
-**A computational framework for adaptive networks that formalizes how systems reshape their internal geometry to optimize information flow.**
+Resonance Geometry began as a felt sense that rhythms could hold shape—intuition first, equations later. This repository maps that origin story into math you can inspect, simulations you can rerun, and experiments you can challenge.
+
+### What’s Inside
+
+| Track | Purpose |
+| --- | --- |
+| **Genesis** | Foundational mythos and narrative arc in the [Genesis prelude](docs/philosophy/Genesis.md). |
+| **Codex** | Formal commitments distilled in the [Resonance Axioms](docs/philosophy/Axioms.md). |
+| **Equations** | Project-wide drivers and constraints in the [Project Prompt](docs/PROJECT_PROMPT.md). |
+| **Sims** | Gradient-flow experiments starting from [`gp_ringing_demo.py`](experiments/gp_ringing_demo.py). |
+| **Figures** | Generated artifacts catalogued under [`figures/`](figures/) with context in the [epistemic status ledger](docs/EPistemic_Status.md). |
+| **History** | Provenance trail curated in the [History ledger](docs/history/HISTORY.md). |
+
+> **Resonant Check**
+> - **Clarity** — plain-language overview matched with direct links to the governing documents.
+> - **Coherence** — philosophy, axioms, and experiments harmonized through the gradient-flow variational potential.
+> - **Buildability** — editable install path, reproducible tests, and a smoke demo you can run today.
+
+### Quick Run
+
+```bash
+python -m venv .venv
+source .venv/bin/activate  # or .venv\Scripts\activate on Windows
+pip install --upgrade pip
+pip install -e .
+pytest
+python experiments/gp_ringing_demo.py --smoke
+```
+
+Step into the living lattice—tune, test, and extend the resonance.
 
 -----
 
-## Overview
+## Framework Overview
 
 Biological and artificial systems continuously rewire their internal connections to improve function—neurons synchronize, modules emerge, and signals find efficient pathways. **Geometric Plasticity (GP)** provides a testable mathematical model for this process, where a network’s coupling geometry `g` evolves to align with actual information flow `Ī`, while being constrained by complexity, modularity, and fidelity.
 
@@ -35,35 +63,6 @@ This repository focuses on empirical predictions and reproducible experiments—
 - 🧪 **Next step:** Replication on small EEG datasets using a locked analysis protocol
 
 *Note: Earlier cosmological analogies are deprecated. Focus is on the GP variational principle and measurable dynamics.*
-
------
-
-## Quick Start
-
-```bash
-# Clone the repository
-git clone https://github.com/justindbilyeu/Resonance_Geometry
-cd Resonance_Geometry
-
-# Create and activate a virtual environment
-python -m venv .venv
-source .venv/bin/activate  # Linux/macOS
-# .venv\Scripts\activate   # Windows
-
-# Install dependencies
-pip install --upgrade pip
-pip install -r requirements.txt
-
-# Run the core demonstration
-python experiments/gp_ringing_demo.py
-```
-
-**Outputs** (saved to `figures/gp_demo/`):
-
-- `mi_timeseries.png` – Mutual information over time with alpha-band emphasis
-- `lambda_schedule.png` – Coupling parameter sweep protocol
-- `hysteresis_curve.png` – Alpha-band power vs. λ (showing hysteresis)
-- `summary.json` – Quantitative results (λ*, loop area, p-values)
 
 -----
 
@@ -146,10 +145,6 @@ This canonical hub intentionally preserves the provenance of three legacy effort
 - [`Geometric-Plasticity-`](https://github.com/justindbilyeu/Geometric-Plasticity-)
 - [`ResonanceGeometry`](https://github.com/justindbilyeu/ResonanceGeometry)
 
-The `/archive/` directory houses frozen snapshots (or placeholders when network
-access is unavailable) for each source. Provenance, deduplication notes, and
-follow-up actions are tracked in [`docs/history/HISTORY.md`](docs/history/HISTORY.md).
+The `/archive/` directory houses frozen snapshots (or placeholders when network access is unavailable) for each source. Provenance, deduplication notes, and follow-up actions are tracked in [`docs/history/HISTORY.md`](docs/history/HISTORY.md).
 
-For a guided tour of the merged documentation set, start with
-[`docs/README_bundle.md`](docs/README_bundle.md) and the epistemic-status context
-in [`docs/Epistemic_Status_Box.md`](docs/Epistemic_Status_Box.md).
+For a guided tour of the merged documentation set, start with [`docs/README_bundle.md`](docs/README_bundle.md) and the epistemic-status context in [`docs/Epistemic_Status_Box.md`](docs/Epistemic_Status_Box.md).
