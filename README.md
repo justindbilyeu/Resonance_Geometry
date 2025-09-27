@@ -92,16 +92,29 @@ This project emphasizes reproducibility and falsifiability:
 
 -----
 
+## Repository Lineage
+
+Resonance_Geometry now consolidates work that previously lived in three standalone projects:
+
+- [resonance-geometry-docs](https://github.com/justindbilyeu/resonance-geometry-docs) – long-form whitepapers, preregistrations, and philosophy notes.
+- [gp-simulations](https://github.com/justindbilyeu/gp-simulations) – Python prototypes for ringing, hysteresis, and motif sweeps.
+- [resonance-figures-archive](https://github.com/justindbilyeu/resonance-figures-archive) – published plots, figure templates, and design assets.
+
+The migration timeline and release notes are tracked in [`docs/history/HISTORY.md`](docs/history/HISTORY.md).
+
+-----
+
 ## Repository Structure
 
 ```
 Resonance_Geometry/
-├── experiments/
-│   ├── gp_ringing_demo.py       # Main demonstration script
-│   └── requirements.txt         # Python dependencies
-├── docs/
-│   ├── predictions.md           # Prediction specifications
-│   └── prereg_P1.md            # Pre-registration protocol
+├── docs/                        # Whitepapers, preregistrations, philosophy, and history
+│   └── history/HISTORY.md       # Migration and release timeline
+├── simulations/
+│   ├── README.md                # Simulation entry points
+│   └── gp_ringing_demo.py       # Main ringing + hysteresis demonstration
+├── figures/                     # Published plots and reusable figure templates
+├── archive/                     # Snapshots of legacy analyses and datasets
 ├── results/                     # Generated outputs (not in version control)
 └── .github/workflows/           # CI configuration
 ```
