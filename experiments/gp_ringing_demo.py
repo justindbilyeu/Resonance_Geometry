@@ -49,8 +49,15 @@ def simulate_coupled(fs=128, dur_up=60, dur_dn=60, lam_max=0.9, seed=7):
 
     for t in range(2, len(lam)):
         c = lam[t]
-        x[t] = a1*x[t-1] + a2*x[t-2] + c*y[t-1] + nx[t]
-        y[t] = a1*y[t-1] + a2*y[t-2] + c*x[t-1] + ny[t]
+        x_new = a1*x[t-1] + a2*x[t-2] + c*y[t-1] + nx[t]
+        y_new = a1*y[t-1] + a2*y[t-2] + c*x[t-1] + ny[t]
+
+        # Soft saturation guards against runaway amplification when the mutual
+        # coupling pushes the linear AR(2) dynamics past the stability region.
+        # This keeps the synthetic demo numerically well behaved without
+        # changing the qualitative ringing / hysteresis behaviour we visualise.
+        x[t] = np.tanh(x_new)
+        y[t] = np.tanh(y_new)
     return lam, x, y
 
 # ---------- Analysis ----------
