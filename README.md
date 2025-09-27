@@ -52,7 +52,7 @@ source .venv/bin/activate  # Linux/macOS
 
 # Install dependencies
 pip install --upgrade pip
-pip install -r experiments/requirements.txt
+pip install -r requirements.txt
 
 # Run the core demonstration
 python experiments/gp_ringing_demo.py
@@ -97,8 +97,7 @@ This project emphasizes reproducibility and falsifiability:
 ```
 Resonance_Geometry/
 ├── experiments/
-│   ├── gp_ringing_demo.py       # Main demonstration script
-│   └── requirements.txt         # Python dependencies
+│   └── gp_ringing_demo.py       # Main demonstration script
 ├── docs/
 │   ├── predictions.md           # Prediction specifications
 │   └── prereg_P1.md            # Pre-registration protocol
