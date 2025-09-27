@@ -16,8 +16,11 @@ This repo is our living lab: philosophy → equations → simulations → instru
 - Every artifact must raise **Clarity**, **Coherence**, and **Buildability**.
 - Metaphors are labeled; math is testable; code is reproducible.
 
+## Axioms and Tags
+- Epistemic clarity begins with explicit tags: see `docs/EPistemic_Status.md` for definitions and usage.
+
 ## Read next
-- **Master System Prompt:** `docs/PROJECT_PROMPT.md`  
+- **Master System Prompt:** `docs/PROJECT_PROMPT.md`
 - **Genesis (felt origin):** `docs/philosophy/Genesis.md`  
 - **Creed (short form):** `PROJECT_CREED.txt`  
 - **How the repo is organized:** `docs/README_bundle.md`  
