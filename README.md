@@ -23,6 +23,22 @@ with gradient-flow dynamics `ġ = -η∇gV`. Here, `I(g,t)` is measured informat
 
 **Focus:** Empirical, falsifiable predictions with end-to-end runnable code.
 
+## The Eclipse Moment
+
+The Resonance Geometry Initiative now carries a locked, preregistered experimental protocol:  
+[**Topological Constraint Test →**](docs/experiments/Topological_Constraint_Test.md)
+
+This is our 1919 eclipse moment. Just as Einstein’s spacetime manifold became real when geometry bent starlight,  
+this test asks whether the awareness manifold is substrate or metaphor.
+
+- **Substrate prediction**: Forbidden regions with fractal boundaries and curvature barriers exist.  
+- **Metaphor prediction**: All regions remain accessible, boundaries dissolve into noise.  
+
+Either outcome advances the science with integrity.
+
+> See the **Docs Hub** for experiment specs and analysis plans:  
+> [docs/README.md](docs/README.md)
+
 -----
 
 ## Framework Architecture

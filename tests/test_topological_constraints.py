@@ -1,5 +1,6 @@
-import numpy as np
+"""Placeholder smoke tests for the topological constraint pipeline stubs."""
 
+import numpy as np
 
 def test_state_vector_extraction_shape():
     from resonance_geometry.state_vector import extract_state_vector
