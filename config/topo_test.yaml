@@ -1,0 +1,28 @@
+# Configuration for the topological accessibility coverage experiment.
+# Parameter ranges are defined for lambda (λ), beta (β), and amplitude (A).
+# The grid bounds map the six-dimensional state vector
+#   (λ, β, A, ||g||, Tr(g L g^T), ΔI)
+# into a regular lattice for coverage estimation.
+
+random_seed: 1337
+
+lambda_range: [0.05, 1.5]
+beta_range: [0.01, 0.8]
+A_range: [0.5, 2.5]
+
+sampling:
+  runs: 128            # Number of independent GP evolutions to sample.
+  schedule_length: 24  # Number of schedule steps for each run.
+  coupling_dim: 3      # Dimension of the coupling matrix g.
+  mi_length: 64        # Length of the mutual information time-series.
+
+grid:
+  min: [0.05, 0.01, 0.5, 0.0, 0.0, 0.0]
+  max: [1.5, 0.8, 2.5, 4.5, 8.0, 1.5]
+  resolution: [18, 18, 18, 18, 18, 18]
+
+# Bounds for the stochastic dynamics used in the stubbed GP evolution loop.
+stub_dynamics:
+  g_noise_scale: 0.3
+  mi_noise_scale: 0.2
+  drift: 0.85
