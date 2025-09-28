@@ -109,6 +109,20 @@ pip install -r experiments/requirements.txt
 python experiments/gp_ringing_demo.py
 ```
 
+## Current Work
+
+Sprint focus: minimal forbidden-region detector plus adversarial forcing MVP.
+
+```bash
+# Task 1 — forbidden region scan
+python experiments/forbidden_region_detector.py
+
+# Task 2 — adversarial forcing sweep
+python experiments/adversarial_forcing.py
+```
+
+See [docs/experiments/Forbidden_Region_Detector.md](docs/experiments/Forbidden_Region_Detector.md) for outputs, decision criteria, and artifact layout.
+
 ## Experiments
 
 - Topological Constraint Test — our 1919 eclipse moment. [docs/experiments/Topological_Constraint_Test.md]
