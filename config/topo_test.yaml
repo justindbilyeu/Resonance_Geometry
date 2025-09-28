@@ -1,0 +1,30 @@
+grid:
+  resolution_per_dim: 6        # mini-grid; can bump later
+  distance_threshold_factor: 0.1  # × grid spacing (for reachability)
+  random_starts: 400
+  adversarial_attempts: 160
+  adversarial_strategies: ["annealing", "bang_bang", "noise_injection", "gradient_ascent"]
+
+fractal:
+  r2_min: 0.90
+  n_scales: 18
+  eps_min: 0.01
+  eps_max: 1.0
+  bootstrap: 1000
+  min_boundary_points: 100
+
+curvature:
+  method: "ollivier_ricci"
+  alpha: 0.5
+  neg_threshold: -0.1
+  coverage_pass: 0.80
+  grad_threshold: 0.05
+
+nulls:
+  run_null1: true  # destroy information structure
+  run_null2: true  # break geometric coupling
+  run_null3: true  # destroy topology via rewiring
+  samples_per_null: 50
+
+io:
+  out_dir: "results/topo_test"
