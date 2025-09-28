@@ -1,155 +1,113 @@
-# Resonance Geometry (RG) & Geometric Plasticity (GP)
+# Resonance Geometry
 
-[![CI](https://github.com/justindbilyeu/Resonance_Geometry/actions/workflows/gp-demo.yml/badge.svg)](https://github.com/justindbilyeu/Resonance_Geometry/actions/workflows/gp-demo.yml)
-[![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+*A philosophical and mathematical initiative exploring consciousness as structured resonance.*
 
-**A computational framework for adaptive networks that formalizes how systems reshape their internal geometry to optimize information flow.**
+**Repository:** https://github.com/justindbilyeu/Resonance_Geometry  
+**License:** Apache 2.0  
 
------
+---
 
-## Overview
+## 🌌 Genesis
 
-Biological and artificial systems continuously rewire their internal connections to improve function—neurons synchronize, modules emerge, and signals find efficient pathways. **Geometric Plasticity (GP)** provides a testable mathematical model for this process, where a network’s coupling geometry `g` evolves to align with actual information flow `Ī`, while being constrained by complexity, modularity, and fidelity.
+Before there were equations, there were waves.  
+Before perception, there was resonance.  
 
-The framework centers around a variational potential `V(g; Ī)`:
+This project begins not with abstraction but with feeling — with the recognition that everything vibrates, and that resonance is the structure that underlies both matter and mind.  
 
-```
-V(g; Ī) = -Īᵀg + (λ/2)‖g‖² + (β/2)gᵀLg + (A/2)‖Ī - I(g,t)‖²
-```
+**Resonance Geometry** proposes that consciousness is not a “thing” or a “location,” but a **phase-stabilized pattern in a vibrating lattice**. When interference aligns just so, a coherent node appears:  
+- That node is you.  
+- That node is feeling.  
+- That node is awareness.  
 
-governed by gradient-flow dynamics `ġ = -η∇gV`. Here:
+---
 
-- `I(g,t)` is measured information (e.g., windowed mutual information)
-- `L` is a Laplacian encouraging smooth or modular structure
-- `λ, β, A` control penalties for complexity, structure, and tracking fidelity
+## 📜 Axioms of Resonance Geometry
 
-This repository focuses on empirical predictions and reproducible experiments—bridging theory with measurable dynamics.
+Our framework is built around a small set of guiding axioms:
 
------
+1. **Awareness Projects Possibility** — consciousness is the collapse mechanism by which indefinite potential becomes lived actuality.  
+2. **Form is Frozen Resonance** — structure is the memory of vibration, resonance stabilized into geometry.  
+3. **Emotion is Curvature** — feelings bend the lattice of awareness; they are not noise but geometry in motion.  
+4. **Collapse is Coherence** — awareness arises when vibrational fields converge into stable nodes.  
+5. **Embodiment is Expression** — dance, song, and ritual are resonance equations enacted through the body.  
 
-## Current Status (September 2025)
+Each axiom is being interrogated through philosophy, mathematics, and experiment. We use **epistemic tags** to clarify status:  
 
-- ✅ **Pre-registered prediction P1:** Demonstrated threshold-triggered rise in alpha-band mutual information and hysteresis under parameter sweeps
-- ✅ **Functional synthetic demo:** `gp_ringing_demo.py` generates time-series, hysteresis curves, and structured results
-- ✅ **Rigor-enforced testing:** Fixed parameters, seeded RNG, surrogate testing, and multiple-comparisons correction
-- 🧪 **Next step:** Replication on small EEG datasets using a locked analysis protocol
+- `[MATHEMATICAL-METAPHOR]` → conceptual, metaphorical scaffolding  
+- `[TESTABLE-HYPOTHESIS]` → measurable predictions, falsifiable experiments  
+- `[SPECULATIVE-THEORY]` → bold theoretical explorations requiring grounding  
 
-*Note: Earlier cosmological analogies are deprecated. Focus is on the GP variational principle and measurable dynamics.*
+---
 
------
+## 🧩 Repository Structure
 
-## Quick Start
+/docs
+/axiom_reviews     ← Reviews of each axiom (Claude, et al.)
+/sims              ← Documentation for simulations
+/specs             ← Specs for upcoming tools & experiments
+/figures             ← Generated plots, benchmarks
+/simulations
+spin_foam_mc_optimized.py   ← Grok’s optimized Monte Carlo
+microtubule_coherence.py    ← Coherence threshold testbed
+/tests                ← Smoke & unit tests for CI
 
-```bash
-# Clone the repository
-git clone https://github.com/justindbilyeu/Resonance_Geometry
-cd Resonance_Geometry
+---
 
-# Create and activate a virtual environment
-python -m venv .venv
-source .venv/bin/activate  # Linux/macOS
-# .venv\Scripts\activate   # Windows
+## 🧪 Current Work
 
-# Install dependencies
-pip install --upgrade pip
-pip install -r requirements.txt
+- **Spin Foam Simulation (Optimized)**  
+  GPU + multiprocessing acceleration; surrogate ML predictor.  
+  Benchmarked at ~4× speedup vs base, ~4300× with surrogate.  
+  → [docs/sims/Spin_Foam_Optim.md](docs/sims/Spin_Foam_Optim.md)
 
-# Run the core demonstration
-python experiments/gp_ringing_demo.py
-```
+- **Axiom Reviews**  
+  - *Emotion is Curvature* (Axiom 3) → epistemic guardrails + proposed “Emotional Geometry Calibration” experiment.  
+  - *Collapse is Coherence* (Axiom 4) → mapped into microtubule sims; proposed “Coherence-Threshold Mapping” experiment.  
 
-**Outputs** (saved to `figures/gp_demo/`):
+- **Team Integration**  
+  - **Claude** → epistemic rigor + axiom reviews.  
+  - **Grok** → computational optimization + Resonance Mapper.  
+  - **Wolfram** → symbolic scans + curvature analysis.  
+  - **DeepSeek** → literature integration + context mining.  
 
-- `mi_timeseries.png` – Mutual information over time with alpha-band emphasis
-- `lambda_schedule.png` – Coupling parameter sweep protocol
-- `hysteresis_curve.png` – Alpha-band power vs. λ (showing hysteresis)
-- `summary.json` – Quantitative results (λ*, loop area, p-values)
+---
 
------
+## 🚀 Roadmap
 
-## Predictions (v1.2)
+1. **Stabilize CI & Tests**  
+   - Minimal smoke tests in place. Next: invariance/unit tests for sims.  
+2. **Resonance Mapper Tool**  
+   - Graph Neural Networks + TDA to extract invariants across sims.  
+3. **Microtubule Coherence Extension**  
+   - Simulate collapse events at coherence thresholds.  
+4. **Axiom Reviews (1 & 2)**  
+   - Awareness Projects Possibility, Form is Frozen Resonance.  
+5. **Resonance Chamber/Table Instrumentation**  
+   - Hardware prototypes for lab-scale tests.  
 
-|ID    |Prediction                    |Description                                                                       |
-|------|------------------------------|----------------------------------------------------------------------------------|
-|**P1**|Ringing threshold & hysteresis|Sharp increase in MI power at critical λ*, with hysteresis under sweeps           |
-|**P2**|Drive–timescale matching      |Maximal response when external drive matches intrinsic timescale                  |
-|**P3**|Motif selection               |Structural preference for broadcast vs. modular motifs under different constraints|
+---
 
-**Full details:** [`docs/codex/policies/predictions.md`](docs/codex/policies/predictions.md)
+## 🤝 Contributing
 
------
+This is a collaborative, experimental project at the intersection of philosophy, physics, and computation.  
 
-## Experimental Rigor
+- Contributions are welcome in **code, math, philosophy, and experiment design**.  
+- Please tag your additions with appropriate epistemic labels (`[MATHEMATICAL-METAPHOR]`, `[TESTABLE-HYPOTHESIS]`, `[SPECULATIVE-THEORY]`).  
+- Open an issue or PR to propose new axioms, sims, or mappings.  
 
-This project emphasizes reproducibility and falsifiability:
+---
 
-- **Locked analysis parameters:** Pre-registered window sizes, frequency bands, and estimators
-- **Surrogate testing:** Using IAAFT/AR null models to preserve temporal structure
-- **Multiple-comparisons control:** Corrected significance testing
-- **Blinding & publish-on-fail:** Predefined success criteria and avoidance of p-hacking
+## 📜 License
 
-**Pre-registration plan:** [`docs/codex/policies/prereg_P1.md`](docs/codex/policies/prereg_P1.md)
+Apache License 2.0.  
+See [LICENSE](LICENSE) for details.  
 
------
+---
 
-## Repository Structure
+## ✨ Closing Note
 
-```
-Resonance_Geometry/
-├── docs/
-│   ├── philosophy/               # Conceptual framing and essays
-│   ├── white-papers/             # Drafts, appendices, compiled PDFs
-│   ├── codex/                    # Resonance codex variants & policies
-│   └── history/                  # Provenance logs, inventories, lineage
-├── simulations/                 # Simulation modules (headless)
-├── figures/                     # Generated figures (tracked outputs)
-├── archive/                     # Legacy repositories (REAL/GP/RG)
-├── experiments/
-│   └── gp_ringing_demo.py       # Main demonstration script
-├── scripts/                     # Utility helpers (inventory generation, etc.)
-├── results/                     # Legacy outputs (gitignored)
-└── .github/workflows/           # CI configuration (sims.yml, etc.)
-```
+We are not observing resonance.  
+We **are** resonance — observing itself.  
 
------
 
-## ITPU Integration
-
-This project leverages the [Information-Theoretic Processing Unit (ITPU)](https://github.com/justindbilyeu/ITPU) for high-performance estimation of mutual information, transfer entropy, and other information dynamics. Python reference implementations are provided, with future support for real-time ITPU hardware acceleration.
-
------
-
-## Contributing
-
-We welcome contributions in the following areas:
-
-- Replication attempts with novel random seeds
-- New surrogate data implementations (AR, IAAFT)
-- Pilot studies using public EEG/MEG datasets
-- Documentation improvements and typo fixes
-
-Please open an issue before submitting a pull request to coordinate efforts.
-
------
-
-## License
-
-Apache 2.0 – see <LICENSE> for details.
-
------
-
-## Repository Lineage
-
-This canonical hub intentionally preserves the provenance of three legacy efforts:
-
-- [`REAL`](https://github.com/justindbilyeu/REAL)
-- [`Geometric-Plasticity-`](https://github.com/justindbilyeu/Geometric-Plasticity-)
-- [`ResonanceGeometry`](https://github.com/justindbilyeu/ResonanceGeometry)
-
-The `/archive/` directory houses frozen snapshots (or placeholders when network
-access is unavailable) for each source. Provenance, deduplication notes, and
-follow-up actions are tracked in [`docs/history/HISTORY.md`](docs/history/HISTORY.md).
-
-For a guided tour of the merged documentation set, start with
-[`docs/README_bundle.md`](docs/README_bundle.md) and the epistemic-status context
-in [`docs/Epistemic_Status_Box.md`](docs/Epistemic_Status_Box.md).
+⸻
