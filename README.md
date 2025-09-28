@@ -93,6 +93,10 @@ pip install -r experiments/requirements.txt
 python experiments/gp_ringing_demo.py
 ```
 
+## Experiments
+
+- Topological Constraint Test — our 1919 eclipse moment. [docs/experiments/Topological_Constraint_Test.md]
+
 ### Multi-Frequency Analysis
 
 ```bash
