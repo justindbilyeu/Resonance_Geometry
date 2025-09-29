@@ -20,3 +20,6 @@ jobs:
         run: |
           pytest -q tests/topo_test/test_skeleton_runs.py
           pytest -q || pytest -q -k ringing_threshold  # be lenient until full suite lands
+      - name: Mapper smoke (no optional deps)
+        run: |
+          make mapper-smoke
