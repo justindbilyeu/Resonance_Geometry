@@ -1,0 +1,9 @@
+{
+  "timestamp": "2025-09-29 13:07:47",
+  "grade": "Weak",
+  "notes": [
+    "Initial 8^4 scan reported ~87% forbidden, likely overcall.",
+    "Adversarial forcing found rare annealing hits (2/20 on 1 cell) -> not truly forbidden.",
+    "Heavier boundary-focused forcing + longer detector runs in progress."
+  ]
+}
