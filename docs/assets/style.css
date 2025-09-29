@@ -14,3 +14,9 @@ section{background:var(--card);border:1px solid #1d2330;border-radius:10px;paddi
 .grade{padding:2px 8px;border-radius:6px;border:1px solid #2a3346}
 footer{padding:16px;color:var(--muted);text-align:center;border-top:1px solid #1d2330}
 @media (max-width:950px){.row{grid-template-columns:1fr}}
+.lede{color:var(--muted);max-width:900px;margin:8px 0 14px}
+.banner{background:#1e2536;border:1px solid #2a3346;color:#cfe0ff;padding:10px 14px;margin:14px 20px;border-radius:8px}
+.banner a{color:#9ecbff}
+.status{margin-top:8px}
+.muted{color:var(--muted)}
+.code{background:#0c101a;border:1px solid #1d2330;border-radius:8px;padding:10px;overflow:auto}
