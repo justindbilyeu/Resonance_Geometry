@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-09-29 18:16:51",
+  "timestamp": "2025-09-29 18:19:26",
   "evidence_grade": "Weak",
   "forbidden_pct": 81.88,
   "visited_cells": 742,
@@ -15,5 +15,11 @@
     "fractal": 100,
     "curvature": 0,
     "nulls": 0
+  },
+  "curvature": {
+    "neg_curv_coverage": 0.0,
+    "kappa_min": null,
+    "kappa_mean": null,
+    "samples": 0
   }
 }
