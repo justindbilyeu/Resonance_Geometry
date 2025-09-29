@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Resonance Geometry — Live Dashboard</title>
+  <link rel="stylesheet" href="./style.css">
+  <meta name="description" content="Latest simulations for the Resonance Geometry project: forbidden regions, fractal boundary scaling, curvature barriers, and mapper/TDA.">
+</head>
+<body>
+  <header class="header">
+    <h1>Resonance Geometry</h1>
+    <p class="tag">Listen Deep · Question Hard · Weave Truth and Pattern · No Fluff</p>
+    <nav class="nav">
+      <a href="https://github.com/justindbilyeu/Resonance_Geometry">Repo</a>
+      <a href="https://github.com/justindbilyeu/Resonance_Geometry/wiki">Wiki</a>
+      <a href="#latest">Latest Simulations</a>
+    </nav>
+  </header>
+
+  <main id="latest" class="container">
+    <section class="grid">
+      <article class="card" id="forbidden-card">
+        <h2>Forbidden Regions (Topological Constraint)</h2>
+        <ul class="kv">
+          <li><span>% Forbidden</span><strong data-bind="forbiddenPct">N/A</strong></li>
+          <li><span>Largest component</span><strong data-bind="largestComp">N/A</strong></li>
+          <li><span>Runs</span><strong data-bind="runs">N/A</strong></li>
+        </ul>
+        <div class="media" data-img="forbiddenPlot"></div>
+        <details><summary>More</summary>
+          <pre class="mono" data-pre="forbiddenJson">No summary file found.</pre>
+        </details>
+      </article>
+
+      <article class="card" id="fractal-card">
+        <h2>Fractal Boundary (Box-counting)</h2>
+        <ul class="kv">
+          <li><span>H (median)</span><strong data-bind="H">N/A</strong></li>
+          <li><span>R²</span><strong data-bind="r2">N/A</strong></li>
+          <li><span>95% CI</span><strong data-bind="ci">N/A</strong></li>
+        </ul>
+        <div class="media" data-img="fractalPlot"></div>
+        <details><summary>More</summary>
+          <pre class="mono" data-pre="fractalJson">No summary file found.</pre>
+        </details>
+      </article>
+
+      <article class="card" id="ricci-card">
+        <h2>Curvature Barriers (Ollivier–Ricci)</h2>
+        <ul class="kv">
+          <li><span>Average κ</span><strong data-bind="avgKappa">N/A</strong></li>
+          <li><span>Boundary coverage</span><strong data-bind="coverage">N/A</strong></li>
+        </ul>
+        <div class="media" data-img="ricciPlot"></div>
+        <details><summary>More</summary>
+          <pre class="mono" data-pre="ricciJson">No summary file found.</pre>
+        </details>
+      </article>
+
+      <article class="card" id="mapper-card">
+        <h2>Resonance Mapper (GNN + TDA)</h2>
+        <ul class="kv">
+          <li><span>Betti (β₀,β₁,β₂)</span><strong data-bind="betti">N/A</strong></li>
+          <li><span>Embeddings</span><strong data-bind="embeddings">N/A</strong></li>
+        </ul>
+        <div class="media" data-img="mapperPlot"></div>
+        <details><summary>More</summary>
+          <pre class="mono" data-pre="mapperJson">No report found.</pre>
+        </details>
+      </article>
+    </section>
+
+    <section class="gallery">
+      <h2>Figures</h2>
+      <div class="figs" id="figs">
+        <!-- auto-populated from ./figures -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>© Resonance Geometry</span>
+    <span>Build: <code id="build-hash">…</code></span>
+  </footer>
+
+  <script src="./app.js"></script>
+</body>
+<style>
+/* tiny inline fallback for quick load; full styles in style.css */
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;margin:0;color:#111}
+.header{padding:24px 20px;border-bottom:1px solid #eee}
+.header h1{margin:0;font-weight:700}
+.tag{margin:6px 0 0 0;color:#555}
+.nav a{margin-right:12px;color:#0a58ca;text-decoration:none}
+.container{padding:24px 20px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.card{border:1px solid #e6e6e6;border-radius:10px;padding:16px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.kv{list-style:none;padding:0;margin:0 0 10px 0}
+.kv li{display:flex;justify-content:space-between;margin:6px 0}
+.kv span{color:#555}
+.media{margin-top:10px;min-height:120px;background:#fafafa;border:1px dashed #ddd;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.mono{white-space:pre-wrap;font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;background:#fafafa;border:1px solid #eee;border-radius:8px;padding:8px}
+.gallery h2{margin-top:36px}
+.figs{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.figs img{width:100%;height:auto;border:1px solid #eee;border-radius:8px}
+.footer{padding:16px 20px;border-top:1px solid #eee;color:#666;display:flex;justify-content:space-between}
+@media (prefers-color-scheme: dark){
+  body{background:#0b0b0c;color:#eaeaea}
+  .card{background:#111214;border-color:#262626}
+  .media{background:#141416;border-color:#2a2a2a}
+  .mono{background:#111214;border-color:#2a2a2a}
+  .header{border-bottom-color:#222}
+  .footer{border-top-color:#222}
+}
+</style>
+</html>
