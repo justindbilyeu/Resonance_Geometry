@@ -1,9 +1,13 @@
 {
-  "timestamp": "2025-09-29 13:22:27",
+  "timestamp": "2025-09-29 15:28:59",
   "evidence_grade": "Weak",
   "forbidden_pct": 87.38,
   "visited_cells": 517,
   "grid_res": 8,
   "random_runs": 10000,
-  "adversarial_decision": "NOT_TRULY_FORBIDDEN"
+  "adversarial_decision": "POTENTIALLY_FORBIDDEN",
+  "fractal": {
+    "H": 1.1379212150474691,
+    "r2": 0.9263877031650025
+  }
 }
