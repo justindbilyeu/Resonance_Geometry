@@ -109,6 +109,14 @@ pip install -r experiments/requirements.txt
 python experiments/gp_ringing_demo.py
 ```
 
+### Live Results
+Our GitHub Pages site shows the latest simulation summaries and figures (forbidden regions, fractal boundaries, curvature, mapper/TDA). It auto-deploys from the `docs/` folder.
+
+- **Dashboard:** enabled via GitHub Pages → Actions workflow
+- **Populates from:** `results/` and `figures/` in this repo
+
+> Tip: commit JSON summaries to `results/…` and PNGs to `figures/…` and they’ll appear on the site automatically after push.
+
 ## Current Work
 
 Sprint focus: minimal forbidden-region detector plus adversarial forcing MVP.
