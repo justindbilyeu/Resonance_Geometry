@@ -94,11 +94,12 @@ def apply_multiple_comparisons_correction(p_values: Sequence[float], method: str
     if method != "fdr_bh":
         raise ValueError("Unsupported correction method")
     order = np.argsort(p_values)
-    ranked = np.empty_like(p_values)
+    sorted_p = p_values[order]
     m = p_values.size
-    for i, idx in enumerate(order, start=1):
-        ranked[idx] = p_values[idx] * m / i
-    adjusted = np.minimum.accumulate(ranked[::-1])[::-1]
+    ranked = sorted_p * m / np.arange(1, m + 1)
+    adjusted_sorted = np.minimum.accumulate(ranked[::-1])[::-1]
+    adjusted = np.empty_like(adjusted_sorted)
+    adjusted[order] = adjusted_sorted
     return np.clip(adjusted, 0.0, 1.0)
 
 
