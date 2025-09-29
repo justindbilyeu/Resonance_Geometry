@@ -14,7 +14,14 @@ import matplotlib
 import numpy as np
 from scipy.signal import butter, filtfilt, hilbert
 
-from .gp_freq_bands import FREQUENCY_BANDS
+if __package__ in (None, ""):
+    import sys
+    from pathlib import Path
+
+    sys.path.append(str(Path(__file__).resolve().parent.parent))
+    from scripts.gp_freq_bands import FREQUENCY_BANDS
+else:
+    from .gp_freq_bands import FREQUENCY_BANDS
 
 matplotlib.use("Agg")  # Headless-friendly backend
 import matplotlib.pyplot as plt
