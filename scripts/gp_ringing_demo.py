@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import os
+import warnings
 from typing import Dict, Mapping, MutableMapping
 
 import matplotlib
@@ -15,6 +16,12 @@ import numpy as np
 from scipy.signal import butter, filtfilt, hilbert
 
 from .gp_freq_bands import FREQUENCY_BANDS
+
+warnings.filterwarnings(
+    "ignore",
+    message=r".*`trapz` is deprecated.*",
+    category=DeprecationWarning,
+)
 
 matplotlib.use("Agg")  # Headless-friendly backend
 import matplotlib.pyplot as plt
@@ -75,7 +82,13 @@ def gp_analysis_pipeline(filtered_data: np.ndarray, lambda_schedule: np.ndarray)
     mi_peak = float(np.max(envelope))
     gradient = np.gradient(envelope)
     transition_sharpness = float(np.max(np.abs(gradient)))
-    hysteresis_area = float(np.trapezoid(np.abs(envelope - envelope.mean()), lam))
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore",
+            message=r".*`trapz` is deprecated.*",
+            category=DeprecationWarning,
+        )
+        hysteresis_area = float(np.trapz(np.abs(envelope - envelope.mean()), lam))
 
     return {
         "lambda_star": lambda_star,

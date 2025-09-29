@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import sys
+import warnings
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -13,6 +14,12 @@ from typing import Dict, Iterable, List, Sequence, Tuple
 
 import numpy as np
 from scipy.signal import butter, filtfilt, welch
+
+warnings.filterwarnings(
+    "ignore",
+    message=r".*`trapz` is deprecated.*",
+    category=DeprecationWarning,
+)
 
 
 def _ensure_repo_on_path() -> None:
@@ -67,7 +74,13 @@ def _band_power(values: np.ndarray, fs: float, band: Tuple[float, float]) -> flo
     mask = (freqs >= band[0]) & (freqs <= band[1])
     if not np.any(mask):
         return 0.0
-    return float(np.trapezoid(psd[mask], freqs[mask]))
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore",
+            message=r".*`trapz` is deprecated.*",
+            category=DeprecationWarning,
+        )
+        return float(np.trapz(psd[mask], freqs[mask]))
 
 
 def _aggregate_by_lambda(
@@ -125,7 +138,13 @@ def _compute_hysteresis(
 
     up_filled = _fill_nan_interp(centers, up_vals)
     down_filled = _fill_nan_interp(centers, down_vals)
-    area = float(np.trapezoid(np.abs(up_filled - down_filled), centers))
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore",
+            message=r".*`trapz` is deprecated.*",
+            category=DeprecationWarning,
+        )
+        area = float(np.trapz(np.abs(up_filled - down_filled), centers))
     return area, centers, up_filled, down_filled
 
 
