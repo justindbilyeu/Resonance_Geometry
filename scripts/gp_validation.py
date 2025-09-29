@@ -9,8 +9,16 @@ from typing import Dict, Iterable, List, Mapping, Sequence
 import numpy as np
 from scipy.signal import butter, filtfilt
 
-from .gp_freq_bands import FREQUENCY_BANDS
-from .gp_ringing_demo import multi_band_gp_analysis
+if __package__ in (None, ""):
+    import sys
+    from pathlib import Path
+
+    sys.path.append(str(Path(__file__).resolve().parent.parent))
+    from scripts.gp_freq_bands import FREQUENCY_BANDS
+    from scripts.gp_ringing_demo import multi_band_gp_analysis
+else:
+    from .gp_freq_bands import FREQUENCY_BANDS
+    from .gp_ringing_demo import multi_band_gp_analysis
 
 RESULTS_PATH = os.path.join("results", "gp_demo", "multi_frequency_validation.json")
 
