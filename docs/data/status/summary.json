@@ -1,14 +1,18 @@
 {
-  "timestamp": "2025-09-29 16:55:43",
+  "timestamp": "2025-09-29 17:32:30",
   "evidence_grade": "Weak",
   "forbidden_pct": 81.88,
   "visited_cells": 742,
   "grid_res": 8,
   "random_runs": 30000,
   "adversarial_decision": "POTENTIALLY_FORBIDDEN",
+  "fractal": {
+    "H": 1.3186284895167975,
+    "r2": 0.95250264623369
+  },
   "progress": {
     "forbidden": 100,
-    "fractal": 0,
+    "fractal": 100,
     "curvature": 0,
     "nulls": 0
   }
