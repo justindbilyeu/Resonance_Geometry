@@ -124,6 +124,7 @@ def main():
     }
     with open(os.path.join(args.out, "forbidden_summary.json"), "w") as f:
         json.dump(summary, f, indent=2)
+    os.system("python tools/update_progress.py forbidden 100")
 
     # Quick projections (λ–β, λ–A, β–A) with ||g|| maxed out
     ensure_dir("figures/forbidden_vX")  # generic sink

@@ -109,6 +109,7 @@ def main():
     }
     with open(os.path.join(args.out, "adversarial_report.json"), "w") as f:
         json.dump(out, f, indent=2)
+    os.system("python tools/update_progress.py forbidden 100")
 
     print("[adversarial] summary:", out)
 
