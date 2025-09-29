@@ -1,3 +1,18 @@
+function updateProgress(data) {
+  const prog = data?.progress || {};
+  const pairs = [
+    ['bar-core', prog.core],
+    ['bar-forbidden', prog.forbidden],
+    ['bar-fractal', prog.fractal],
+    ['bar-curvature', prog.curvature],
+    ['bar-null', prog.nulls]
+  ];
+  pairs.forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el) el.style.width = ((val ?? 0)) + '%';
+  });
+}
+
 (async function () {
   // Data contract: publish_results.py writes these under docs/data/latest/
   const base = 'data/latest';
@@ -7,6 +22,7 @@
   }
 
   const summary = await loadJSON(`${base}/summary.json`, {});
+  const status = await loadJSON('data/status/summary.json', {});
   const forb3d = await loadJSON(`${base}/forbidden_points.json`, {accessible:[], forbidden:[]});
   const fractal = await loadJSON(`${base}/fractal.json`, null);
   const curvature = await loadJSON(`${base}/curvature.json`, null);
@@ -24,6 +40,7 @@
   gEl.style.borderColor = grade==='Strong' ? 'var(--ok)' : grade==='Moderate' ? 'var(--warn)' : 'var(--bad)';
   document.getElementById('commit').textContent = summary.commit || 'HEAD';
   const dl = document.getElementById('dl-summary'); dl.href = `${base}/summary.json`;
+  updateProgress(status);
 
   // Forbidden 3D scatter (λ, β, A) with color by reachable
   (function drawForbidden3D() {

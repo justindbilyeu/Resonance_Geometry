@@ -3,6 +3,10 @@
 .hero{padding:28px 20px;border-bottom:1px solid #1d2330}
 .hero h1{margin:0 0 10px;font-weight:650}
 #status{display:flex;gap:24px;flex-wrap:wrap;color:var(--muted)}
+#progress{margin:2em 0}
+.bar{margin:.5em 0;background:#eee;border-radius:4px;overflow:hidden}
+.bar span{display:block;font-size:14px;margin:.2em 0}
+.fill{height:12px;background:#0b84f3;width:0%;transition:width .8s ease}
 .cta a{margin-right:12px;color:#9ecbff;text-decoration:none}
 .grid{padding:20px;display:grid;gap:18px}
 section{background:var(--card);border:1px solid #1d2330;border-radius:10px;padding:16px}
