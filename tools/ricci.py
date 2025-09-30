@@ -130,3 +130,11 @@ def ollivier_ricci(
         values.append(kappa)
     avg = float(np.mean(values)) if values else float("nan")
     return ricci, avg
+    import networkx as nx
+
+def shortest_paths(G):
+    try:
+        return dict(nx.all_pairs_shortest_path_length(G))
+    except AttributeError:
+        # Fallback for newer versions
+        return dict(nx.all_pairs_shortest_path_length(G, cutoff=None))
