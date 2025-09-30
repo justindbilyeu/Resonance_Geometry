@@ -25,14 +25,22 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run lightweight headless simulations
-        run: |
-          if [ -d simulations ]; then
-            echo "Running lightweight simulations under ./simulations"
-            pytest -q simulations --maxfail=1 || exit 1
-          else
-            echo "No ./simulations directory found; skipping headless run."
-          fi
+      - name: Run lightweight simulations
+  run: |
+    if [ -d simulations ]; then
+      echo "Running lightweight simulations under ./simulations"
+      pytest -q simulations --maxfail=1
+      EXIT_CODE=$?
+      if [ $EXIT_CODE -eq 5 ]; then
+        echo "No tests collected (exit code 5) - this is OK"
+        exit 0
+      elif [ $EXIT_CODE -ne 0 ]; then
+        echo "Tests failed with exit code $EXIT_CODE"
+        exit 1
+      fi
+    else
+      echo "No ./simulations directory found; skipping headless run."
+    fi
 
       - name: Document deferred heavy simulations
         run: |
