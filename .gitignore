@@ -2,3 +2,16 @@
 # Bytecode
 __pycache__/
 *.pyc
+
+# Generated documentation assets
+docs/assets/plots/
+docs/data/status/*.json
+docs/data/latest/**
+docs/data/latest_adv/
+docs/data/latest_curv/
+docs/data/latest_fractal/
+docs/data/latest_scan/
+
+# Generated analysis results
+results/**/*.npy
+results/**/*.pkl
