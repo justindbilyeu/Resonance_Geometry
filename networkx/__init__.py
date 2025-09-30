@@ -1,7 +1,8 @@
 """A lightweight subset of the :mod:`networkx` API used for testing."""
 from __future__ import annotations
 
-from typing import Dict, Iterable, Iterator, List, Optional, Tuple
+from collections import deque
+from typing import Dict, Iterable, Iterator, List, Mapping, Optional, Tuple
 
 import numpy as np
 
@@ -59,6 +60,9 @@ class Graph:
     def get_edge_data(self, u: object, v: object) -> Optional[Dict[str, object]]:
         return self._adj.get(u, {}).get(v)
 
+    def is_directed(self) -> bool:
+        return False
+
     def adjacency(self) -> Dict[object, Dict[object, Dict[str, object]]]:
         return self._adj
 
@@ -105,3 +109,30 @@ def path_graph(length: int) -> Graph:
             graph.add_edge(prev, idx)
         prev = idx
     return graph
+
+
+def single_source_shortest_path_length(
+    graph: Graph, source: object
+) -> Mapping[object, int]:
+    """Compute shortest path lengths from ``source`` using BFS."""
+
+    if source not in graph:
+        raise KeyError(f"{source!r} is not a node in the graph")
+
+    lengths: Dict[object, int] = {source: 0}
+    queue: deque[object] = deque([source])
+    while queue:
+        u = queue.popleft()
+        for v in graph.neighbors(u):
+            if v in lengths:
+                continue
+            lengths[v] = lengths[u] + 1
+            queue.append(v)
+    return lengths
+
+
+def all_pairs_shortest_path_length(graph: Graph) -> Iterable[Tuple[object, Mapping[object, int]]]:
+    """Yield shortest path lengths for all source nodes in ``graph``."""
+
+    for node in graph.nodes():
+        yield node, single_source_shortest_path_length(graph, node)
