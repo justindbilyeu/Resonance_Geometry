@@ -30,7 +30,12 @@ def _node_measure(graph: nx.Graph, node: object, alpha: float) -> _Measure:
 
 
 def _all_pairs_distances(graph: nx.Graph) -> Mapping[object, Mapping[object, float]]:
-    return {node: dict(lengths) for node, lengths in nx.all_pairs_shortest_path_length(graph)}
+    """Compute unweighted shortest path distances between all node pairs."""
+
+    return {
+        source: dict(nx.single_source_shortest_path_length(graph, source))
+        for source in graph.nodes()
+    }
 
 
 def _earth_mover_distance(
