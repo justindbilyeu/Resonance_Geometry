@@ -1,155 +1,131 @@
-import json, argparse, numpy as np
-from pathlib import Path
+cat > experiments/phase1_prediction.py << 'PY'
+import numpy as np
+from typing import List, Dict
+from experiments.forbidden_region_detector import gp_toy_evolve
+from tools.geom_predict import finite_diff_grad, angle_between
 
-# reuse the toy GP stepper from the detector
-from experiments.forbidden_region_detector import gp_toy_evolve, param_grid4
-from tools.ricci import ollivier_ricci
-import networkx as nx
+# Try OR; otherwise we use boundary-density fallback
+try:
+    from tools.ricci import ollivier_ricci
+    import networkx as nx
+    HAVE_OR = True
+except Exception:
+    HAVE_OR = False
 
-def coupling_to_graph(g, topk=5):
-    """Build a simple kNN graph (by absolute weight) from coupling matrix g."""
-    n = g.shape[0]
+# Optional fallback: use visited_4d grid if present to define a scalar field
+_V_GRID = None
+try:
+    import json, pathlib
+    summ = json.load(open("results/forbidden_v1/forbidden_summary.json"))
+    vpath = summ.get("visited_path","results/forbidden_v1/visited_4d.npy")
+    import numpy as _np
+    _V_GRID = _np.load(vpath).astype(np.uint8)  # 1=visited, 0=never
+except Exception:
+    _V_GRID = None
+
+def _local_graph_kappa_or(x, n=8) -> float:
+    """
+    κ(x) via OR on a tiny 4D L1 star around the nearest gridpoint to x.
+    """
+    if not HAVE_OR:
+        return 0.0
+    xi = np.clip((np.asarray(x)*(n-1)).round().astype(int), 0, n-1)
+    pts = [tuple(xi)]
+    for d in range(4):
+        for s in (-1, 1):
+            p = xi.copy(); p[d] += s
+            if 0 <= p[d] < n:
+                pts.append(tuple(p))
+    pts = list(dict.fromkeys(pts))
     G = nx.Graph()
-    for i in range(n): G.add_node(i)
-    for i in range(n):
-        # exclude self, take top-k strongest absolute couplings
-        idx = np.argsort(-np.abs(g[i]))[:topk+1]  # includes i
-        for j in idx:
-            if i == j: continue
-            w = float(g[i, j])
-            if w != 0.0:
-                G.add_edge(i, j, weight=abs(w))
-    return G
+    for i,p in enumerate(pts):
+        G.add_node(i, coord=np.array(p, dtype=float))
+    for i,pi in enumerate(pts):
+        for j,pj in enumerate(pts):
+            if i < j and sum(abs(a-b) for a,b in zip(pi,pj)) == 1:
+                G.add_edge(i,j,weight=1.0)
+    kappa_edges, _ = ollivier_ricci(G, alpha=0.5, method="exact")
+    if not kappa_edges:
+        return 0.0
+    center_idx = 0
+    vals = []
+    for (u,v), kv in kappa_edges.items():
+        if kv is None: 
+            continue
+        if u == center_idx or v == center_idx:
+            vals.append(kv)
+    if not vals:
+        vals = [kv for kv in kappa_edges.values() if kv is not None]
+    return float(np.mean(vals)) if vals else 0.0
 
-def predict_deflection_from_curvature(G):
+def _grid_mean_in_cube(V, idx, rad=1):
+    n = V.shape[0]
+    i,j,k,m = idx
+    i0,i1 = max(0,i-rad), min(n-1,i+rad)
+    j0,j1 = max(0,j-rad), min(n-1,j+rad)
+    k0,k1 = max(0,k-rad), min(n-1,k+rad)
+    m0,m1 = max(0,m-rad), min(n-1,m+rad)
+    block = V[i0:i1+1, j0:j1+1, k0:k1+1, m0:m1+1]
+    return float(block.mean()) if block.size else 0.0
+
+def _kappa_fallback(x, n=8) -> float:
     """
-    Heuristic: more negative edge curvature => 'repulsive moat'.
-    We predict the local flow points in the average direction
-    that *decreases* exposure to negative curvature edges.
-    Return a scalar 'curvature pressure' and sign (repel/attract).
+    κ(x) fallback: use boundary-density from visited_4d grid.
+    Higher κ near mixed visited/forbidden regions.
     """
-    # summarize by average edge curvature
-    ricci, avg_kappa = ollivier_ricci(G, alpha=0.5, method="sinkhorn", tau=0.02)
-    # for a quick scalar predictor, negative avg means 'repelled'
-    return avg_kappa  # < 0 predicts outward deflection from high-curvature zone
+    if _V_GRID is None:
+        return 0.0
+    xi = np.clip((np.asarray(x)*(n-1)).round().astype(int), 0, n-1)
+    v_mean = _grid_mean_in_cube(_V_GRID, tuple(xi), rad=1)   # local visited density
+    # define κ as "forbidden density" locally; smooth-ish scalar field
+    return float(1.0 - v_mean)
 
-def unit(v):
-    n = np.linalg.norm(v)
-    return v / n if n > 0 else v
+def _kappa_field(x, n=8) -> float:
+    # prefer OR if available; else fallback to boundary-density
+    if HAVE_OR:
+        return _local_graph_kappa_or(x, n=n)
+    return _kappa_fallback(x, n=n)
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--summary", default="results/forbidden_v0/forbidden_summary.json")
-    ap.add_argument("--samples", type=int, default=64, help="boundary-near initializations")
-    ap.add_argument("--steps", type=int, default=8, help="short rollout for deflection estimate")
-    ap.add_argument("--seed", type=int, default=7)
-    ap.add_argument("--out", default="results/phase1_prediction")
-    args = ap.parse_args()
+def _actual_deflection(traj, tail=100):
+    T = len(traj)
+    if T < 4:
+        return np.zeros(4)
+    tail = min(tail, T//2)
+    head = min(tail, T - tail)
+    v_init  = np.mean(np.diff(traj[:head], axis=0), axis=0) if head>1 else (traj[min(1,T-1)]-traj[0])
+    v_final = np.mean(np.diff(traj[-tail:], axis=0), axis=0) if tail>1 else (traj[-1]-traj[-2])
+    return v_final - v_init
 
-    rng = np.random.RandomState(args.seed)
-    Path(args.out).mkdir(parents=True, exist_ok=True)
+def run_phase1_analysis(n_runs: int = 1000, seed: int = 42) -> List[Dict]:
+    """
+    Geometry-only prediction of deflection vs. actual deflection.
+    Returns list of {"sign_match":bool, "angular_error":float}.
+    """
+    rng = np.random.default_rng(seed)
+    results: List[Dict] = []
+    n = 8
 
-    # 1) Load grid extents & visited mask
-    summ = json.load(open(args.summary))
-    grid_res = summ["grid_res"]  # e.g., 8
-    visited = np.load("results/forbidden_v0/visited_4d.npy")  # shape (n,n,n,n) booleans
-    n = visited.shape[0]
+    for _ in range(n_runs):
+        # 1) Random start + GP evolution
+        x0 = rng.random(4)
+        traj = gp_toy_evolve(x0, steps=400, dt=0.02,
+                             seed=int(rng.integers(0, 2**31-1)))
+        traj = np.asarray(traj, dtype=float)
+        traj = np.clip(traj, 0.0, 1.0)  # ensure [0,1]^4
 
-    # 2) find boundary-near accessible cells (touch at least one forbidden neighbor)
-    def neighbors(ix):
-        i,j,k,m = ix
-        for di in (-1,0,1):
-          for dj in (-1,0,1):
-            for dk in (-1,0,1):
-              for dm in (-1,0,1):
-                if (di,dj,dk,dm) == (0,0,0,0): continue
-                u,v,w,x = i+di,j+dj,k+dk,m+dm
-                if 0 <= u < n and 0 <= v < n and 0 <= w < n and 0 <= x < n:
-                    yield (u,v,w,x)
+        # 2) Actual deflection from trajectory tail
+        d_actual = _actual_deflection(traj, tail=100)
 
-    boundary_cells = []
-    it = np.ndindex(visited.shape)
-    for idx in it:
-        if visited[idx]:  # accessible
-            # boundary if any neighbor is forbidden
-            if any(not visited[u] for u in neighbors(idx)):
-                boundary_cells.append(idx)
+        # 3) Geometric prediction: −∇κ(x0)
+        grad_k = finite_diff_grad(lambda z: _kappa_field(z, n=n), traj[0], h=1e-2)
+        d_geom = -grad_k
 
-    if len(boundary_cells) == 0:
-        print("[phase1] no boundary cells found—need a fresh scan output.")
-        return
-
-    # 3) sample some boundary cells
-    picks = boundary_cells if len(boundary_cells) <= args.samples else [boundary_cells[i] for i in rng.choice(len(boundary_cells), args.samples, replace=False)]
-
-    # 4) map cell index -> param values via the same grid builder
-    # we reuse param_grid4 logic but without full construction:
-    # assume each axis spans [0,1] for demo; we only need relative deflection vectors
-    # if your detector stored true axis ranges, load them here.
-    to_param = lambda idx: np.array(idx) / (n - 1)  # crude normalized (λ,β,A,||g||) proxy
-
-    # 5) roll short trajectories & compare deflection to curvature sign
-    # metric: sign agreement and angular error between predicted sign and actual step in ||g|| axis
-    results = []
-    sign_hits = 0
-    angles = []
-
-    for cell in picks:
-        p0 = to_param(cell)  # 4D param proxy
-        # initialize internal GP state from this param proxy
-        lam, beta, A, normg = p0
-        # small random internal state consistent with ||g|| ~ normg
-        d = 32
-        g0 = rng.randn(d, d)
-        g0 = g0 / np.linalg.norm(g0) * (1e-3 + normg)  # tiny baseline + target norm
-
-        traj = []
-        g = g0.copy()
-        lam_t, beta_t, A_t = lam, beta, A
-
-        # short rollout
-        for t in range(args.steps):
-            g = gp_toy_evolve(g, lam_t, beta_t, A_t, dt=0.05, steps=1)
-            traj.append(g.copy())
-
-        # actual deflection in parameter proxy = change in ||g||
-        norms = np.array([np.linalg.norm(G) for G in traj])
-        d_norm = norms[-1] - norms[0]  # positive = moved outward along ||g||
-
-        # curvature prediction (repel if negative)
-        G_graph = coupling_to_graph(traj[0])  # evaluate geometry at start
-        kappa = predict_deflection_from_curvature(G_graph)
-        predicted_sign = -1 if kappa < 0 else +1   # negative curvature predicts outward push
-
-        actual_sign = +1 if d_norm > 0 else -1 if d_norm < 0 else 0
-        sign_hits += int(predicted_sign == actual_sign)
-
-        # coarse "angle": compare 1D signs; angle 0 if agree, pi if flip
-        angle = 0.0 if predicted_sign == actual_sign else np.pi
-        angles.append(angle)
-
+        # 4) Compare
+        ang = angle_between(d_geom, d_actual)
         results.append({
-            "cell": list(cell),
-            "kappa_avg": float(kappa),
-            "pred_sign": int(predicted_sign),
-            "d_norm": float(d_norm),
-            "actual_sign": int(actual_sign)
+            "sign_match": bool(np.sign(d_geom[0]) == np.sign(d_actual[0])),
+            "angular_error": float(ang)
         })
 
-    acc = sign_hits / max(1, len(results))
-    mean_angle = float(np.mean(angles)) if angles else None
-
-    out = {
-        "tested": len(results),
-        "sign_accuracy": acc,                # want >> 0.5
-        "mean_angular_error_rad": mean_angle,# want << pi/2
-        "details": results
-    }
-    Path(args.out).mkdir(parents=True, exist_ok=True)
-    with open(Path(args.out) / "phase1_prediction_summary.json", "w") as f:
-        json.dump(out, f, indent=2)
-
-    print("[phase1] summary:", out)
-
-if __name__ == "__main__":
-    main()
+    return results
+PY
