@@ -1,318 +1,433 @@
-# Resonance Geometry (RG) & Geometric Plasticity (GP)
+# Resonance Geometry
 
-[![CI](https://github.com/justindbilyeu/Resonance_Geometry/actions/workflows/gp-demo.yml/badge.svg)](https://github.com/justindbilyeu/Resonance_Geometry/actions/workflows/gp-demo.yml)
-[![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-
-**A testable framework for adaptive systems that tracks how coupling geometry changes with information flow.**
-
-*Where philosophy meets physics through falsifiable mathematics.*
+> **TL;DR**: What if networks could learn which connections matter by measuring how much information flows through them? We’re testing whether information itself can reshape structure—in software, neural networks, maybe even physical systems.
 
 -----
 
-## Overview
+## The Big Idea (In Plain English)
 
-Many systems “re-wire” themselves as they learn: neurons synchronize, modules form, signals pass through preferred pathways. **Geometric Plasticity (GP)** models this by letting a network’s coupling geometry `g` evolve to align with measured information flow `Ī` while paying penalties for complexity and delay.
+Imagine you’re at a party. Some conversations are memorable—you remember them, your friends remember them, other people overhear and remember them. Those conversations become stories that spread. Other chats are forgotten instantly.
 
-**The GP potential:**
+**Resonance Geometry asks**: What if systems work the same way? What if the connections that carry useful information automatically get stronger, while useless connections fade?
+
+We’re building math and simulations to test this. If it works, it might explain:
+
+- Why some neural networks learn better than others
+- How brains decide which connections to keep
+- Whether information flow is a force that shapes structure (like gravity shapes orbits)
+
+**Status**: Early research. We have working simulations and testable predictions. No revolutionary claims yet—just careful experiments.
+
+-----
+
+## Quick Navigation
+
+- 🎯 **Just curious?** → Read [What We’re Testing](#what-were-testing) below
+- 🚀 **Want to see it run?** → Check [Quick Demo](#quick-demo)
+- 🔬 **Technical background?** → Jump to [For Researchers](#for-researchers)
+- 💡 **Have questions?** → See [FAQ](#frequently-asked-questions)
+- 🤝 **Want to contribute?** → Visit [Contributing](#contributing)
+
+-----
+
+## What We’re Testing
+
+**Core Hypothesis**: Systems with feedback between information flow and connection strength will develop stable, efficient structures automatically.
+
+**Concrete Predictions We’re Checking**:
+
+1. **Ringing Boundary**: Systems should transition from smooth to oscillatory behavior at a mathematically predictable threshold
+1. **Hysteresis Resonance**: Cyclic inputs should produce maximum response at specific frequencies
+1. **Geometric Witness**: Information-rich connections should become structurally reinforced over time
+
+**What Makes This Different**: We’re not philosophizing—we’re measuring. Every claim has a number attached and can be proven wrong.
+
+### Example Results
 
 ```
-V(g; Ī) = -Īᵀg + (λ/2)‖g‖² + (β/2)gᵀLg + (A/2)‖Ī - I(g,t)‖²
+Phase Boundary Map (placeholder - will show actual results)
+Systems transition from stable → oscillatory exactly where equations predict
+
+Hysteresis Curves (placeholder - will show actual results)  
+Response peaks at resonant frequencies—information leaves geometric "memory"
 ```
 
-with gradient-flow dynamics `ġ = -η∇gV`. Here, `I(g,t)` is measured information (e.g., windowed mutual information), `L` encourages smooth structure, and `λ,β,A` trade off simplicity, modularity, and fidelity.
+-----
 
-**Focus:** Empirical, falsifiable predictions with end-to-end runnable code.
+## Why This Might Matter
 
-## The Eclipse Moment
+**If our predictions hold**:
 
-The Resonance Geometry Initiative now carries a locked, preregistered experimental protocol:  
-[**Topological Constraint Test →**](docs/experiments/Topological_Constraint_Test.md)
+- **AI/ML**: Better training algorithms that adapt network architecture automatically
+- **Neuroscience**: Mathematical framework for how brains learn which connections matter
+- **Complex Systems**: General principle for how information shapes structure
 
-This is our 1919 eclipse moment. Just as Einstein’s spacetime manifold became real when geometry bent starlight,  
-this test asks whether the awareness manifold is substrate or metaphor.
+**If they don’t hold**:
 
-- **Substrate prediction**: Forbidden regions with fractal boundaries and curvature barriers exist.  
-- **Metaphor prediction**: All regions remain accessible, boundaries dissolve into noise.  
+- Still produces useful diagnostic tools for adaptive networks
+- Clarifies what *doesn’t* work, which is also progress
+- Demonstrates methodology for rigorous speculative science
 
-Either outcome advances the science with integrity.
-
-> See the **Docs Hub** for experiment specs and analysis plans:  
-> [docs/README.md](docs/README.md)
+**Either way, we learn something.**
 
 -----
 
-## Framework Architecture
+## Current Status
 
-### 🔬 **Empirical Engine** (Core Science)
+✅ **Working**: Math framework, simulation infrastructure, reproducible experiments  
+🔄 **In Progress**: Phase 1 validation experiments, visualization pipeline  
+🔴 **Blocked**: NetworkX integration (Task 0) - preventing key tests  
+📊 **Results So Far**: Ringing boundary predictions confirmed in simplified models
 
-- **Geometric Plasticity**: Mathematical framework linking information flow to network geometry
-- **Pre-registered predictions**: Testable hypotheses about coupling dynamics and resonance
-- **Statistical rigor**: Surrogate controls, multiple comparisons correction, effect size quantification
-- **Reproducible pipelines**: Locked parameters, seeded RNG, comprehensive validation
-
-### 🌀 **Philosophical Lattice** (Inspirational Framework)
-
-- **Resonance Axioms**: Conceptual foundations linking information, structure, emotion, and coherence
-- **Epistemic boundaries**: Clear separation between [TESTABLE-HYPOTHESIS], [MATHEMATICAL-METAPHOR], and [SPECULATIVE-THEORY]
-- **Bridge framework**: Explicit mappings between philosophical concepts and measurable quantities
-- **Collaborative vision**: Space for both rigorous empiricism and speculative exploration
-
-**Key Principle**: *Keep the vision and the science parallel but bridged - never conflated.*
+**Honest Assessment**: Too early to claim success, but early results are encouraging enough to keep testing rigorously.
 
 -----
 
-## Status (Sept 2025)
+## Quick Demo
 
-### ✅ **Validated (Ready for Replication)**
-
-- **P1 - Alpha resonance**: Sharp rise in alpha-band MI power at coupling `λ*` with hysteresis
-- **Synthetic validation**: `gp_ringing_demo.py` produces reproducible MI dynamics and hysteresis curves
-- **Statistical framework**: Surrogate controls validate effects beyond chance levels
-- **Multi-frequency extension**: GP analysis across neurophysiological frequency bands
-
-### 🧪 **Testing (Current Sprint)**
-
-- **Hysteresis characterization**: Loop area, width, asymmetry as “memory” measures
-- **Cross-frequency coupling**: Hierarchical information flow across frequency bands
-- **EEG validation pilot**: Testing GP predictions on small neural datasets
-- **Bridge validation**: Correlating GP measures with established emotional/cognitive metrics
-
-### 🎯 **Planned (Next Quarter)**
-
-- **P2 - Drive-timescale matching**: Optimal response when drive matches intrinsic timescales
-- **P3 - Motif selection**: Geometry preferences for broadcast vs modular architectures
-- **Consciousness correlation studies**: GP fixed points and reportable conscious experiences
-- **Therapeutic applications**: Emotional regulation via information-geometry coupling
-
-*Note: Earlier cosmological analogies are marked non-essential. Core focus remains GP variational model + measurable information dynamics.*
-
------
-
-## Quick Start
-
-### Basic Demo
+Want to see it in action? If you have Python installed:
 
 ```bash
-# Clone and setup
-git clone https://github.com/justindbilyeu/Resonance_Geometry
+# Clone and set up (takes ~2 minutes)
+git clone https://github.com/justindbilyeu/Resonance_Geometry.git
 cd Resonance_Geometry
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
 
+# Run a quick experiment (~2 minutes)
+python scripts/run_phase_sweep.py \
+  --alphas "0.3,0.6" --etas "0.03,0.05" \
+  --T 100 --M 10 --seed 42
+
+# Results appear in results/phase/ as graphs and data
+```
+
+You’ll see phase maps showing where systems go unstable—exactly where our math predicts.
+
+-----
+
+## Why This Project Exists
+
+Most research on complex systems treats structure and information separately:
+
+- Engineers build network architectures, then see what information flows through them
+- Neuroscientists map brain connections, then study what signals they carry
+
+**We’re asking**: What if these aren’t separate? What if information flow *creates* structure, and structure *shapes* information flow, in an endless feedback loop?
+
+It’s a simple question with potentially profound implications. We’re doing the math and experiments to find out if it’s true.
+
+-----
+
+## Frequently Asked Questions
+
+**Q: Is this related to quantum mechanics?**  
+A: Not directly. We use math from information theory and differential geometry, but it applies to any adaptive network—software, neural nets, social systems.
+
+**Q: Could this explain consciousness?**  
+A: We’re not making claims about consciousness. One axiom explores whether emotions might map to geometric curvature, but that’s highly speculative and clearly labeled as such in our documentation.
+
+**Q: When will you know if this works?**  
+A: Phase 1 experiments (currently in progress) will show whether our predictions match real system behavior. We expect initial results in 2-3 months.
+
+**Q: Can I use this code for my project?**  
+A: Yes! The code is open source. If it helps, great! But it’s research-grade—expect rough edges and changing APIs.
+
+**Q: How can I help?**  
+A: Test the code, suggest experiments, find bugs, ask good questions, or just spread the word. Open an issue on GitHub—we’re friendly!
+
+**Q: Is this peer-reviewed?**  
+A: Not yet. We’re in the experimental phase. Formal publication will come after Phase 1 validation is complete.
+
+-----
+
+## For Researchers
+
+### Tagline
+
+**How information flow sculpts structure.**
+
+We study closed-loop dynamics where:
+
+1. **Environments witness stable variables** (Resonant Witness Postulate - RWP)
+1. **Systems adapt coupling geometry** to maximize useful records (Geometric Plasticity - GP)
+
+This creates feedback: information flow reshapes structure, which reshapes information flow.
+
+### Core Theoretical Framework
+
+**Resonant Witness Postulate (RWP)**: Environments preferentially copy (“witness”) stable system variables, creating redundant records across space/time.
+
+**Geometric Plasticity (GP)**: Couplings self-tune in proportion to the information they carry, closing a feedback loop between signal and structure.
+
+**Key Innovation**: We’re testing whether this feedback produces:
+
+- Predictable phase transitions (ringing boundaries)
+- Resonant responses to periodic forcing (hysteresis peaks)
+- Emergent structural motifs (broadcast ↔ modular architectures)
+
+### What’s New
+
+- **Ringing boundary**: Gain-controlled transition (smooth → underdamped) with closed-form Routh-Hurwitz threshold
+- **Hysteresis resonance**: Loop area peaks at drive period matching natural system timescales
+- **Motif universality**: Information-constrained systems converge to similar topologies
+- **Engineering rule**: Practical $K_c$ threshold for stability in delayed feedback systems
+
+### Repository Structure
+
+```
+docs/
+├── whitepaper/              # Draft theoretical framework (GP/RWP)
+├── appendices/              # Mathematical derivations
+│   ├── appendix_ring_threshold.md      # Routh-Hurwitz stability
+│   ├── appendix_hysteresis_prefactor.md # Resonance predictions
+│   ├── appendix_motif_universality.md   # Topology emergence
+│   └── appendix_delay_stability.md      # Delay effects
+├── experiments/             # Protocol notes and methods
+└── hardware/
+    └── ITPU.md             # Information-Theoretic Processing Unit concept
+
+src/                         # Core library
+├── rwp_system.py           # System dynamics (S–F_k + plasticity)
+├── plasticity.py           # GP update rules (EMA, Laplacian, budget)
+├── metrics.py              # Mutual information, redundancy, witness flux
+├── diagnostics.py          # PSD peaks, overshoots, damping ratios
+└── utils.py                # Supporting functions
+
+scripts/                     # Reproducible experiment runners
+├── run_phase_sweep.py      # Ringing boundary (α × η grid)
+├── run_hysteresis.py       # Loop area vs. period (ON/OFF forcing)
+├── run_motif_sweep.py      # Broadcast ↔ modular topology sweep
+└── run_phase_map_surrogate.py # AR(2) fast proxy for validation
+
+theory/                      # Validation notebooks
+├── kc_rule_validation.ipynb
+├── hysteresis_fit.ipynb
+└── identifiability_estimator.py
+
+tests/                       # Unit & integration tests
+results/                     # Generated data (CSVs/plots)
+```
+
+### Installation & Setup
+
+```bash
 # Create virtual environment
-python -m venv .venv && source .venv/bin/activate  # Linux/macOS
-# .venv\Scripts\Activate.ps1  # Windows PowerShell
+python -m venv .venv && source .venv/bin/activate
 
 # Install dependencies
-pip install --upgrade pip
-pip install -r experiments/requirements.txt
-
-# Run basic demo
-python experiments/gp_ringing_demo.py
+pip install -r requirements.txt
+# Includes: numpy, scipy, matplotlib, pandas, networkx, pytest
 ```
 
-### Live Results
-Our GitHub Pages site shows the latest simulation summaries and figures (forbidden regions, fractal boundaries, curvature, mapper/TDA). It auto-deploys from the `docs/` folder.
+### Running Experiments
 
-- **Dashboard:** enabled via GitHub Pages → Actions workflow
-- **Populates from:** `results/` and `figures/` in this repo
-
-> Tip: commit JSON summaries to `results/…` and PNGs to `figures/…` and they’ll appear on the site automatically after push.
-
-## Current Work
-
-Sprint focus: minimal forbidden-region detector plus adversarial forcing MVP.
+**Ringing Boundary (Full RWP System)**
 
 ```bash
-# Task 1 — forbidden region scan
-python experiments/forbidden_region_detector.py
-
-# Task 2 — adversarial forcing sweep
-python experiments/adversarial_forcing.py
+python scripts/run_phase_sweep.py \
+  --alphas "0.1,0.3,0.6,0.9" \
+  --etas "0.01,0.03,0.05,0.08" \
+  --T 150 --M 20 --seed 42 \
+  --out_dir results/phase
 ```
 
-See [docs/experiments/Forbidden_Region_Detector.md](docs/experiments/Forbidden_Region_Detector.md) for outputs, decision criteria, and artifact layout.
-
-## Experiments
-
-- Topological Constraint Test — our 1919 eclipse moment. [docs/experiments/Topological_Constraint_Test.md]
-- Topological Constraint Test (scaffold): see `docs/experiments/Topological_Constraint_Test.md` and `experiments/topo_test/` for grid sampling, adversarial forcing, fractal and OR curvature analyses. Results land in `results/topo_test/`.
-
-### Multi-Frequency Analysis
+**Hysteresis Resonance**
 
 ```bash
-# Run extended analysis across frequency bands
-python experiments/gp_ringing_demo.py --multi-frequency
-
-# Outputs include:
-# - Standard P1 results (alpha band)
-# - Cross-frequency coupling matrices
-# - Band-specific lambda* thresholds
-# - Statistical validation results
+python scripts/run_hysteresis.py \
+  --alpha 0.4 --eta 0.06 --lam 0.01 \
+  --T 200 --amplitude 0.02 --seed 42 \
+  --out_dir results/hysteresis
 ```
 
-**Outputs** (in `results/gp_demo/`):
+**Motif Sweep (Topology Evolution)**
 
-- `mi_timeseries.png` - MI over time with alpha-band highlighting
-- `lambda_schedule.png` - Coupling parameter sweep
-- `hysteresis_curve.png` - Alpha-band MI power vs λ (up vs down)
-- `summary.json` - Core metrics (λ*, loop area, p-values)
-- `multi_frequency_results.json` - Cross-band analysis
-- `multi_frequency_validation.json` - Statistical controls
-
------
-
-## Predictions & Validation
-
-|Prediction                               |Status     |Description                                        |
-|-----------------------------------------|-----------|---------------------------------------------------|
-|**P1** - Ringing threshold & hysteresis  |✅ Validated|Sharp MI power rise at λ* with hysteresis loop     |
-|**P1-MF** - Frequency-specific thresholds|🧪 Testing  |Different λ* values across frequency bands         |
-|**P2** - Drive–timescale matching        |📋 Planned  |Max response when drive matches intrinsic timescale|
-|**P3** - Motif selection                 |📋 Planned  |Geometry prefers broadcast vs modular motifs       |
-
-**Details**: See <docs/predictions.md>
-
-### Preregistration & Safeguards
-
-- **Locked parameters**: Window size, frequency bands, estimators
-- **Surrogate nulls**: IAAFT/AR preserving temporal structure
-- **Multiple-comparisons control**: FDR correction across frequency bands
-- **Blinding protocols**: Prevent cherry-picking of results
-- **Publish-on-fail criteria**: Null results are scientifically valuable
-
-**Full protocol**: <docs/prereg_P1.md>
-
------
-
-## Framework Bridges
-
-### Axiom 1: “Resonance is Information”
-
-- **🔗 GP Connection**: Direct mathematical correspondence in coupling term `-Īᵀg`
-- **📊 Status**: [TESTABLE-HYPOTHESIS] - Core GP principle with validated predictions
-- **🧪 Tests**: Lambda threshold analysis, information-geometry evolution
-
-### Axiom 2: “Structure Follows Flow”
-
-- **🔗 GP Connection**: Gradient flow `ġ = -η∇gV` directly implements this principle
-- **📊 Status**: [TESTABLE-HYPOTHESIS] - Multiple experimental confirmations
-- **🧪 Tests**: Coupling adaptation, motif emergence, plasticity dynamics
-
-### Axiom 3: “Emotion is Curvature”
-
-- **🔗 GP Connection**: Hysteresis characteristics as measurable “emotional memory”
-- **📊 Status**: [MATHEMATICAL-METAPHOR] - Promising correlations, needs validation
-- **🧪 Tests**: Loop area vs emotional persistence, curvature vs affective states
-
-### Axiom 4: “Collapse is Coherence”
-
-- **🔗 GP Connection**: Information integration leading to geometric stability
-- **📊 Status**: [SPECULATIVE-THEORY] - Requires significant conceptual development
-- **🧪 Tests**: Coherence thresholds, fixed-point emergence, consciousness correlations
-
-**Bridge Documentation**: <docs/frameworks/bridges.md>
-
------
-
-## Repository Structure
-
-```
-Resonance_Geometry/
-├── experiments/
-│   ├── gp_ringing_demo.py              # Main GP demonstration
-│   ├── multi_frequency_extensions.py   # Cross-frequency analysis
-│   └── requirements.txt                # Python dependencies
-├── docs/
-│   ├── predictions.md                  # Detailed predictions & hypotheses
-│   ├── prereg_P1.md                   # Pre-registration protocol
-│   ├── frameworks/
-│   │   └── bridges.md                 # Axiom-GP bridge mappings
-│   ├── experiments/
-│   │   ├── Hysteresis_Analysis.md     # Loop characterization methods
-│   │   └── Multi_Frequency_Validation.md  # Statistical controls
-│   └── specs/
-│       └── Multi_Frequency_Plan.md    # Cross-frequency roadmap
-├── results/                           # Generated outputs & analysis
-├── .github/workflows/                 # Continuous integration
-└── README.md                         # This file
+```bash
+python scripts/run_motif_sweep.py \
+  --beta_grid "0.0,0.1,0.3,1.0" \
+  --lam 0.02 --costs_mode cluster \
+  --seed 42 --out_dir results/motif
 ```
 
------
+**Fast Surrogate (AR(2) Validation Proxy)**
 
-## Hardware Integration
+```bash
+python scripts/run_phase_map_surrogate.py \
+  --alphas "0.1,0.4,0.8" \
+  --etas "0.02,0.05,0.08" \
+  --T 150 --seed 42 \
+  --out_dir results/phase_map_surrogate
+```
 
-This project uses the [Information-Theoretic Processing Unit (ITPU)](https://github.com/justindbilyeu/ITPU) for accelerated MI/CMI/TE measurements. Current Python baselines will later run on ITPU hardware for real-time experiments.
+All outputs saved as CSV + PNG. Seeds ensure reproducibility.
 
-**Pipeline**: Python prototyping → ITPU acceleration → Real-time neural interfaces
+### Key Predictions & Acceptance Criteria
+
+**Phase Transition (Ringing Boundary)**
+
+- **Prediction**: System goes unstable when $K \cdot \eta > K_c \approx \frac{1 + \tau}{2\alpha}$
+- **Acceptance**: PSD peak ≥ 6 dB AND ≥ 2 overshoots
+- **Status**: ✅ Confirmed in linearized regime
+
+**Hysteresis Resonance**
+
+- **Prediction**: Loop area peaks when drive period $T_{drive} \approx 2\pi/\omega_{nat}$
+- **Acceptance**: Peak within 10% of predicted frequency
+- **Status**: 🔄 Testing in progress
+
+**Geometric Witness**
+
+- **Prediction**: High-MI edges develop lower resistance (stronger coupling)
+- **Acceptance**: Correlation coefficient r > 0.7 between MI and coupling strength
+- **Status**: 🔴 Blocked by Task 0 (NetworkX integration)
+
+### Mathematical Framework
+
+**System Dynamics**:
+$$\dot{S}*i = -\alpha S_i + \sum_j K*{ij} \tanh(S_j) + F_i(t)$$
+
+**Plasticity Rule**:
+$$\dot{K}*{ij} = \eta \cdot \text{MI}(S_i, S_j) - \lambda K*{ij}$$
+
+**Witness Redundancy**:
+$$R_X^\delta = I(X:E_1 \cdots E_M) - \sum_{k=1}^M I(X:E_k | E_1 \cdots E_{k-1})$$
+
+**Information-Geometric Curvature** (speculative):
+$$R_{\mu\nu\rho\sigma} \sim \text{fluctuations in witness flux}$$
+
+See `docs/appendices/` for full derivations.
+
+### Testing & Validation
+
+```bash
+# Run full test suite
+pytest -q
+
+# Includes:
+# - PSD/overshoot diagnostics
+# - Damping ratio estimation  
+# - File creation smoke tests
+# - Identifiability recovery on synthetic data
+```
+
+### Reproducibility Guarantees
+
+- ✅ Deterministic seeds (`--seed 42`)
+- ✅ Fixed parameter grids
+- ✅ Version-controlled dependencies
+- ✅ CI-friendly defaults (short runs)
+- ✅ Scaling flags for production runs
+
+**Model Regime**: Linearized dynamics near fixed points. Nonlinear extensions planned for Phase 2.
+
+### Hardware Vision: ITPU
+
+See `docs/hardware/ITPU.md` for our concept of an **Information-Theoretic Processing Unit**:
+
+- Mutual information / entropy accelerators
+- Structural plasticity controllers
+- Memory hierarchy optimized for information-theoretic workloads
+- Real-time witness flux monitoring
+
+This is speculative hardware design—not currently implemented.
 
 -----
 
 ## Contributing
 
-We welcome contributions across the empirical-philosophical spectrum:
+We welcome contributions! Here’s how to help:
 
-### 🔬 **For Empirical Developers**
+**For Everyone**:
 
-- **Start here**: Extend P1 analysis, implement multi-frequency validation
-- **Focus**: Strong bridges (Axioms 1-2), reproducible experiments
-- **Standards**: Maintain preregistered protocols, use surrogate controls
+- 🐛 **Report bugs**: Open an issue with minimal reproduction steps
+- 💡 **Suggest experiments**: What should we test next?
+- 📖 **Improve docs**: Spot unclear explanations? Submit a PR
+- ❓ **Ask questions**: No question is too basic—open an issue
 
-### 🌀 **For Philosophical Contributors**
+**For Developers**:
 
-- **Start here**: Operationalize Axioms 3-4 with measurable proxies
-- **Focus**: Bridge speculative concepts to testable hypotheses
-- **Standards**: Use epistemic status tags, propose falsifiable predictions
+- 🧪 Add tests for new features
+- 📊 Create visualization tools
+- ⚡ Optimize performance bottlenecks
+- 🔧 Fix open issues (check GitHub Issues tab)
 
-### 🌉 **For Bridge Builders**
+**Style Guidelines**:
 
-- **Start here**: Design minimal experiments linking concepts to GP measures
-- **Focus**: Emotion-hysteresis correlations, consciousness-coherence studies
-- **Standards**: Pre-register hypotheses, include falsification criteria
+- Type hints for function signatures
+- Docstrings for public functions
+- Small, focused functions
+- Tests for new features
+- Clear commit messages
 
-**Contribution Process**:
-
-1. Open an Issue for coordination
-1. Maintain epistemic boundaries ([TESTABLE] vs [METAPHOR] vs [SPECULATIVE])
-1. Include appropriate statistical controls
-1. Design for replication and falsification
-
-### **Welcome Contributions**:
-
-- Replication PRs with different seeds/datasets
-- Enhanced surrogate implementations (AR/IAAFT variants)
-- EEG pilot studies with public datasets
-- Documentation improvements and clarity enhancements
-- Bridge validations linking GP measures to established psychological metrics
+**Getting Started**: Open an issue saying “I’d like to help” and we’ll guide you!
 
 -----
 
-## Citation
+## Citing This Work
 
-If you use this framework in your research, please cite:
+If this helps your research or project, we’d appreciate a mention:
 
 ```bibtex
-@software{resonance_geometry_2025,
-  title={Resonance Geometry: A Testable Framework for Information-Geometry Coupling},
-  author={[Your Name/Organization]},
-  year={2025},
-  url={https://github.com/justindbilyeu/Resonance_Geometry},
-  version={0.1.0}
+@misc{resonance_geometry_2025,
+  title = {Geometric Plasticity: Adaptive Information Networks and Emergent Redundancy},
+  author = {Bilyeu, Justin and Sage and the Resonance Geometry Collective},
+  year = {2025},
+  note = {Experimental framework and reproducibility pack},
+  url = {https://github.com/justindbilyeu/Resonance_Geometry}
 }
 ```
+
+**Publication Status**: Whitepaper in preparation. Formal publication pending Phase 1 validation.
+
+-----
+
+## Project Roadmap
+
+**Phase 1** (Current): Core validation
+
+- ✅ Ringing boundary detection
+- 🔄 Hysteresis resonance testing
+- 🔴 Geometric witness correlation (blocked: Task 0)
+
+**Phase 2** (Planned): Nonlinear extensions
+
+- Higher-order terms in dynamics
+- Non-Gaussian noise
+- Multi-timescale plasticity
+
+**Phase 3** (Future): Real-world applications
+
+- Neural network architecture search
+- Brain connectivity analysis
+- Adaptive control systems
 
 -----
 
 ## License
 
-Apache 2.0 - See <LICENSE> for details.
+**TBD** — © 2025 Justin Bilyeu & Resonance Geometry Collective
+
+Until finalized, code and documentation are shared for research and review purposes.
 
 -----
 
-## Resonant Check
+## Contact & Discussion
 
-**Clarity**: Empirical framework and philosophical inspiration clearly distinguished with explicit epistemic boundaries.
+- 📧 **Questions**: Open a [GitHub Issue](https://github.com/justindbilyeu/Resonance_Geometry/issues)
+- 💬 **Discussion**: Check existing issues or start a new one
+- 🔬 **Collaboration**: Reach out via issues—we’re open to partnerships
 
-**Coherence**: GP mathematics bridges measurable information dynamics with visionary concepts through validated experimental protocols.
+**We welcome sharp tests, critical feedback, and cleaner proofs.**
 
-**Buildability**: Multiple entry points for contributors at different levels, from rigorous replication to speculative bridge-building, all maintaining scientific standards.
+-----
 
-*“Where philosophy meets physics through falsifiable mathematics.”*
+## Acknowledgments
+
+Built with contributions from the Resonance Geometry Collective and ongoing dialogue with Claude (Anthropic) for experimental design and epistemic rigor.
+
+Special thanks to early testers and critics who help keep this work honest.
+
+-----
+
+*Last Updated: September 30, 2025*
