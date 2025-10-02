@@ -1,0 +1,18 @@
+{
+  "steps": 200,
+  "runs": 1500,
+  "seeds": 1,
+  "beta": 0.9,
+  "alpha": 0.08,
+  "tau": 40.0,
+  "Kc_proxy": 256.25,
+  "ringing_fraction": 1.0,
+  "avg_peaks": 5.0,
+  "avg_overshoot": 0.15185,
+  "avg_rms": 3.819242008762813,
+  "notes": [
+    "CI-safe demo; synthetic oscillator approximates ringing behavior.",
+    "Tune alpha (damping), beta (drive), tau (period) to shape ringing.",
+    "Kc_proxy is a rough stability threshold proxy for dashboards."
+  ]
+}
