@@ -60,3 +60,13 @@ jobs:
         with:
           name: gp_ringing_demo_ci
           path: results/gp_ringing_demo_ci
+          - name: Run GP ringing demo (CI mode)
+  run: python experiments/gp_ringing_demo.py --steps 500 --runs 2000 --seeds 2 --out results/gp_demo
+  env:
+    RG_CI: "1"
+
+- name: Upload demo summary
+  uses: actions/upload-artifact@v4
+  with:
+    name: gp-ringing-demo
+    path: results/gp_demo/ringing_demo_summary.json
