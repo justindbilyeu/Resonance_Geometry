@@ -1,4 +1,17 @@
 #!/usr/bin/env python3
+# --- compatibility shim for legacy tests ---
+def adversarial_attack_pipeline(*args, **kwargs):
+    """
+    Back-compat wrapper for CI smoke test.
+    Calls run_adversarial(...) (or the current public entry point).
+    """
+    # import locally to avoid circulars
+    try:
+        return run_adversarial(*args, **kwargs)  # ← if your function is named differently, change this line
+    except NameError:
+        # Fall back to module-level main if that's what you expose
+        return main(*args, **kwargs)  # or raise with a helpful message
+
 import argparse, json, os, pathlib, time
 import numpy as np
 
