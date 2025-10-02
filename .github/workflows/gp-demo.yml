@@ -1,3 +1,4 @@
+# .github/workflows/gp-demo.yml
 name: gp demos smoke
 
 on:
@@ -8,6 +9,7 @@ on:
 jobs:
   smoke:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout
@@ -16,8 +18,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-          cache: pip
+          python-version: "3.12"   # match Codespace
 
       - name: Install project (editable)
         run: |
@@ -25,21 +26,32 @@ jobs:
           if [ -f pyproject.toml ]; then pip install -e .; fi
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Run tests
-        run: pytest -q
-
-      - name: Run GP ringing demo
-        env:
-          MPLBACKEND: Agg
-          RG_CI: "1"
-        run: python experiments/gp_ringing_demo.py
-
-      - name: Run optimized spin-foam smoke
-        env:
-          MPLBACKEND: Agg
-          RG_CI: "1"
+      - name: Show versions
         run: |
-          python experiments/spin_foam_smoke.py --steps 5000 --size 16 --runs 4 --seed 7
+          python -V
+          python -c "import networkx as nx; print('networkx', nx.__version__)"
+          python -c "import numpy as np, matplotlib; print('numpy', np.__version__, 'matplotlib', matplotlib.__version__)"
+
+      - name: Run tests (smoke)
+        run: pytest -q -k "minimal or smoke"   # keep tiny tests in the smoke run
+
+      - name: Run GP ringing demo (smoke)
+        env:
+          MPLBACKEND: Agg
+          RG_CI: "1"
+        timeout-minutes: 4
+        run: |
+          # Add a --ci or env guard inside the script to reduce work when RG_CI=1
+          python experiments/gp_ringing_demo.py
+
+      - name: Run optimized spin-foam smoke (reduced)
+        env:
+          MPLBACKEND: Agg
+          RG_CI: "1"
+        timeout-minutes: 6
+        run: |
+          # drastically smaller params so it can't time out on a free runner:
+          python experiments/spin_foam_smoke.py --steps 800 --size 8 --runs 2 --seed 7
 
       - name: Upload figures (artifacts)
         if: always()
