@@ -47,3 +47,20 @@ checkpoints/
 
 # Heavy artifacts
 results/**/*.npy
+
+# --- local & heavy artifacts ---
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+checkpoints/
+results/**/*.npy
+results/**/boundary_*.npy
+results/**/visited_*.npy
+figures/**/tmp_*
+# keep only plots that are published to docs/assets/plots
+figures/**/*
+!figures/forbidden_v1_fractal/boundary_pca2d.png
+!figures/forbidden_v1_curv/curvature_hist.png
+
+# site build cache (if any)
+.site/
