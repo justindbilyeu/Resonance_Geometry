@@ -1,6 +1,12 @@
 # GP ringing demo: coupled stochastic oscillators → windowed MI → alpha-band MI power & hysteresis
 # Deps: numpy, scipy, matplotlib
-
+import os
+CI = os.getenv("RG_CI") == "1"
+if CI:
+    # clamp parameters for speed/determinism
+    STEPS = min(STEPS, 800)
+    SIZE  = min(SIZE, 8)
+    RUNS  = min(RUNS, 2)
 import json, os
 import numpy as np
 import matplotlib.pyplot as plt
