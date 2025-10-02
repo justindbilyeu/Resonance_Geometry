@@ -1,4 +1,4 @@
-cat > experiments/phase1_prediction.py <<'PY'
+experiments/phase1_prediction.py <<'PY'
 from __future__ import annotations
 
 import numpy as np
