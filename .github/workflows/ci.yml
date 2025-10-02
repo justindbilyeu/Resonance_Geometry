@@ -1,4 +1,8 @@
 # .github/workflows/ci.yml
+# add this near the top of EACH workflow file
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 name: ci
 on:
   push:
