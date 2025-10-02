@@ -1,54 +1,52 @@
-# path: .github/workflows/sims.yml
-name: simulations
+name: Simulations (lightweight)
 
 on:
   push:
   pull_request:
-  workflow_dispatch:
 
 jobs:
-  lightweight-headless:
+  sims:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: pip
-          cache-dependency-path: requirements.txt
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          python -m pip install -U pip
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+          # pytest is used below
+          pip install pytest
 
-      - name: Run lightweight simulations
-  run: |
-    if [ -d simulations ]; then
-      echo "Running lightweight simulations under ./simulations"
-      pytest -q simulations --maxfail=1
-      EXIT_CODE=$?
-      if [ $EXIT_CODE -eq 5 ]; then
-        echo "No tests collected (exit code 5) - this is OK"
-        exit 0
-      elif [ $EXIT_CODE -ne 0 ]; then
-        echo "Tests failed with exit code $EXIT_CODE"
-        exit 1
-      fi
-    else
-      echo "No ./simulations directory found; skipping headless run."
-    fi
+      - name: Run lightweight simulations if present
+        shell: bash
+        run: |
+          if [ -d simulations ]; then
+            echo "Running lightweight simulations under ./simulations"
+            # Exit-code handling: 5 means 'no tests collected' (not a failure for this job)
+            set +e
+            pytest -q simulations --maxfail=1
+            EXIT_CODE=$?
+            set -e
+            if [ $EXIT_CODE -eq 5 ]; then
+              echo "No tests collected (exit code 5) - this is OK"
+              exit 0
+            elif [ $EXIT_CODE -ne 0 ]; then
+              echo "Tests failed with exit code $EXIT_CODE"
+              exit $EXIT_CODE
+            fi
+          else
+            echo "No ./simulations directory found; skipping headless run."
+          fi
 
       - name: Document deferred heavy simulations
         run: |
-          echo "TODO: Add GPU-accelerated / long-running simulation suite once dedicated runners are available."
-
-      - name: Upload figures artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: simulation-figures
-          path: figures
-          if-no-files-found: ignore
+          echo "::notice::Heavy/long simulations are deferred to manual or scheduled runs."
