@@ -1,6 +1,12 @@
 """Tiny smoke test for the optimized spin-foam Monte Carlo driver."""
 from __future__ import annotations
-
+import os
+CI = os.getenv("RG_CI") == "1"
+if CI:
+    # clamp parameters for speed/determinism
+    STEPS = min(STEPS, 800)
+    SIZE  = min(SIZE, 8)
+    RUNS  = min(RUNS, 2)
 import argparse
 import json
 import sys
