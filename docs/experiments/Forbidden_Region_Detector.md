@@ -4,7 +4,9 @@ This sprint delivers a minimal forbidden-region detector on top of a self-contai
 
 - Runs randomized exploration over a 4D grid spanning the parameters $(\lambda, \beta, A)$ and the emergent $\lVert g \rVert$ norm bin.
 - Logs which cells were visited and marks the remainder as candidate forbidden regions.
-- Estimates the largest connected forbidden structure via 2D projections.
+- Estimates the largest connected forbidden structure via the official
+  [NetworkX](https://networkx.org/) library rather than the historical shim,
+  ensuring we exercise the battle-tested connected components routines.
 - Emits a JSON summary for downstream pipelines.
 - Saves lightweight heatmap projections as quick-look PNGs.
 
