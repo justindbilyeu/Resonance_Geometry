@@ -1,13 +1,14 @@
 {
   "grid_res": 8,
   "total_cells": 4096,
-  "visited_cells": 742,
-  "forbidden_cells": 3354,
-  "forbidden_pct": 81.884765625,
-  "largest_cc_proxy": 1,
-  "random_runs": 30000,
+  "visited_cells": 812,
+  "forbidden_cells": 3284,
+  "forbidden_pct": 80.17578125,
+  "largest_cc_proxy": 3282,
+  "largest_forbidden_component": 3282,
+  "random_runs": 150000,
   "n": 32,
-  "steps": 400,
-  "runtime_sec": 140.701,
+  "steps": 800,
+  "runtime_sec": 1376.172,
   "decision_hint": "ESCALATE"
 }
