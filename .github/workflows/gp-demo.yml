@@ -1,16 +1,12 @@
-name: GP demos smoke
+name: GP Demo (smoke)
 
 on:
   push:
   pull_request:
 
 jobs:
-  smoke:
+  demo:
     runs-on: ubuntu-latest
-    env:
-      RG_CI: "1"                      # <<< clamp heavy workloads inside scripts
-      PIP_DISABLE_PIP_VERSION_CHECK: "1"
-      PYTHONWARNINGS: "ignore"
 
     steps:
       - name: Checkout
@@ -19,35 +15,30 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-
-      - name: Cache pip
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          python-version: "3.11"
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          python -m pip install -U pip
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+          pip install pytest
 
-      - name: Sanity import (networkx present)
-        run: |
-          python - <<'PY'
-          import networkx as nx
-          print("NetworkX", nx.__version__)
-          PY
+      # --- Smoke tests ---
+      - name: Run topo skeleton smoke
+        run: pytest -q tests/topo_test/test_skeleton_runs.py
 
-      - name: Run quick tests
-        run: |
-          pytest -q tests/topo_test/test_skeleton_runs.py
-          pytest -q tests/experiments/test_forbidden_minimal.py
-          pytest -q tests/experiments/test_adversarial_smoke.py
+      - name: Run forbidden minimal smoke
+        run: pytest -q tests/experiments/test_forbidden_minimal.py
 
+      - name: Run adversarial smoke
+        run: pytest -q tests/experiments/test_adversarial_smoke.py
+
+      # --- Ringing demo (CI-safe) ---
       - name: Run ringing demo (CI-safe)
+        env:
+          RG_CI: "1"
         run: |
           python -m experiments.gp_ringing_demo \
             --steps 150 --runs 1000 --seeds 1 \
@@ -55,18 +46,15 @@ jobs:
           ls -la results/gp_ringing_demo_ci || true
           test -f results/gp_ringing_demo_ci/ringing_demo_summary.json
 
-      - name: Upload ringing demo artifact
+      # --- Artifacts ---
+      - name: Upload ringing demo folder
         uses: actions/upload-artifact@v4
         with:
           name: gp_ringing_demo_ci
           path: results/gp_ringing_demo_ci
-          - name: Run GP ringing demo (CI mode)
-  run: python experiments/gp_ringing_demo.py --steps 500 --runs 2000 --seeds 2 --out results/gp_demo
-  env:
-    RG_CI: "1"
 
-- name: Upload demo summary
-  uses: actions/upload-artifact@v4
-  with:
-    name: gp-ringing-demo
-    path: results/gp_demo/ringing_demo_summary.json
+      - name: Upload demo summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: gp-ringing-demo-summary
+          path: results/gp_ringing_demo_ci/ringing_demo_summary.json
