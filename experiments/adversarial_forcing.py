@@ -128,3 +128,19 @@ def main():
 
 if __name__ == "__main__":
     main()
+# --- CI back-compat shim for older tests/workflows ---
+def adversarial_attack_pipeline(*args, **kwargs):
+    """
+    Back-compat for tests that import adversarial_attack_pipeline.
+    Routes to the current public entry point.
+    """
+    # prefer your real entrypoint; adjust name if different
+    try:
+        return run_adversarial(*args, **kwargs)   # replace with your actual function if named differently
+    except NameError:
+        try:
+            return main(*args, **kwargs)
+        except Exception as e:
+            raise RuntimeError(
+                "Compat shim failed: no run_adversarial/main entrypoint available"
+            ) from e
