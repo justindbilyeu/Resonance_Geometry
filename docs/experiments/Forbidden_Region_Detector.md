@@ -4,7 +4,7 @@ This sprint delivers a minimal forbidden-region detector on top of a self-contai
 
 - Runs randomized exploration over a 4D grid spanning the parameters $(\lambda, \beta, A)$ and the emergent $\lVert g \rVert$ norm bin.
 - Logs which cells were visited and marks the remainder as candidate forbidden regions.
-- Estimates the largest connected forbidden structure via 2D projections.
+- Estimates the largest connected forbidden structure via a NetworkX lattice graph.
 - Emits a JSON summary for downstream pipelines.
 - Saves lightweight heatmap projections as quick-look PNGs.
 
@@ -24,7 +24,7 @@ python experiments/adversarial_forcing.py
 
 Running the detector writes artifacts to:
 
-- `results/forbidden_v0/forbidden_summary.json`: summary metrics and decision hint.
+- `results/forbidden_v0/forbidden_summary.json`: summary metrics and decision hint, including the size of the largest forbidden connected component.
 - `results/forbidden_v0/visited_4d.npy`: boolean occupancy grid.
 - `figures/forbidden_v0/forbidden_lam_beta.png`: % forbidden per $(\lambda, \beta)$ slice.
 - `figures/forbidden_v0/forbidden_lam_A.png`: % forbidden per $(\lambda, A)$ slice.

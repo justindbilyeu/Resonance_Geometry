@@ -2,7 +2,8 @@
 from __future__ import annotations
 
 from collections import deque
-from typing import Dict, Iterable, Iterator, List, Mapping, Optional, Tuple
+from itertools import product
+from typing import Dict, Iterable, Iterator, List, Mapping, Optional, Sequence, Tuple
 
 import numpy as np
 
@@ -25,6 +26,22 @@ class Graph:
         self._adj[v][u] = dict(attrs)
         self._edge_attrs[(u, v)] = dict(attrs)
         self._edge_attrs[(v, u)] = dict(attrs)
+
+    def remove_node(self, node: object) -> None:
+        """Remove ``node`` and any incident edges if present."""
+
+        if node not in self._nodes:
+            return
+        for neighbor in list(self._adj.get(node, {})):
+            self._adj[neighbor].pop(node, None)
+            self._edge_attrs.pop((node, neighbor), None)
+            self._edge_attrs.pop((neighbor, node), None)
+        self._adj.pop(node, None)
+        self._nodes.pop(node, None)
+
+    def remove_nodes_from(self, nodes: Iterable[object]) -> None:
+        for node in list(nodes):
+            self.remove_node(node)
 
     def nodes(self) -> Iterable[object]:
         return self._nodes.keys()
@@ -55,7 +72,7 @@ class Graph:
         return edges
 
     def neighbors(self, node: object) -> Iterable[object]:
-        return self._adj[node].keys()
+        return self._adj.get(node, {}).keys()
 
     def get_edge_data(self, u: object, v: object) -> Optional[Dict[str, object]]:
         return self._adj.get(u, {}).get(v)
@@ -82,17 +99,29 @@ def to_numpy_array(graph: Graph, nodelist: Optional[List[object]] = None, dtype=
     return matrix
 
 
-def grid_graph(dim: Tuple[int, int]) -> Graph:
-    rows, cols = dim
+def grid_graph(dim: Sequence[int] | int) -> Graph:
+    """Return an undirected grid graph for an N-dimensional lattice."""
+
+    if isinstance(dim, int):
+        dimensions = (dim,)
+    else:
+        dimensions = tuple(int(d) for d in dim)
+
+    if not dimensions:
+        raise ValueError("grid_graph requires at least one dimension")
+    if any(d <= 0 for d in dimensions):
+        raise ValueError("grid_graph dimensions must be positive")
+
     graph = Graph()
-    for r in range(rows):
-        for c in range(cols):
-            node = (r, c)
-            graph.add_node(node)
-            if r > 0:
-                graph.add_edge(node, (r - 1, c))
-            if c > 0:
-                graph.add_edge(node, (r, c - 1))
+    ranges = [range(d) for d in dimensions]
+    for node in product(*ranges):
+        graph.add_node(node)
+        for axis, size in enumerate(dimensions):
+            if node[axis] == 0:
+                continue
+            neighbor = list(node)
+            neighbor[axis] -= 1
+            graph.add_edge(node, tuple(neighbor))
     return graph
 
 
@@ -136,3 +165,27 @@ def all_pairs_shortest_path_length(graph: Graph) -> Iterable[Tuple[object, Mappi
 
     for node in graph.nodes():
         yield node, single_source_shortest_path_length(graph, node)
+
+
+def connected_components(graph: Graph) -> Iterable[set]:
+    """Yield the connected components of ``graph`` as sets of nodes."""
+
+    seen: set = set()
+    for node in list(graph.nodes()):
+        if node in seen:
+            continue
+        if node not in graph:
+            continue
+        component = set()
+        queue: deque = deque([node])
+        seen.add(node)
+        while queue:
+            current = queue.popleft()
+            component.add(current)
+            for neighbor in graph.neighbors(current):
+                if neighbor in seen or neighbor not in graph:
+                    continue
+                seen.add(neighbor)
+                queue.append(neighbor)
+        if component:
+            yield component
