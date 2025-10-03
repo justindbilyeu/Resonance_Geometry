@@ -1,0 +1,82 @@
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+name: phase1-pilot
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - "experiments/**"
+      - "scripts/**"
+      - "requirements.txt"
+      - ".github/workflows/phase1-pilot.yml"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "experiments/**"
+      - "scripts/**"
+      - "requirements.txt"
+      - ".github/workflows/phase1-pilot.yml"
+
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+      RG_CI: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e .
+      - name: Run pilot (null)
+        run: |
+          python scripts/run_phase1_chunked.py \
+            --module experiments.phase1_prediction \
+            --func run_phase1_analysis_null \
+            --total_runs 1000 --chunk_size 200 --seed 40 \
+            --checkpoint_dir checkpoints/pilot_null \
+            --summary_out checkpoints/pilot_null/summary.json
+          cat checkpoints/pilot_null/summary.json
+      - name: Upload null artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase1-pilot-null
+          path: checkpoints/pilot_null/summary.json
+      - name: Run pilot (proxy)
+        run: |
+          python scripts/run_phase1_chunked.py \
+            --module experiments.phase1_prediction \
+            --func run_phase1_analysis \
+            --total_runs 1000 --chunk_size 200 --seed 42 \
+            --checkpoint_dir checkpoints/pilot_proxy \
+            --summary_out checkpoints/pilot_proxy/summary.json
+          cat checkpoints/pilot_proxy/summary.json
+      - name: Upload proxy artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase1-pilot-proxy
+          path: checkpoints/pilot_proxy/summary.json
+      - name: Run pilot (curv)
+        run: |
+          python scripts/run_phase1_chunked.py \
+            --module experiments.phase1_prediction \
+            --func run_phase1_analysis_curv \
+            --total_runs 1000 --chunk_size 200 --seed 44 \
+            --checkpoint_dir checkpoints/pilot_curv \
+            --summary_out checkpoints/pilot_curv/summary.json
+          cat checkpoints/pilot_curv/summary.json
+      - name: Upload curvature artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase1-pilot-curv
+          path: checkpoints/pilot_curv/summary.json
