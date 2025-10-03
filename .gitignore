@@ -64,3 +64,4 @@ figures/**/*
 
 # site build cache (if any)
 .site/
+results/
