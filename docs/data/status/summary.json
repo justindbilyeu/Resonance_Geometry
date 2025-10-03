@@ -1,13 +1,19 @@
 {
-  "timestamp": "2025-10-03 15:12:00",
+  "timestamp": "2025-10-03 21:02:40",
   "evidence_grade": "Testing",
   "task_0_status": "Complete",
   "networkx_integration": "Functional",
   "phase_sweep": {
     "status": "Complete",
     "experiments_run": 4,
-    "alpha_range": [0.3, 0.6],
-    "eta_range": [0.03, 0.05],
+    "alpha_range": [
+      0.3,
+      0.6
+    ],
+    "eta_range": [
+      0.03,
+      0.05
+    ],
     "ringing_detected": false,
     "note": "Tested parameters in stable region - wider sweep needed"
   },
@@ -25,7 +31,8 @@
     "phase_sweep_tool": 100,
     "forbidden_detection": 100,
     "robustness_framework": 0,
-    "validation_experiments": 20
+    "validation_experiments": 20,
+    "forbidden": 100
   },
   "infrastructure": {
     "mi_tools": "Ready",
