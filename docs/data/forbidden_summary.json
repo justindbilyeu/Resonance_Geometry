@@ -1,0 +1,14 @@
+{
+  "grid_res": 4,
+  "total_cells": 256,
+  "visited_cells": 33,
+  "forbidden_cells": 223,
+  "forbidden_pct": 87.109375,
+  "largest_cc_proxy": 223,
+  "largest_forbidden_component": 223,
+  "random_runs": 50,
+  "n": 32,
+  "steps": 50,
+  "runtime_sec": 0.045,
+  "decision_hint": "ESCALATE"
+}

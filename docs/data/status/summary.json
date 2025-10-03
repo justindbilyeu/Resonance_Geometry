@@ -1,25 +1,35 @@
 {
-  "timestamp": "2025-10-02 14:33:30",
-  "evidence_grade": "Weak",
-  "forbidden_pct": 81.88,
-  "visited_cells": 742,
-  "grid_res": 8,
-  "random_runs": 30000,
-  "adversarial_decision": "POTENTIALLY_FORBIDDEN",
-  "fractal": {
-    "H": 1.3186284895167975,
-    "r2": 0.95250264623369
+  "timestamp": "2025-10-03 15:12:00",
+  "evidence_grade": "Testing",
+  "task_0_status": "Complete",
+  "networkx_integration": "Functional",
+  "phase_sweep": {
+    "status": "Complete",
+    "experiments_run": 4,
+    "alpha_range": [0.3, 0.6],
+    "eta_range": [0.03, 0.05],
+    "ringing_detected": false,
+    "note": "Tested parameters in stable region - wider sweep needed"
+  },
+  "forbidden_region": {
+    "status": "Complete",
+    "forbidden_pct": 87.11,
+    "visited_cells": 33,
+    "total_cells": 256,
+    "grid_res": 4,
+    "largest_component": 223,
+    "random_runs": 50
   },
   "progress": {
-    "forbidden": 100,
-    "fractal": 100,
-    "curvature": 0,
-    "nulls": 0
+    "task_0_networkx": 100,
+    "phase_sweep_tool": 100,
+    "forbidden_detection": 100,
+    "robustness_framework": 0,
+    "validation_experiments": 20
   },
-  "curvature": {
-    "neg_curv_coverage": 0.0,
-    "kappa_min": null,
-    "kappa_mean": null,
-    "samples": 0
+  "infrastructure": {
+    "mi_tools": "Ready",
+    "stability_detection": "Ready",
+    "mode_classification": "Ready"
   }
 }
