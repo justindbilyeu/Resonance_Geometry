@@ -1,0 +1,30 @@
+[
+  {
+    "alpha": 0.3,
+    "eta": 0.03,
+    "psd_peak": 0.00022747526224929518,
+    "overshoot": 0.02114725963738688,
+    "ringing": false
+  },
+  {
+    "alpha": 0.3,
+    "eta": 0.05,
+    "psd_peak": 0.00022708884158352652,
+    "overshoot": 0.02112604312298428,
+    "ringing": false
+  },
+  {
+    "alpha": 0.6,
+    "eta": 0.03,
+    "psd_peak": 0.00029881608041836146,
+    "overshoot": 0.02884577232451733,
+    "ringing": false
+  },
+  {
+    "alpha": 0.6,
+    "eta": 0.05,
+    "psd_peak": 0.0002987367527983209,
+    "overshoot": 0.028842782134114713,
+    "ringing": false
+  }
+]
