@@ -27,3 +27,13 @@ jobs:
       - name: Mapper smoke (no optional deps)
         run: |
           make mapper-smoke
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "experiments/**"
+      - "tests/**"
+      - "requirements.txt"
+      - ".github/workflows/ci.yml"
+  pull_request:
+    branches: [ main ]
