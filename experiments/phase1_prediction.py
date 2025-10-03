@@ -130,3 +130,40 @@ def run_phase1_analysis(n_runs: int = 1000, seed: int = 42) -> List[Dict]:
         })
 
     return out
+
+
+def run_phase1_analysis_curv(n_runs: int = 1000, seed: int = 42) -> List[Dict]:
+    """Minimal curvature-based predictor suitable for CI runs.
+
+    Workflow:
+      - Sample a starting point ``x0`` in the unit hypercube.
+      - Roll out a lightweight, deterministic-ish trajectory with a tiny drift
+        and restoring force to obtain an "actual" deflection.
+      - Use the analytic curvature proxy :math:`-∇κ(x0)` as the geometric
+        prediction direction and compare against the trajectory deflection.
+    """
+    rng = np.random.default_rng(seed)
+    out: List[Dict] = []
+
+    for _ in range(n_runs):
+        x0 = rng.random(4)
+
+        # Toy trajectory: slow drift along a random unit vector with mild
+        # restoring dynamics to keep it in-bounds.
+        T = 200
+        v = rng.standard_normal(4)
+        v /= np.linalg.norm(v) + 1e-12
+        x = x0.copy()
+        for _ in range(T):
+            x = x + 0.02 * v - 0.01 * (x - 0.5)
+            x = np.clip(x, 0.0, 1.0)
+
+        d_actual = x - x0
+        d_geom = -_finite_diff_grad(_curvature_scalar, x0, eps=1e-2)
+
+        out.append({
+            "sign_match": bool(np.sign(d_geom[0]) == np.sign(d_actual[0])),
+            "angular_error": float(_angle_between(d_geom, d_actual)),
+        })
+
+    return out
