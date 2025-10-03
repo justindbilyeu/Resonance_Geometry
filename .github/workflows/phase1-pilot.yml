@@ -1,0 +1,46 @@
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+name: Phase 1 Pilot
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    env:
+      RG_CI: "1"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install -U pip
+          pip install -r requirements.txt
+
+      - name: Run phase 1 pilot chunk
+        run: |
+          python scripts/run_phase1_chunked.py \
+            --module experiments.phase1_prediction \
+            --func run_phase1_analysis \
+            --total_runs 128 \
+            --chunk_size 32 \
+            --seed 42 \
+            --checkpoint_dir results/phase1/checkpoints \
+            --summary_out results/phase1/summary.json
+          test -f results/phase1/summary.json
+
+      - name: Upload phase1 summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase1-pilot-summary
+          path: results/phase1/summary.json
