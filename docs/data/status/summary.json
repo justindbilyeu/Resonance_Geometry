@@ -1,10 +1,16 @@
 {
-  "last_updated": "2025-10-03T21:33:48.367189Z",
+  "last_updated": "2025-10-03T22:34:37.656761Z",
   "evidence_grade": "C: Two experiments completed, expanding validation",
   "experiments_completed": [
     "phase_sweep",
     "forbidden"
   ],
   "n_experiments": 2,
-  "status": "testing"
+  "status": "testing",
+  "validation": {
+    "replication": "All experiments use seed 42 (deterministic)",
+    "surrogate_controls": "\u2014",
+    "null_models": "\u2014",
+    "forbidden_region": "\u2014"
+  }
 }
