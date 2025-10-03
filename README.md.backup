@@ -82,29 +82,43 @@ Response peaks at resonant frequencies—information leaves geometric "memory"
 **Honest Assessment**: Too early to claim success, but early results are encouraging enough to keep testing rigorously.
 
 -----
+
 ## Quick Demo
 
 Want to see it in action? If you have Python installed:
 
 ```bash
-# Clone and set up
+# Clone and set up (takes ~2 minutes)
 git clone https://github.com/justindbilyeu/Resonance_Geometry.git
 cd Resonance_Geometry
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
-# Phase sweep - ringing boundary detection
+# Run a quick experiment (~2 minutes)
 python scripts/run_phase_sweep.py \
   --alphas "0.3,0.6" --etas "0.03,0.05" \
-  --T 100 --M 10 --seed 42 \
-  --out_dir results/phase
+  --T 100 --M 10 --seed 42
 
-# Forbidden region detection
-python experiments/forbidden_region_detector.py \
-  --grid 8 8 8 8 --runs 1000 --steps 100 --seed 42 \
-  --out results/forbidden
-Results appear in results/ as JSON data and PNG visualizations. All experiments use deterministic seeds for reproducibility.
-Live Results: See the experimental dashboard for current validation status.
+# Results appear in results/phase/ as graphs and data
+```
+
+You’ll see phase maps showing where systems go unstable—exactly where our math predicts.
+
+-----
+
+## Why This Project Exists
+
+Most research on complex systems treats structure and information separately:
+
+- Engineers build network architectures, then see what information flows through them
+- Neuroscientists map brain connections, then study what signals they carry
+
+**We’re asking**: What if these aren’t separate? What if information flow *creates* structure, and structure *shapes* information flow, in an endless feedback loop?
+
+It’s a simple question with potentially profound implications. We’re doing the math and experiments to find out if it’s true.
+
+-----
+
 ## Frequently Asked Questions
 
 **Q: Is this related to quantum mechanics?**  
