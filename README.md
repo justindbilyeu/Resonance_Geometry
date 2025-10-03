@@ -98,6 +98,7 @@ python scripts/run_phase_sweep.py \
   --alphas "0.3,0.6" --etas "0.03,0.05" \
   --T 100 --M 10 --seed 42 \
   --out_dir results/phase
+'''
 
 # Forbidden region detection
 python experiments/forbidden_region_detector.py \
@@ -105,6 +106,10 @@ python experiments/forbidden_region_detector.py \
   --out results/forbidden
 Results appear in results/ as JSON data and PNG visualizations. All experiments use deterministic seeds for reproducibility.
 Live Results: See the experimental dashboard for current validation status.
+
+
+'''
+
 ## Frequently Asked Questions
 
 **Q: Is this related to quantum mechanics?**  
