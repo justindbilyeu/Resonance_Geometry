@@ -1,42 +1,10 @@
 {
-  "timestamp": "2025-10-03 21:02:40",
-  "evidence_grade": "Testing",
-  "task_0_status": "Complete",
-  "networkx_integration": "Functional",
-  "phase_sweep": {
-    "status": "Complete",
-    "experiments_run": 4,
-    "alpha_range": [
-      0.3,
-      0.6
-    ],
-    "eta_range": [
-      0.03,
-      0.05
-    ],
-    "ringing_detected": false,
-    "note": "Tested parameters in stable region - wider sweep needed"
-  },
-  "forbidden_region": {
-    "status": "Complete",
-    "forbidden_pct": 87.11,
-    "visited_cells": 33,
-    "total_cells": 256,
-    "grid_res": 4,
-    "largest_component": 223,
-    "random_runs": 50
-  },
-  "progress": {
-    "task_0_networkx": 100,
-    "phase_sweep_tool": 100,
-    "forbidden_detection": 100,
-    "robustness_framework": 0,
-    "validation_experiments": 20,
-    "forbidden": 100
-  },
-  "infrastructure": {
-    "mi_tools": "Ready",
-    "stability_detection": "Ready",
-    "mode_classification": "Ready"
-  }
+  "last_updated": "2025-10-03T21:33:48.367189Z",
+  "evidence_grade": "C: Two experiments completed, expanding validation",
+  "experiments_completed": [
+    "phase_sweep",
+    "forbidden"
+  ],
+  "n_experiments": 2,
+  "status": "testing"
 }
