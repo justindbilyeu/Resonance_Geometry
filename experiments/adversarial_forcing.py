@@ -90,7 +90,7 @@ def run_adversarial(
     return report
 
 
-def adversarial_attack_pipeline(*, **kwargs) -> Dict[str, Any]:
+def adversarial_attack_pipeline(**kwargs) -> Dict[str, Any]:
     """
     Back-compat wrapper for CI smoke test.
     Calls run_adversarial(...) (or the current public entry point).
