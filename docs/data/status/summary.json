@@ -12,5 +12,22 @@
     "surrogate_controls": "\u2014",
     "null_models": "\u2014",
     "forbidden_region": "\u2014"
+  },
+  "timestamp": "2025-10-04 01:35:17",
+  "phase1_pilots": {
+    "null": {
+      "completed": 500,
+      "sign_acc": 0.512,
+      "mean_angular_error": 1.5940908384229355,
+      "total_runs": 500,
+      "chunk_size": 100
+    },
+    "proxy": {
+      "completed": 500,
+      "sign_acc": 0.522,
+      "mean_angular_error": 1.7082831546572514,
+      "total_runs": 500,
+      "chunk_size": 100
+    }
   }
 }
