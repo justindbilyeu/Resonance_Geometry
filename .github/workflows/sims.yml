@@ -1,55 +1,16 @@
+# DISABLED — superseded by sim-validate.yml
 name: Simulations (lightweight)
-# add this near the top of EACH workflow file
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+
 on:
-  push:
   pull_request:
+    paths: [ '__disabled__/**' ]
+  push:
+    paths: [ '__disabled__/**' ]
+  workflow_dispatch: {}
 
 jobs:
   sims:
+    if: false  # DISABLED — superseded by sim-validate.yml
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        run: |
-          python -m pip install -U pip
-          if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
-          fi
-          # pytest is used below
-          pip install pytest
-
-      - name: Run lightweight simulations if present
-        shell: bash
-        run: |
-          if [ -d simulations ]; then
-            echo "Running lightweight simulations under ./simulations"
-            # Exit-code handling: 5 means 'no tests collected' (not a failure for this job)
-            set +e
-            pytest -q simulations --maxfail=1
-            EXIT_CODE=$?
-            set -e
-            if [ $EXIT_CODE -eq 5 ]; then
-              echo "No tests collected (exit code 5) - this is OK"
-              exit 0
-            elif [ $EXIT_CODE -ne 0 ]; then
-              echo "Tests failed with exit code $EXIT_CODE"
-              exit $EXIT_CODE
-            fi
-          else
-            echo "No ./simulations directory found; skipping headless run."
-          fi
-
-      - name: Document deferred heavy simulations
-        run: |
-          echo "::notice::Heavy/long simulations are deferred to manual or scheduled runs."
+      - run: echo "disabled"

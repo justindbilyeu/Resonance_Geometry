@@ -1,9 +1,25 @@
-name: Build Papers (figures + PDFs)
+name: build-papers
 
 on:
-  push:
-    branches: [ main, feature/** ]
   pull_request:
+    paths:
+      - 'docs/papers/**'
+      - 'papers/**'
+      - '.github/workflows/build-papers.yml'
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/papers/**'
+      - 'papers/**'
+      - '.github/workflows/build-papers.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.sha }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -12,40 +28,53 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Install Python deps
-        run: |
-          pip install --upgrade pip
-          pip install numpy scipy matplotlib
-
-      - name: Install Pandoc + LaTeX
+      - name: Install Pandoc + XeLaTeX
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc texlive-latex-extra texlive-fonts-recommended
+          sudo apt-get install -y --no-install-recommends \
+            pandoc \
+            texlive-xetex \
+            texlive-fonts-recommended \
+            texlive-latex-extra \
+            lmodern
+          echo "pandoc version: $(pandoc -v | head -n1)"
 
-      - name: Regenerate figures
+      - name: Build PDFs from Markdown (docs/papers & papers)
+        shell: bash
         run: |
-          make figures
+          set -euo pipefail
+          outdir="build/papers"
+          mkdir -p "$outdir"
+          # Collect all candidate Markdown paper files
+          mapfile -t files < <(git ls-files \
+            'docs/papers/**/*.md' \
+            'papers/**/*.md' \
+            ':!:**/README.md' \
+            ':!:**/drafts/**' || true)
 
-      - name: Build PDFs
-        run: |
-          make pdf
-          ./scripts/build_pdfs.sh
+          echo "Found ${#files[@]} md files"
+          for f in "${files[@]}"; do
+            rel="${f}"
+            base="$(basename "${rel}" .md)"
+            # mirror folder structure
+            subdir="$(dirname "${rel}")"
+            destdir="${outdir}/${subdir}"
+            mkdir -p "${destdir}"
+            echo "Building ${rel} -> ${destdir}/${base}.pdf"
+            pandoc "${rel}" \
+              --from=gfm \
+              --pdf-engine=xelatex \
+              --metadata=title:"${base}" \
+              -V geometry:margin=1in \
+              -V mainfont="Latin Modern Roman" \
+              -o "${destdir}/${base}.pdf"
+          done
 
-      - name: Upload figures
+      - name: Upload paper PDFs
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: figures
-          path: |
-            papers/neurips/figures/*.png
-
-      - name: Upload PDFs
-        uses: actions/upload-artifact@v4
-        with:
-          name: papers-pdf
-          path: |
-            docs/papers/**/*.pdf
+          name: paper-pdfs
+          path: build/papers/
+          if-no-files-found: warn
+          retention-days: 14
