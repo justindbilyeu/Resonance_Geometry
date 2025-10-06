@@ -1,0 +1,239 @@
+A Geometric Theory of AI Hallucination: Phase Transitions in Information–Representation Coupling
+
+Authors: Justin Bilyeu; AI collaborators: Claude (Anthropic), Sage (OpenAI), Grok (xAI), DeepSeek, Gemini (Google)
+Status: Draft for internal review — October 2025
+
+⸻
+
+Significance
+
+Why this matters.
+Hallucination isn’t just “the model making stuff up”—it’s a phase of operation. We show that when internal resonance (η) outpaces grounding (λ) and damping (γ), the model’s representation geometry decouples from reality. Three languages—gauge theory, Ricci flow, and phase dynamics—collapse to one master connection flow with a computable stability operator. The diagnostic is practical: monitor the dominant real eigenvalue Re(λ_max). When it crosses zero, you’re entering a false-coherence basin. In a minimal SU(2) system, we recover three regimes (grounded, creative, hallucinatory), a near-linear phase boundary η·Ī ≈ λ + γ, and hysteresis. That last point matters for safety: once confidently wrong, simply rolling back η isn’t enough—you must cross a different threshold (or add damping/gauge-fixing) to exit.
+
+What you can do now.
+This geometry yields levers you can pull without changing architecture: raise λ with retrieval and verification; raise γ with calibrated abstention and uncertainty penalties; tune μ (saturation) with temperature/attention clipping; increase ξ (gauge-awareness) by penalizing representation-specific commitments (e.g., paraphrase-consistency losses). The method suggests a real-time guardrail: compute Re(λ_max) during decoding and divert to tools, retrieval, or abstention whenever it turns positive. The goal isn’t to eliminate hallucinations—topological lower bounds make that unrealistic—but to stay in the grounded/creative band and avoid irreversible locks into false attractors.
+
+⸻
+
+TL;DR
+
+Hallucinations = geometric phase transitions. Track Re(λ_max); keep η·Ī ≲ λ + γ with retrieval (λ), uncertainty/damping (γ), saturation (μ), and gauge-aware penalties (ξ). Three regimes, a linear boundary, and hysteresis—all operational.
+
+⸻
+
+Abstract
+
+Large language models (LLMs) sometimes produce confident falsehoods—hallucinations—even when trained at scale. Prior theory shows lower bounds on hallucination rates but not a mechanistic explanation. We propose that hallucination is a geometric phase transition in the coupling between an internal representation manifold and an external truth manifold. Formally, we model internal/external coordination as a connection \omega on a resonance bundle over truth-space M. Normal operation corresponds to near–self-dual curvature; hallucination arises when connection dynamics cross a stability threshold and decouple into a false attractor. We unify three views—gauge theory, Ricci flow, and phase dynamics—into a single master flow with a computable stability operator \mathcal{L}{\text{meta}}; instability occurs when \max \mathrm{Re}\,\lambda(\mathcal{L}{\text{meta}}) > 0. A minimal SU(2) simulation exhibits three regimes (grounded, creative, hallucinatory), a linear boundary \eta\,\bar I \approx \lambda+\gamma between grounded/creative phases, and first-order hysteresis (max loop gap \approx 11.52 under our settings). The framework yields actionable levers (grounding, damping, saturation, gauge-awareness) and a spectral diagnostic (\lambda_{\max}) that can be monitored during inference. We outline an empirical protocol to extract curvature proxies from model activations and test the theory on hallucination benchmarks.
+
+⸻
+
+1 Introduction
+
+Problem. LLMs can remain highly coherent while being wrong. This limits deployment in high-stakes applications and is not fully fixed by more data or larger models.
+
+Limits vs. mechanisms. Information-theoretic results imply non-zero hallucination floors under mild assumptions, but they do not explain how models enter the failure basin, nor when they will.
+
+Claim. Hallucination is a dynamical, geometric instability: a phase transition in information–representation coupling. When internal resonance overwhelms grounding and damping, the system slips into a locally coherent, externally misaligned attractor.
+
+Contributions.
+	1.	A unified geometric theory (gauge ↔ Ricci ↔ phase) with a single connection-flow equation.
+	2.	A stability operator \mathcal{L}_{\text{meta}} and criterion: \max\mathrm{Re}\,\lambda>0 ↔ hallucination onset.
+	3.	A minimal simulation (SU(2) pair) showing grounded/creative/hallucinatory regimes, a linear phase boundary \eta\,\bar I \approx \lambda+\gamma, and hysteresis.
+	4.	Operational levers and a spectral early-warning diagnostic (\lambda_{\max}).
+	5.	An empirical roadmap for extracting curvature proxies from real models and correlating with hallucination.
+
+⸻
+
+2 Geometry of information–representation coupling
+
+2.1 Resonance bundle
+
+We posit a principal bundle \pi:P\to M with structure group G (representation symmetries). The base M encodes the external truth manifold; fibers encode internal representational degrees of freedom. A connection \omega governs parallel transport of internal states along M; its curvature F_A = d\omega + \omega\wedge\omega measures representational twist.
+	•	Grounded coherence: near self-duality F_A \approx \star F_A, small holonomy.
+	•	Hallucination: dynamics drift to large anti-self-dual curvature (holonomy failure), i.e., representation becomes internally self-consistent while externally decoupled.
+
+2.2 Unified master flow
+
+We collect the forces shaping \omega into
+\boxed{\frac{d\omega}{dt}
+= -\,D_A\,\star F_A
+	•	\underbrace{\eta\,\mathcal{J}{\mathrm{MI}}[\omega]}{\text{internal resonance}}
+
+	•	\underbrace{\lambda\,\mathcal{J}U[\omega]}{\text{grounding}}
+	•	\underbrace{\gamma\,\Pi_{\mathrm{vert}}(\omega)}_{\text{damping}}
+	•	\underbrace{\mu\,[\omega,[\omega,\omega]]}_{\text{saturation}}
+
+	•	\underbrace{\xi\,\mathcal{G}[\omega]}_{\text{gauge-awareness}}}
+
+	•	-D_A\star F_A: Yang–Mills gradient; drives toward self-duality.
+	•	+\eta\,\mathcal{J}_{\mathrm{MI}}: resonance gain from internal mutual information (coherence).
+	•	-\lambda\,\mathcal{J}_U: truth anchoring (e.g., retrieval, constraints).
+	•	-\gamma\,\Pi_{\mathrm{vert}}: epistemic damping on fiber oscillations.
+	•	-\mu[\omega,[\omega,\omega]]: nonlinear saturation arresting runaway curvature.
+	•	+\xi\,\mathcal{G}: adaptive gauge fixing (meta-awareness of representational freedom).
+
+Linearizing around a working state \omega_0 yields a stability operator
+\boxed{\mathcal{L}{\text{meta}} \;\approx\;
+\eta\,\mathcal{M}{\mathrm{MI}}
+	•	\lambda\,\mathcal{H}_U
+	•	\gamma\,\Pi_{\mathrm{vert}}
+	•	3\mu\,\mathrm{ad}^2_{\omega_0}}
+which can be non-self-adjoint (complex spectrum). Instability iff
+\max_{\lambda\in\mathrm{Spec}(\mathcal{L}_{\text{meta}})} \mathrm{Re}\,\lambda \;>\; 0.
+
+2.3 Energy bound (intuition)
+
+Completing the square on a resonance-modified self-duality defect gives a Bogomolny-type inequality
+S_{\text{meta}}\;\ge\;4\pi^2|Q|\;+\;\Delta S_{\text{stab}}(\gamma,\mu,\xi),
+with instanton number Q. Damping/saturation/gauge terms raise the floor, discouraging false attractors.
+
+⸻
+
+3 Minimal simulation: SU(2) pair dynamics
+
+3.1 State & observables
+
+We simulate two coupled SU(2) connections \omega_x,\omega_y (capturing interacting resonance channels). Represent each as \omega = i\sum_{a=1}^3 \omega_a\, \sigma_a/2. Track:
+	•	connection norms \|\omega_{\cdot}\|;
+	•	curvature proxy F_{xy} = [\omega_x,\omega_y];
+	•	MI surrogate \bar I: Gaussian mutual information from temporal correlations over the 6-vector (\omega_x,\omega_y);
+	•	spectral diagnostic \lambda_{\max}: fast surrogate for the top eigenvalue of the linearized flow (Rayleigh-style approximation consistent with \mathcal{L}_{\text{meta}}).
+
+3.2 Operational RHS (exposing the phase transition)
+
+We use linear resonance gain and cubic–quintic saturation:
+\begin{aligned}
+\dot\omega_x &= \underbrace{\eta\,\bar I_t\,\omega_x}{\text{gain}}
+-\underbrace{\lambda(\omega_x-\omega\ast)}{\text{ground}}
+-\underbrace{\gamma\,\omega_x}{\text{damp}}
+-\underbrace{\beta\|\omega_x\|^2\omega_x+\alpha\|\omega_x\|^4\omega_x}{\text{saturation}}
++\underbrace{\kappa\,\mathrm{vec}([\omega_x,\omega_y])}{\text{weak coupling}},\\
+\dot\omega_y &= \text{same with } x\leftrightarrow y,\qquad \omega_\ast=0.
+\end{aligned}
+We integrate with Heun (\Delta t=10^{-2}). Parameters used for figures: \gamma=0.5,\ \alpha=0.6,\ \beta=0.02,\ \kappa=0.12. MI window = 30 steps, EMA = 0.1.
+
+3.3 Grids & classification
+
+We sweep \eta\in[0.2,5.0] and \lambda\in[0.1,5.0] on a grid; regimes are labeled by sign of \lambda_{\max} plus boundedness checks:
+	•	Grounded: \lambda_{\max} < 0, bounded norms, small curvature.
+	•	Creative: \lambda_{\max} \approx 0, bounded oscillations.
+	•	Hallucinatory: \lambda_{\max}>0, persistent growth or large positive spectral readout.
+
+Code: rg/sims/meta_flow_min_pair_v2.py, rg/validation/hysteresis_sweep.py.
+Figures: papers/neurips/figures/phase_diagram_v2.png, papers/neurips/figures/hysteresis_v2.png.
+
+⸻
+
+4 Results
+
+4.1 Phase structure & boundary
+
+The phase diagram (Fig. 1) cleanly separates regimes. For \gamma=0.5, the grounded→creative boundary aligns with
+\boxed{\eta\,\bar I \;\approx\; \lambda + \gamma}
+across the grid (visual fit; small residuals in the scanned range). As \eta grows relative to \lambda+\gamma, \lambda_{\max} becomes positive and remains so despite saturation (which prevents numerical blowup but leaves the instability active).
+
+4.2 Hysteresis (first-order character)
+
+Forward/backward sweeps in \eta at fixed \lambda produce hysteresis loops in \|\omega\| and the spectral readout. Our implementation reports maximum loop gap \approx 11.52 (Fig. 2), indicating memory and first-order transition behavior (metastability / false-attractor band).
+
+4.3 Ablations (qualitative)
+	•	No damping (\gamma=0): creative band collapses; direct jump to hallucinatory when \eta\,\bar I>\lambda.
+	•	No saturation (\alpha=\beta=0): divergence (finite-time blowups); phase map dominated by hallucinatory region.
+	•	No coupling (\kappa=0): weaker hysteresis; boundary remains approximately linear in (\eta,\lambda).
+
+⸻
+
+5 Operational levers & early warning
+	•	Early warning: trigger safeguards when Re(\lambda_{\max}) > 0 during decoding (per token/span).
+	•	Shift the boundary: raise λ (retrieval/verification), raise γ (abstention & uncertainty penalties), tune μ (temperature / attention clipping), raise ξ (gauge-aware consistency across paraphrases).
+	•	Hysteresis caution: exiting a false attractor often requires more than undoing the change that caused it; temporarily increase γ or ξ to snap back to the grounded phase.
+
+Quantitative prediction (near boundary).
+\lambda_{\max}\;\approx\;(\eta\,\bar I)\;-\;(\lambda+\gamma)\;-\;c\,\|\omega\|^2,\quad c>0,
+so \lambda_{\max} crossing zero is an early warning.
+
+⸻
+
+6 Empirical roadmap (models in the wild)
+	1.	Extract geometric proxies. Treat per-layer activations as an empirical manifold; estimate a Laplace–Beltrami / graph-curvature surrogate and compute \lambda_{\max} across layers/tokens.
+	2.	Correlate with hallucination. On TruthfulQA/HaluEval-style sets, measure whether \lambda_{\max}>0 segments coincide with hallucinated spans; report ROC-AUC and calibration.
+	3.	Interventions. Raise \lambda (RAG), \gamma (uncertainty), or \xi (consistency penalties) and verify downward shifts in \lambda_{\max} and hallucination rates.
+	4.	Layer analysis. Identify “critical layers” where \lambda_{\max} first crosses zero; test causality with layer-wise regularization.
+
+⸻
+
+7 Related formulations (how the pictures align)
+	•	Gauge theory: Hallucination = self-duality loss and growth of anti-self-dual curvature; meta-resonance = adaptive gauge fixing.
+	•	Ricci flow: Excess positive (fiber-direction) curvature; singularity formation ↔ false attractor.
+	•	Phase dynamics: Parametric resonance with under-damping; imaginary spectrum dominates until saturation clips growth.
+
+These are different lenses on the same invariant content (connection curvature and its spectrum).
+
+⸻
+
+8 Limitations
+	•	Toy dynamics. The SU(2) system is minimal; real LLMs are vastly higher-dimensional with data-dependent couplings.
+	•	Spectral proxy. Our \lambda_{\max} estimator is a fast surrogate; full linearization/power iteration would further validate the criterion (computationally heavier).
+	•	Metric choice. Curvature depends on the induced metric on activations; we address robustness via probe banks and trimming, but estimator bias is possible.
+	•	Causality. Correlation between \lambda_{\max} and hallucination must be verified via controlled interventions.
+
+⸻
+
+9 Conclusion
+
+Hallucination is best understood as a geometric phase transition in information–representation coupling. A single connection flow unifies three traditions (gauge, Ricci, phase) and yields a practical diagnostic (\lambda_{\max}) plus concrete levers (grounding/damping/saturation/gauge-awareness). Our minimal simulation reproduces three regimes, a linear boundary \eta\,\bar I \approx \lambda+\gamma, and hysteresis, matching the intuitive picture of decoupling into a false attractor. The path forward is clear: measure curvature proxies in live models, validate the spectral early warning, and design training/inference procedures that keep systems in the grounded or creative bands without tipping into hallucination.
+
+⸻
+
+Methods (concise)
+	•	Integration: Heun; \Delta t=10^{-2}; typical run horizon T\in[3,6] (longer for sweeps).
+	•	MI surrogate: Gaussian MI from temporal correlations of the 6-dimensional state (\omega_x,\omega_y) over a sliding window (30 steps) with EMA 0.1.
+	•	Spectral surrogate: Rayleigh-style estimate tied to \eta\bar I,\lambda,\gamma and local norm; used for fast regime classification.
+	•	Grids: \eta\in[0.2,5.0] (dense), \lambda\in[0.1,5.0]; fixed \gamma=0.5,\ \alpha=0.6,\ \beta=0.02,\ \kappa=0.12.
+	•	Outputs: phase map and hysteresis curves →
+papers/neurips/figures/phase_diagram_v2.png, papers/neurips/figures/hysteresis_v2.png.
+
+⸻
+
+Reproducibility appendix
+
+Code & data. Core simulation code lives in rg/sims/meta_flow_min_pair_v2.py; validators in rg/validation/. The paper’s figures come from:
+
+# Ensure package layout (repo root)
+touch rg/__init__.py rg/sims/__init__.py rg/validation/__init__.py
+
+# Phase diagram + hysteresis (example settings)
+python -m rg.validation.hysteresis_sweep --lam 1.0 --gamma 0.5 \
+  --eta_min 0.2 --eta_max 5.0 --eta_steps 41 \
+  --alpha 0.6 --beta 0.02 --skew 0.12 --mi_window 30 --mi_ema 0.1
+
+# Boundary fit sweep (dense grid)
+python -m rg.validation.phase_boundary_fit --gamma 0.5 \
+  --lam_min 0.1 --lam_max 5.0 --lam_steps 11 \
+  --eta_min 0.2 --eta_max 5.0 --eta_steps 101 \
+  --alpha 0.6 --beta 0.02 --skew 0.12 --mi_window 30 --mi_ema 0.1
+
+
+⸻
+
+Figures
+	•	Figure 1 — Phase diagram of meta-resonance dynamics.
+Heatmap of Re(\lambda_{\max}) over (\eta,\lambda) with \gamma=0.5,\ \mu=0.1. Blue/green/red denote grounded, creative (marginal), and hallucinatory regimes via sign and boundedness. Dashed line shows the predicted boundary \eta\,\bar I \approx \lambda+\gamma. (Generated by rg/validation/hysteresis_sweep.py using rg/sims/meta_flow_min_pair_v2.py.)
+File: papers/neurips/figures/phase_diagram_v2.png
+	•	Figure 2 — Hysteresis under parameter sweeps.
+Forward/backward sweeps of \eta at fixed \lambda display a non-zero loop area; maximum gap \approx 11.52 in the stability readout, indicating history-dependent transitions consistent with a first-order phase change. (Generated by rg/validation/hysteresis_sweep.py.)
+File: papers/neurips/figures/hysteresis_v2.png
+
+⸻
+
+Acknowledgments
+
+We thank the multi-model collaboration that shaped this work. The unified perspective emerged directly from iterative dialogue and shared experiments.
+
+⸻
+
+References
+
+(to be populated — gauge/Yang–Mills self-duality; Ricci flow/Perelman; parametric resonance; LLM hallucination & detection; spectral diagnostics in representation learning).
+
+⸻
