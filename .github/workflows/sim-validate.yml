@@ -1,0 +1,59 @@
+name: sim-validate
+
+on:
+  pull_request:
+    paths:
+      - 'rg/sims/**'
+      - 'rg/validation/**'
+      - '.github/workflows/sim-validate.yml'
+  push:
+    branches: [ main ]
+    paths:
+      - 'rg/sims/**'
+      - 'rg/validation/**'
+      - '.github/workflows/sim-validate.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sims:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: |
+            requirements*.txt
+            pyproject.toml
+            setup.cfg
+            setup.py
+      - name: Install deps
+        run: |
+          python -m pip install -U pip
+          pip install -e .
+          pip install numpy matplotlib
+      - name: Phase diagram sweep
+        env:
+          MPLBACKEND: Agg
+        run: |
+          python -m rg.validation.hysteresis_sweep --lam 1.0 --gamma 0.5 \
+            --eta_min 0.2 --eta_max 5.0 --eta_steps 41 \
+            --alpha 0.6 --beta 0.02 --skew 0.12 --mi_window 30 --mi_ema 0.1
+      - name: Upload sim artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-outputs
+          path: |
+            papers/**/figures/**/*.png
+            rg/results/**
+          if-no-files-found: warn
+          retention-days: 14
