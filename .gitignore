@@ -59,3 +59,4 @@ figures/**/*
 # site build cache (if any)
 .site/
 results/
+!docs/papers/**/*.pdf

@@ -1,0 +1,51 @@
+name: Build Papers (figures + PDFs)
+
+on:
+  push:
+    branches: [ main, feature/** ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Python deps
+        run: |
+          pip install --upgrade pip
+          pip install numpy scipy matplotlib
+
+      - name: Install Pandoc + LaTeX
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc texlive-latex-extra texlive-fonts-recommended
+
+      - name: Regenerate figures
+        run: |
+          make figures
+
+      - name: Build PDFs
+        run: |
+          make pdf
+          ./scripts/build_pdfs.sh
+
+      - name: Upload figures
+        uses: actions/upload-artifact@v4
+        with:
+          name: figures
+          path: |
+            papers/neurips/figures/*.png
+
+      - name: Upload PDFs
+        uses: actions/upload-artifact@v4
+        with:
+          name: papers-pdf
+          path: |
+            docs/papers/**/*.pdf
