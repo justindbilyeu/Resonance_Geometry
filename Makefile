@@ -17,7 +17,7 @@ SKEW?=0.12
 MI_WINDOW?=30
 MI_EMA?=0.1
 
-.PHONY: all figures pdf clean test smoke mapper-smoke
+.PHONY: all figures pdf clean test smoke mapper-smoke sim-smoke
 
 all: figures pdf
 
@@ -53,3 +53,16 @@ smoke:
 mapper-smoke: smoke
 >@ls -la results/mapper || true
 >@ls -la figures || true
+
+sim-smoke:
+>$(PY) -m rg.validation.hysteresis_sweep --lam 1.0 --gamma 0.5 \
+>  --eta_min 0.2 --eta_max 3.0 --eta_steps 21 \
+>  --alpha 0.6 --beta 0.02 --skew 0.12 \
+>  --mi_window 30 --mi_ema 0.1 \
+>  --algebra so3 --antisym_coupling --noise_std 0.01 \
+>  --mi_est corr --mi_scale 1.0
+>$(PY) -m rg.validation.phase_boundary_fit --gamma 0.5 \
+>  --lam_min 0.1 --lam_max 2.0 --lam_steps 5 \
+>  --eta_min 0.2 --eta_max 3.0 --eta_steps 51 \
+>  --alpha 0.6 --beta 0.02 --skew 0.12 --mi_window 30 --mi_ema 0.1 \
+>  --algebra su2 --noise_std 0.0 --mi_est svd --mi_scale 1.0
