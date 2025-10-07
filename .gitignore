@@ -78,3 +78,6 @@ rg/results/
 !docs/papers/neurips/results/
 !docs/papers/neurips/results/*.csv
 >>>>>>> origin/main
+
+# package artifacts
+*.egg-info/
