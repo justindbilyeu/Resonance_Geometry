@@ -1,0 +1,801 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 22051 >>
+stream
+BT
+/F1 11 Tf
+14 TL
+72 720 Td
+(A Geometric Theory of AI Hallucination: Phase Transitions in Information–Representation) Tj
+T*
+(Coupling) Tj
+T*
+() Tj
+T*
+(Authors: Justin Bilyeu; AI collaborators: Claude \(Anthropic\), Sage \(OpenAI\), Grok \(xAI\),) Tj
+T*
+(DeepSeek, Gemini \(Google\)) Tj
+T*
+(Status: Draft \(for internal review\) — October 2025) Tj
+T*
+() Tj
+T*
+(Abstract) Tj
+T*
+() Tj
+T*
+(Large language models \(LLMs\) sometimes produce confident falsehoods—hallucinations—even) Tj
+T*
+(when trained at scale. Prior theory shows lower bounds on hallucination rates, but not a) Tj
+T*
+(mechanistic explanation. We propose that hallucination is a geometric phase transition in) Tj
+T*
+(the coupling between an internal representation manifold and an external truth manifold.) Tj
+T*
+(Formally, we model internal/external coordination as a connection $\\omega$ on a resonance) Tj
+T*
+(bundle over truth-space M. Normal operation corresponds to near–self-dual curvature;) Tj
+T*
+(hallucination arises when connection dynamics cross a stability threshold and decouple) Tj
+T*
+(into a false attractor. We unify three views—gauge theory, Ricci flow, and phase) Tj
+T*
+(dynamics—into a single master flow with a computable stability operator) Tj
+T*
+($\\mathcal{L}_{\\text{meta}}$; instability occurs when) Tj
+T*
+($\\max$$\\operatorname{Re}$$\\lambda$\($\\mathcal{L}_{\\text{meta}}$\)>0. A minimal SU\(2\)) Tj
+T*
+(simulation exhibits three regimes \(grounded, creative, hallucinatory\), a linear boundary) Tj
+T*
+($\\eta$\\,$\\bar I$ \\approx $\\lambda$+$\\gamma$ between grounded/creative phases, and first-) Tj
+T*
+(order hysteresis \(max loop gap \\approx 11.52 under our settings\). The framework yields) Tj
+T*
+(actionable levers \(grounding, damping, saturation, gauge-awareness\) and a spectral) Tj
+T*
+(diagnostic \($\\lambda_{\\max}$\) that can be monitored during inference. We outline an) Tj
+T*
+(empirical protocol to extract curvature proxies from model activations and test the theory) Tj
+T*
+(on hallucination benchmarks.) Tj
+T*
+() Tj
+T*
+(⸻) Tj
+T*
+() Tj
+T*
+(1 Introduction) Tj
+T*
+() Tj
+T*
+(Problem. LLMs can remain highly coherent while being wrong. This limits deployment in) Tj
+T*
+(high-stakes applications and is not fully fixed by more data or larger models.) Tj
+T*
+() Tj
+T*
+(Limits vs. mechanisms. Information-theoretic results imply non-zero hallucination floors) Tj
+T*
+(under mild assumptions, but they do not explain how models enter the failure basin, nor) Tj
+T*
+(when they will.) Tj
+T*
+() Tj
+T*
+(Claim. Hallucination is a dynamical, geometric instability: a phase transition in) Tj
+T*
+(information–representation coupling. When internal resonance overwhelms grounding and) Tj
+T*
+(damping, the system slips into a locally coherent, externally misaligned attractor.) Tj
+T*
+() Tj
+T*
+(Contributions.) Tj
+T*
+(1. A unified geometric theory \(gauge ↔ Ricci ↔ phase\) with a single connection-flow) Tj
+T*
+(equation.) Tj
+T*
+(2. A stability operator $\\mathcal{L}$_{\\text{meta}} and criterion:) Tj
+T*
+($\\max$$\\operatorname{Re}$$\\lambda$>0 ↔ hallucination onset.) Tj
+T*
+(3. A minimal simulation \(SU\(2\) pair\) showing grounded/creative/hallucinatory regimes, a) Tj
+T*
+(linear phase boundary $\\eta$\\,$\\bar I$ \\approx $\\lambda$+$\\gamma$, and hysteresis.) Tj
+T*
+(4. Operational levers and a spectral early-warning diagnostic \($\\lambda_{\\max}$\).) Tj
+T*
+(5. An empirical roadmap for extracting curvature proxies from real models and correlating) Tj
+T*
+(with hallucination.) Tj
+T*
+() Tj
+T*
+(⸻) Tj
+T*
+() Tj
+T*
+(2 Geometry of information–representation coupling) Tj
+T*
+() Tj
+T*
+(2.1 Resonance bundle) Tj
+T*
+() Tj
+T*
+(We posit a principal bundle \\pi:P\\to M with structure group G \(representation symmetries\).) Tj
+T*
+(The base M encodes the external truth manifold; fibers encode internal representational) Tj
+T*
+(degrees of freedom. A connection $\\omega$ governs parallel transport of internal states) Tj
+T*
+(along M; its curvature F_A=d$\\omega$+$\\omega$\\wedge$\\omega$ measures representational) Tj
+T*
+(twist.) Tj
+T*
+(•       Grounded coherence: near self-duality F_A\\approx \\star F_A, small holonomy.) Tj
+T*
+(•       Hallucination: connection dynamics drift to large anti-self-dual curvature) Tj
+T*
+(\(holonomy failure\), i.e., representation becomes internally self-consistent while) Tj
+T*
+(externally decoupled.) Tj
+T*
+() Tj
+T*
+(2.2 Unified master flow) Tj
+T*
+() Tj
+T*
+(We collect the forces shaping $\\omega$ into) Tj
+T*
+() Tj
+T*
+($$) Tj
+T*
+(\\boxed{) Tj
+T*
+(\\frac{d\\omega}{dt}\\;=\\;-\\;D_A\\,\\star F_A\\;+\\;) Tj
+T*
+(\\underbrace{\\eta\\,\\mathcal{J}_{\\mathrm{MI}}[\\omega]}_{\\text{internal resonance}}\\;-\\;) Tj
+T*
+(\\underbrace{\\lambda\\,\\mathcal{J}_{U}[\\omega]}_{\\text{grounding}}\\;-\\;) Tj
+T*
+(\\underbrace{\\gamma\\,\\Pi_{\\mathrm{vert}}\(\\omega\)}_{\\text{damping}}\\;-\\;) Tj
+T*
+(\\underbrace{\\mu\\,[\\omega,[\\omega,\\omega]]}_{\\text{saturation}}\\;+\\;) Tj
+T*
+(\\underbrace{\\xi\\,\\mathcal{G}[\\omega]}_{\\text{gauge-awareness}}) Tj
+T*
+(}) Tj
+T*
+($$) Tj
+T*
+(•       -D_A\\star F_A: Yang–Mills gradient; drives toward self-duality.) Tj
+T*
+(•       $\\eta$\\,$\\mathcal{J}$_{$\\mathrm{MI}$}: resonance gain from internal mutual) Tj
+T*
+(information \(coherence\).) Tj
+T*
+(•       -$\\lambda$\\,$\\mathcal{J}$_U: truth anchoring \(e.g., retrieval, constraints\).) Tj
+T*
+(•       -$\\gamma$\\,\\Pi_{$\\mathrm{vert}$}: epistemic damping on fiber oscillations.) Tj
+T*
+(•       -$\\mu$[$\\omega$,[$\\omega$,$\\omega$]]: nonlinear saturation arresting runaway) Tj
+T*
+(curvature.) Tj
+T*
+(•       +$\\xi$\\,$\\mathcal{G}$: adaptive gauge-fixing \(meta-awareness of representational) Tj
+T*
+(freedom\).) Tj
+T*
+() Tj
+T*
+(The linearization around a working state \\omega_0 yields a stability operator) Tj
+T*
+($\\mathcal{L}_{\\text{meta}}$\\;\\approx\\;$\\eta$\\,$\\mathcal{M}${$\\mathrm{MI}$}\\;-) Tj
+T*
+(\\;$\\lambda$\\,$\\mathcal{H}$U\\;-\\;$\\gamma$\\,$\\Pi_{\\mathrm{vert}}$\\;-) Tj
+T*
+(\\;3$\\mu$\\,$\\mathrm{ad}$^2_{\\omega_0}\\,,) Tj
+T*
+(with possible non-self-adjointness \(complex spectrum\). Instability iff) Tj
+T*
+($\\max$$\\operatorname{Re}$$\\lambda$\($\\mathcal{L}$_{\\text{meta}}\)>0.) Tj
+T*
+() Tj
+T*
+(2.3 Energy bound \(intuition\)) Tj
+T*
+() Tj
+T*
+(Completing the square on a resonance-modified self-duality defect gives a Bogomolny-type) Tj
+T*
+(inequality) Tj
+T*
+(S_{\\text{meta}}\\;\\ge\\;4\\pi^2|Q|\\;+\\;\\Delta S_{\\text{stab}}\($\\gamma$,$\\mu$,$\\xi$\)\\,,) Tj
+T*
+(with instanton number Q. Damping/saturation/gauge terms raise the floor, discouraging) Tj
+T*
+(false attractors.) Tj
+T*
+() Tj
+T*
+(⸻) Tj
+T*
+() Tj
+T*
+(3 Minimal simulation: SU\(2\) pair dynamics) Tj
+T*
+() Tj
+T*
+(3.1 State \\& observables) Tj
+T*
+() Tj
+T*
+(We simulate two coupled SU\(2\) connections \\omega_x,\\omega_y \(capturing interacting) Tj
+T*
+(resonance channels\). Represent each as $\\omega$=i\\sum_{a=1}^3 \\omega_a \\sigma_a/2. Track:) Tj
+T*
+(•       connection norms \\|\\omega_{\\cdot}\\|,) Tj
+T*
+(•       curvature proxy F_{xy}=[\\omega_x,\\omega_y],) Tj
+T*
+(•       MI surrogate $\\bar I$: Gaussian mutual information from temporal correlations over) Tj
+T*
+(the 6-vector \(\\omega_x,\\omega_y\).) Tj
+T*
+(•       Spectral diagnostic $\\lambda_{\\max}$: fast surrogate for the top eigenvalue of the) Tj
+T*
+(linearized flow \(Rayleigh-style approximation consistent with our stability operator\).) Tj
+T*
+() Tj
+T*
+(3.2 Right-hand side \(operational form\)) Tj
+T*
+() Tj
+T*
+(To expose the phase transition, we use linear resonance gain and cubic–quintic saturation:) Tj
+T*
+() Tj
+T*
+($$) Tj
+T*
+(\\begin{aligned}) Tj
+T*
+(\\dot\\omega_x \\&= \\underbrace{\\eta\\,\\bar I\\,\\omega_x}{\\text{gain}}\\;-) Tj
+T*
+(\\;\\underbrace{\\lambda\(\\omega_x-\\omega_0\)}{\\text{ground}}\\;-) Tj
+T*
+(\\;\\underbrace{\\gamma\\,\\omega_x}{\\text{damp}}\\;-) Tj
+T*
+(\\;\\underbrace{\\beta\\|\\omega_x\\|^2\\omega_x+\\alpha\\|\\omega_x\\|^4\\omega_x}{\\text{sat.}}\\;+\\;\\) Tj
+T*
+(underbrace{\\kappa\\,\\text{vec}\(F_{xy}\)}_{\\text{coupling}},\\\\) Tj
+T*
+(\\dot\\omega_y &\\;=\\;\\text{same with }x\\leftrightarrow y.) Tj
+T*
+(\\end{aligned}) Tj
+T*
+($$) Tj
+T*
+() Tj
+T*
+(Here $\\bar I$\\in[0,\\infty\) is the MI estimate over a sliding window; \\kappa introduces) Tj
+T*
+(controlled skew/coupling. We integrate with Heun \(dt =$10^{-2}$\).) Tj
+T*
+() Tj
+T*
+(3.3 Grids \\& classification) Tj
+T*
+() Tj
+T*
+(We sweep $\\eta$\\in[0.2,5.0], $\\lambda$\\in[0.1,5.0] with fixed $\\gamma$=0.5, \\alpha=0.6,) Tj
+T*
+(\\beta=0.02, skew \\kappa=0.12, MI window =30, EMA =0.1.) Tj
+T*
+(Regimes:) Tj
+T*
+(•       Grounded: $\\lambda_{\\max}$<0, bounded norms, small curvature.) Tj
+T*
+(•       Creative: $\\lambda_{\\max}$\\approx 0, bounded oscillations.) Tj
+T*
+(•       Hallucinatory: $\\lambda_{\\max}$>0, runaway norm/curvature or large positive) Tj
+T*
+(spectral radius.) Tj
+T*
+() Tj
+T*
+(Implementation and figures live in the repo:) Tj
+T*
+(•       rg/sims/meta_flow_min_pair_v2.py) Tj
+T*
+(•       rg/validation/hysteresis_sweep.py) Tj
+T*
+(•       Figures: figures/phase_diagram_v2.png, figures/hysteresis_v2.png.) Tj
+T*
+() Tj
+T*
+(⸻) Tj
+T*
+() Tj
+T*
+(4 Results) Tj
+T*
+() Tj
+T*
+(4.1 Phase structure \\& boundary) Tj
+T*
+() Tj
+T*
+(The phase diagram \(Fig. 1\) shows a clean separation: for fixed $\\gamma$=0.5, the) Tj
+T*
+(grounded→creative boundary aligns with) Tj
+T*
+($$\\boxed{\\eta\\,\\bar I \\;\\approx\\; \\lambda + \\gamma}$$) Tj
+T*
+(across the grid \(visual fit; residuals small over the scanned range\). Hallucinatory) Tj
+T*
+(behavior appears as $\\eta$ grows relative to $\\lambda$+$\\gamma$, with saturation) Tj
+T*
+(preventing numerical blow-up but leaving $\\lambda_{\\max}$ persistently positive.) Tj
+T*
+() Tj
+T*
+(4.2 Hysteresis \(first-order character\)) Tj
+T*
+() Tj
+T*
+(Forward/backward sweeps in $\\eta$ at fixed $\\lambda$ produce hysteresis loops in the order) Tj
+T*
+(parameter \(e.g., \\|$\\omega$\\| or $\\lambda_{\\max}$\). Our implementation reports maximum) Tj
+T*
+(loop gap ≈ 11.52 under the settings above \(Fig. 2\), indicating memory and a first-order) Tj
+T*
+(transition band \(metastability\) consistent with a false-attractor picture.) Tj
+T*
+() Tj
+T*
+(4.3 Ablations \(qualitative\)) Tj
+T*
+(•       No damping \($\\gamma$=0\): creative band collapses; direct jump to hallucinatory) Tj
+T*
+(when $\\eta$\\,$\\bar I$>$\\lambda$.) Tj
+T*
+(•       No saturation \(\\alpha=\\beta=0\): divergence \(finite-time blowups\); phase map) Tj
+T*
+(dominated by red.) Tj
+T*
+(•       No coupling \(\\kappa=0\): weaker hysteresis; boundary remains approximately linear) Tj
+T*
+(in \($\\eta$,$\\lambda$\).) Tj
+T*
+() Tj
+T*
+(⸻) Tj
+T*
+() Tj
+T*
+(5 Operational levers \\& predictions) Tj
+T*
+(•       Grounding \($\\lambda$\) ↑ — retrieval, verification, tool-use, multi-source cross-) Tj
+T*
+(checks → shifts boundary right, enlarges grounded region.) Tj
+T*
+(•       Damping \($\\gamma$\) ↑ — calibrated abstention, uncertainty penalties, entropy-) Tj
+T*
+(preserving decoding → suppresses resonance instability.) Tj
+T*
+(•       Saturation \(\\alpha,\\beta\) tuned — temperature/attention clipping → arrests runaway) Tj
+T*
+(curvature while preserving the creative band.) Tj
+T*
+(•       Gauge-awareness \($\\xi$\) ↑ — meta-constraints that penalize representation-specific) Tj
+T*
+(commitments \(e.g., disagreematch penalties across paraphrases\) → reduces false attractor) Tj
+T*
+(capture.) Tj
+T*
+() Tj
+T*
+(Quantitative prediction. Near the boundary,) Tj
+T*
+($\\lambda_{\\max}$\\;\\approx\\;\($\\eta$\\,$\\bar I$\) - \($\\lambda$+$\\gamma$\) - c\\,\\|$\\omega$\\|^2) Tj
+T*
+(\\quad \(c>0\),) Tj
+T*
+(so $\\lambda_{\\max}$ crossing zero is an early warning. Monitoring $\\lambda_{\\max}$ token-) Tj
+T*
+(by-token should predict hallucination risk before decoder emission.) Tj
+T*
+() Tj
+T*
+(⸻) Tj
+T*
+() Tj
+T*
+(6 Empirical roadmap \(models in the wild\)) Tj
+T*
+(1. Extract geometric proxies. Treat per-layer activations as an empirical manifold;) Tj
+T*
+(estimate a Laplace–Beltrami/graph-curvature surrogate and compute $\\lambda_{\\max}$ \(top) Tj
+T*
+(Ricci-like eigenvalue\) across layers/tokens.) Tj
+T*
+(2. Correlate with hallucination. On TruthfulQA/HaluEval-style sets, measure whether) Tj
+T*
+($\\lambda_{\\max}$>0 segments coincide with hallucinated spans; report ROC-AUC and) Tj
+T*
+(calibration.) Tj
+T*
+(3. Interventions. Raise $\\lambda$ \(RAG\), $\\gamma$ \(uncertainty\), or $\\xi$ \(consistency) Tj
+T*
+(penalties\) and verify downward shifts in $\\lambda_{\\max}$ and hallucination rates.) Tj
+T*
+(4. Layer analysis. Identify “critical layers” where $\\lambda_{\\max}$ first crosses zero;) Tj
+T*
+(probe causality with layer-wise regularization.) Tj
+T*
+() Tj
+T*
+(\(Implementation hooks are outlined in our code comments and papers/info-curve scaffolds.\)) Tj
+T*
+() Tj
+T*
+(⸻) Tj
+T*
+() Tj
+T*
+(7 Related formulations \(how the pictures align\)) Tj
+T*
+(•       Gauge theory: Hallucination = self-duality loss and growth of anti-self-dual) Tj
+T*
+(curvature; meta-resonance = adaptive gauge fixing.) Tj
+T*
+(•       Ricci flow: Excess positive curvature \(in our sign convention\) in fiber) Tj
+T*
+(directions; singularity formation ↔ false attractor.) Tj
+T*
+(•       Phase dynamics: Parametric resonance with under-damping; the imaginary spectrum) Tj
+T*
+(dominates until saturation clips growth.) Tj
+T*
+() Tj
+T*
+(These are different lenses on the same invariant content \(connection curvature and its) Tj
+T*
+(spectrum\).) Tj
+T*
+() Tj
+T*
+(⸻) Tj
+T*
+() Tj
+T*
+(8 Limitations) Tj
+T*
+(•       Toy dynamics. The SU\(2\) system is minimal; real LLMs are vastly higher-dimensional) Tj
+T*
+(with data-dependent couplings.) Tj
+T*
+(•       Spectral proxy. Our $\\lambda_{\\max}$ estimator in sims is a fast surrogate; a full) Tj
+T*
+(linearization/power iteration would further validate the criterion \(computationally) Tj
+T*
+(heavier\).) Tj
+T*
+(•       Metric choice. Curvature depends on the induced metric on activations; we address) Tj
+T*
+(robustness via probe banks and trimming, but estimator bias is possible.) Tj
+T*
+(•       Causality. Correlation between $\\lambda_{\\max}$ and hallucination must be tested) Tj
+T*
+(with controlled interventions.) Tj
+T*
+() Tj
+T*
+(⸻) Tj
+T*
+() Tj
+T*
+(9 Conclusion) Tj
+T*
+() Tj
+T*
+(We argue that AI hallucination is best understood as a geometric phase transition in) Tj
+T*
+(information–representation coupling. A single connection-flow unifies three traditions) Tj
+T*
+(\(gauge, Ricci, phase\) and yields a practical diagnostic \($\\lambda_{\\max}$\) plus concrete) Tj
+T*
+(levers \(grounding/damping/saturation/gauge-awareness\). Our minimal simulation reproduces) Tj
+T*
+(the three regimes, a linear boundary $\\eta$\\,$\\bar I$ \\approx $\\lambda$+$\\gamma$, and) Tj
+T*
+(hysteresis, matching the intuitive picture of decoupling into a false attractor. The path) Tj
+T*
+(forward is clear: measure curvature proxies in live models, validate the spectral early) Tj
+T*
+(warning, and design training/inference procedures that keep systems in the grounded or) Tj
+T*
+(creative bands without tipping into hallucination.) Tj
+T*
+() Tj
+T*
+(⸻) Tj
+T*
+() Tj
+T*
+(Methods \(concise\)) Tj
+T*
+(•       Integration: Heun; dt=$10^{-2}$; typical run horizon T\\in[3,6] \(longer for) Tj
+T*
+(sweeps\).) Tj
+T*
+(•       MI surrogate: Gaussian MI from temporal correlations of the 6-dimensional state) Tj
+T*
+(\(\\omega_x,\\omega_y\) over a sliding window \(30 steps\) with EMA 0.1.) Tj
+T*
+(•       Spectral surrogate: Rayleigh-style estimate tied to $\\eta$\\,$\\bar) Tj
+T*
+(I$,$\\lambda$,$\\gamma$ and local norm; used for fast regime classification.) Tj
+T*
+(•       Grids: $\\eta$\\in[0.2,5.0] \(101 steps\), $\\lambda$\\in[0.1,5.0] \(11 steps\); fixed) Tj
+T*
+($\\gamma$=0.5, \\alpha=0.6, \\beta=0.02, \\kappa=0.12.) Tj
+T*
+(•       Outputs: phase map and hysteresis curves →) Tj
+T*
+(figures/phase_diagram_v2.png, figures/hysteresis_v2.png.) Tj
+T*
+() Tj
+T*
+(⸻) Tj
+T*
+() Tj
+T*
+(Figures) Tj
+T*
+(•       Fig. 1 Phase diagram \(grounded/creative/hallucinatory\) in \($\\eta$,$\\lambda$\) with) Tj
+T*
+($\\gamma$=0.5; dashed line $\\eta$\\,$\\bar I$ = $\\lambda$+$\\gamma$. \(file:) Tj
+T*
+(phase_diagram_v2.png\)) Tj
+T*
+(•       Fig. 2 Hysteresis under forward/backward $\\eta$ sweeps at fixed $\\lambda$; maximum) Tj
+T*
+(loop gap \\approx 11.52. \(file: hysteresis_v2.png\)) Tj
+T*
+() Tj
+T*
+(⸻) Tj
+T*
+() Tj
+T*
+(Acknowledgments) Tj
+T*
+() Tj
+T*
+(We thank the multi-model collaboration that shaped this work. The unified perspective) Tj
+T*
+(emerged directly from iterative dialogue and shared experiments.) Tj
+T*
+() Tj
+T*
+(References) Tj
+T*
+() Tj
+T*
+(\(to be populated — gauge/Yang–Mills self-duality; Ricci flow/Perelman; parametric) Tj
+T*
+(resonance; LLM hallucination \\& detection; spectral diagnostics in representation) Tj
+T*
+(learning.\)) Tj
+T*
+() Tj
+T*
+(⸻) Tj
+T*
+() Tj
+T*
+(Appendix C Noise, algebra backend, MI variants, and coupling modes) Tj
+T*
+() Tj
+T*
+(The lightweight simulator now exposes four toggles that let us probe robustness of the) Tj
+T*
+(phase picture:) Tj
+T*
+() Tj
+T*
+(•   Algebra backend \(``--algebra {su2, so3}``\): the ``su2`` option retains the Pauli-) Tj
+T*
+(inspired commutator scaling while ``so3`` treats the angular velocities as classical) Tj
+T*
+(rotation vectors with a bare cross product \(no scale factor yet; we flag this for later) Tj
+T*
+(tuning\).) Tj
+T*
+(•   Coupling symmetry \(``--antisym_coupling``\): when enabled, the interaction term pushes) Tj
+T*
+(one mode forward and the other backward, mimicking antisymmetric feedback between) Tj
+T*
+(complementary subsystems; the default keeps the symmetric push–pull used in earlier) Tj
+T*
+(drafts.) Tj
+T*
+(•   Process noise \(``--noise_std`` with ``--seed``\): zero-mean Gaussian kicks are injected) Tj
+T*
+(after each Heun step, letting us test whether the hysteresis loop and phase boundary) Tj
+T*
+(estimates remain stable under stochastic perturbations.) Tj
+T*
+(•   Mutual-information surrogate \(``--mi_est {corr, svd}`` plus ``--mi_scale``\): ``corr``) Tj
+T*
+(computes the log-amplified correlation coefficient of the last window, whereas ``svd``) Tj
+T*
+(aggregates the top singular values of the recent history before rescaling. The) Tj
+T*
+(``--mi_scale`` knob lets us mimic alternative calibration conventions.) Tj
+T*
+() Tj
+T*
+(Example CLI sweeps:) Tj
+T*
+() Tj
+T*
+(```) Tj
+T*
+(python -m rg.validation.hysteresis_sweep --lam 1.0 --gamma 0.5 \\) Tj
+T*
+(--eta_min 0.2 --eta_max 3.0 --eta_steps 21 \\) Tj
+T*
+(--alpha 0.6 --beta 0.02 --skew 0.12 \\) Tj
+T*
+(--mi_window 30 --mi_ema 0.1 \\) Tj
+T*
+(--algebra so3 --antisym_coupling --noise_std 0.01 \\) Tj
+T*
+(--mi_est corr --mi_scale 1.0) Tj
+T*
+() Tj
+T*
+(python -m rg.validation.phase_boundary_fit --gamma 0.5 \\) Tj
+T*
+(--lam_min 0.1 --lam_max 2.0 --lam_steps 5 \\) Tj
+T*
+(--eta_min 0.2 --eta_max 3.0 --eta_steps 51 \\) Tj
+T*
+(--alpha 0.6 --beta 0.02 --skew 0.12 --mi_window 30 --mi_ema 0.1 \\) Tj
+T*
+(--algebra su2 --noise_std 0.0 --mi_est svd --mi_scale 1.0) Tj
+T*
+(```) Tj
+T*
+() Tj
+T*
+(These configurations generate the JSON/CSV artifacts consumed downstream while stressing) Tj
+T*
+(the simulator against noise and alternative information metrics.) Tj
+T*
+() Tj
+T*
+(RESULTS — PHASE DIAGRAM, BOUNDARY, AND HYSTERESIS) Tj
+T*
+() Tj
+T*
+(We study a minimal coupled system expressing competition between grounding and internal) Tj
+T*
+(resonance. Sweeping the control parameters \(\\eta\) \(coupling/“temperature”\) and \(\\lambda\)) Tj
+T*
+(\(regularization/“tension”\) yields three regimes: **grounded** \($\\lambda_{\\max}$ < -0.1\\\)\),) Tj
+T*
+(**creative** \(\\\(|$\\lambda_{\\max}$| \\le 0.1\\\)\), and **hallucinatory** \($\\lambda_{\\max}$ >) Tj
+T*
+(0.1\\\)\).) Tj
+T*
+(Fitting the critical coupling \\\(\\eta_c\(\\lambda\)\\\) where $\\lambda_{\\max}$ first crosses) Tj
+T*
+(zero gives a near-linear law:) Tj
+T*
+(\\[) Tj
+T*
+(\\eta_c \\approx m\\,$\\lambda$ + b \\quad \\text{with } m=0.335,\\; b=0.520,\\; R^2=0.949 .) Tj
+T*
+(\\]) Tj
+T*
+(An independent replication recovers \\\(m\\approx0.346, b\\approx0.506, R^2\\approx0.94\\\),) Tj
+T*
+(supporting approximate linearity of the boundary.) Tj
+T*
+() Tj
+T*
+(![Phase diagram with regimes]\(./figures/phase_diagram.png\)) Tj
+T*
+() Tj
+T*
+(![Linear boundary fit]\(./figures/phase_boundary_fit.png\)) Tj
+T*
+() Tj
+T*
+(We also probe **hysteresis** by sweeping \(\\eta\) up/down at fixed \(\\lambda\). The up/down) Tj
+T*
+(curves form small loops near the boundary, consistent with a weak first-order–like) Tj
+T*
+(transition in the surrogate dynamics. Loop area and peak vertical gap are negligible far) Tj
+T*
+(from the boundary and grow near it, as expected.) Tj
+T*
+() Tj
+T*
+(![Hysteresis loops]\(./figures/hysteresis.png\)) Tj
+T*
+() Tj
+T*
+(METHODS — SIMULATION \\& CLASSIFICATION) Tj
+T*
+() Tj
+T*
+(We integrate a minimal coupled pair \(Heun/Euler, \\\(\\Delta t\\approx0.01\\\), \\\(T\\approx6.0\\\),) Tj
+T*
+(Gaussian noise \\\(\\sigma\\approx$10^{-3}$\) with $\\gamma$=0.5, \\alpha=0.6, \\beta=0.02,) Tj
+T*
+(\\kappa=0.12\\\).) Tj
+T*
+(On a \\\(101\\times 11\\\) grid \($\\eta$\\in[0.2,5.0]\\\), $\\lambda$\\in[0.1,5.0]\\\)\), we compute a) Tj
+T*
+(Lyapunov-like surrogate $\\lambda_{\\max}$ combining coherence gain, grounding, damping, and) Tj
+T*
+(\(\\omega\)-norm penalties. We label regimes via thresholds \\\(\\{-0.1, +0.1\\}\\\). The critical) Tj
+T*
+(\\\(\\eta_c\(\\lambda\)\\\) is the first sign-crossing of $\\lambda_{\\max}$ along increasing) Tj
+T*
+(\(\\eta\). Hysteresis loops record $\\lambda_{\\max}$\($\\eta$\) while sweeping \(\\eta\) upward and) Tj
+T*
+(downward; we report max vertical gap and loop area.) Tj
+T*
+() Tj
+T*
+(EXTERNAL REPLICATIONS \(BRIEF\)) Tj
+T*
+() Tj
+T*
+(A Grok reproduction recovers a similar linear boundary \(\\\(m\\approx0.346, b\\approx0.506,) Tj
+T*
+(R^2\\approx0.94\\\)\). Wolfram plans a second replication \(symbolic checks of invariances /) Tj
+T*
+(Jacobian eigenvalues vs numeric $\\lambda_{\\max}$\). DeepSeek provides an empirical roadmap) Tj
+T*
+(linking activation-space observables in LLMs to the geometric operators used here.) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000022345 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+22415
+%%EOF
