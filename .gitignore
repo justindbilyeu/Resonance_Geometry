@@ -60,3 +60,7 @@ figures/**/*
 .site/
 results/
 !docs/papers/**/*.pdf
+
+# --- allow tracked paper results under docs (override global results/ ignore) ---
+!docs/papers/neurips/results/
+!docs/papers/neurips/results/*.csv

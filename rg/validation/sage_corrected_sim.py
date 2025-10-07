@@ -122,7 +122,8 @@ print(f”            -> eta ~ {(LAMBDA_FIXED + GAMMA_BASE)/I_EFF:.2f} at lambda
 print(”=”*70)
 
 ```
-Path("rg/results/sage_corrected").mkdir(parents=True, exist_ok=True)
+Path("docs/papers/neurips/results").mkdir(parents=True, exist_ok=True)
+Path("docs/papers/neurips/figures").mkdir(parents=True, exist_ok=True)
 
 results_grid = np.zeros((len(ETA_VALUES), len(LAMBDA_VALUES)))
 regime_grid = np.empty((len(ETA_VALUES), len(LAMBDA_VALUES)), dtype=object)
@@ -183,10 +184,10 @@ ax2.set_title('Regime Distribution', fontsize=13, fontweight='bold')
 ax2.grid(alpha=0.3, axis='y')
 
 plt.tight_layout()
-plt.savefig('rg/results/sage_corrected/phase_diagram.png', dpi=300)
+plt.savefig('docs/papers/neurips/figures/phase_diagram_v2.png', dpi=300)
 plt.close()
 
-with open('rg/results/sage_corrected/phase_data.json', 'w') as f:
+with open('docs/papers/neurips/results/phase_data.json', 'w') as f:
     json.dump({'results': results, 'grid': results_grid.tolist()}, f, indent=2)
 
 n_grounded = regime_counts[0]
@@ -211,7 +212,8 @@ print(f”Sweeping eta: {ETA_HYSTERESIS[0]:.2f} -> {ETA_HYSTERESIS[-1]:.2f} -> {
 print(”=”*70)
 
 ```
-Path("rg/results/sage_corrected").mkdir(parents=True, exist_ok=True)
+Path("docs/papers/neurips/results").mkdir(parents=True, exist_ok=True)
+Path("docs/papers/neurips/figures").mkdir(parents=True, exist_ok=True)
 
 # Forward sweep
 omega_current = OMEGA_0.copy()
@@ -291,7 +293,7 @@ ax2.legend()
 ax2.grid(alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('rg/results/sage_corrected/hysteresis.png', dpi=300)
+plt.savefig('docs/papers/neurips/figures/hysteresis_v2.png', dpi=300)
 plt.close()
 
 has_hysteresis = max_gap_norm > 0.01 or max_gap_lambda > 0.01
@@ -364,13 +366,13 @@ try:
 
 ## Output Files
 
-- rg/results/sage_corrected/phase_diagram.png
-- rg/results/sage_corrected/hysteresis.png
-- rg/results/sage_corrected/phase_data.json
+- docs/papers/neurips/figures/phase_diagram_v2.png
+- docs/papers/neurips/figures/hysteresis_v2.png
+- docs/papers/neurips/results/phase_data.json
   “””
   
   ```
-    with open('rg/results/SAGE_CORRECTED_SUMMARY.md', 'w') as f:
+    with open('docs/papers/neurips/results/SAGE_CORRECTED_SUMMARY.md', 'w') as f:
         f.write(summary)
     
     print("\n" + "="*70)

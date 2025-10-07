@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 import argparse
+import csv
+import pathlib
 import numpy as np
 
 from rg.sims.meta_flow_min_pair_v2 import simulate_trajectory
+
 
 def hallucinatory_eta_for_lambda(lam, eta_grid, base):
     """Smallest eta with hallucinatory regime (or positive lambda_max)."""
@@ -14,8 +17,8 @@ def hallucinatory_eta_for_lambda(lam, eta_grid, base):
         lam_arr = traj.get('lambda_max', [0.0])
         lam_max = float(lam_arr[-1] if hasattr(lam_arr, '__len__') and len(lam_arr) > 0 else lam_arr)
         if regime == 2 or lam_max > 0.0:
-            return eta
-    return np.nan
+            return float(eta)
+    return float('nan')
 
 
 def main():
@@ -32,6 +35,7 @@ def main():
     ap.add_argument('--skew', type=float, default=0.12)
     ap.add_argument('--mi_window', type=int, default=30)
     ap.add_argument('--mi_ema', type=float, default=0.1)
+    ap.add_argument('--output', type=pathlib.Path, default=pathlib.Path('docs/papers/neurips/results/phase_boundary_fit.csv'))
     args = ap.parse_args()
 
     base = {
@@ -50,9 +54,25 @@ def main():
     lam_grid = np.linspace(args.lam_min, args.lam_max, args.lam_steps)
     eta_grid = np.linspace(args.eta_min, args.eta_max, args.eta_steps)
 
+    output_records = []
     for lam in lam_grid:
         eta_c = hallucinatory_eta_for_lambda(lam, eta_grid, base)
+        output_records.append({'lambda': float(lam), 'eta_critical': eta_c})
         print(f"λ={lam:.2f} -> η_c≈{eta_c:.3f}")
+
+    output_path = args.output
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with output_path.open('w', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=['lambda', 'eta_critical'])
+        writer.writeheader()
+        for row in output_records:
+            eta_value = row['eta_critical']
+            if np.isnan(eta_value):
+                writer.writerow({'lambda': row['lambda'], 'eta_critical': ''})
+            else:
+                writer.writerow({'lambda': row['lambda'], 'eta_critical': eta_value})
+
+    print(f"Saved phase boundary estimates to {output_path}")
 
 
 if __name__ == '__main__':

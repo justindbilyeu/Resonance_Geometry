@@ -87,7 +87,7 @@ def main():
     ap.add_argument('--skew', type=float, default=0.12)
     ap.add_argument('--mi_window', type=int, default=30)
     ap.add_argument('--mi_ema', type=float, default=0.1)
-    ap.add_argument('--output', type=pathlib.Path, default=pathlib.Path('papers/neurips/figures'))
+    ap.add_argument('--output', type=pathlib.Path, default=pathlib.Path('docs/papers/neurips/figures'))
     args = ap.parse_args()
 
     eta_values = np.linspace(args.eta_min, args.eta_max, args.eta_steps)

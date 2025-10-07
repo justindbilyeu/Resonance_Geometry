@@ -8,6 +8,6 @@ for md in docs/papers/**/*.md; do
     --from markdown+tex_math_single_backslash \
     --pdf-engine=xelatex \
     -V geometry:margin=1in \
-    --resource-path=.:"papers/neurips/figures":"docs/papers/neurips" \
+    --resource-path=.:"docs/papers/neurips/figures":"docs/papers/neurips" \
     --output "$pdf"
 done
