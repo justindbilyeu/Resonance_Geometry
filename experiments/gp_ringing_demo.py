@@ -57,6 +57,7 @@ def oscillator_series(T=200, beta=0.9, alpha=0.08, tau=40.0, seed=0):
         x[t] = x[t - 1] + v
     return x
 
+
 def windowed_mi(x: np.ndarray, w: int = 50) -> float:
     if len(x) < 2 * w:
         return 0.0
@@ -74,6 +75,7 @@ def analyze_ringing(x: np.ndarray) -> dict:
     rms = float(np.sqrt(np.mean((x - x.mean()) ** 2)))
     return {"peaks": peaks, "overshoot": overshoot, "rms": rms}
 
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--steps", type=int, default=200)
@@ -90,7 +92,9 @@ def main():
         args.runs = min(args.runs, 1500)
         args.seeds = min(args.seeds, 1)
 
-    out_dir = pathlib.Path(args.out); out_dir.mkdir(parents=True, exist_ok=True)
+    out_dir = pathlib.Path(args.out)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
     peaks, overs, rmss = [], [], []
 
     for s in range(args.seeds):
@@ -104,7 +108,9 @@ def main():
                 seed=int(rng.integers(0, 2**31 - 1)),
             )
             m = analyze_ringing(x)
-            peaks.append(m["peaks"]); overs.append(m["overshoot"]); rmss.append(m["rms"])
+            peaks.append(m["peaks"])
+            overs.append(m["overshoot"])
+            rmss.append(m["rms"])
 
     summary = {
         "steps": args.steps, "runs": args.runs, "seeds": args.seeds,
@@ -122,6 +128,7 @@ def main():
     with open(out_dir / "ringing_demo_summary.json", "w") as f:
         json.dump(summary, f, indent=2)
     print("Wrote:", out_dir / "ringing_demo_summary.json")
+
 
 if __name__ == "__main__":
     main()
