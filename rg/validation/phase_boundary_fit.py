@@ -1,149 +1,100 @@
 #!/usr/bin/env python3
-import argparse
-import csv
-import json
-from pathlib import Path
-from typing import Dict
-
-import numpy as np
-
+import argparse, os, numpy as np, matplotlib.pyplot as plt
 from rg.sims.meta_flow_min_pair_v2 import simulate_trajectory
 
-
-def hallucinatory_eta_for_lambda(lam: float, eta_grid: np.ndarray, base: Dict[str, float]) -> float:
-    """Smallest eta with hallucinatory regime (or positive lambda_max)."""
+def hallucinatory_eta_for_lambda(lam, eta_grid, base):
+    """
+    Sweep eta for fixed lambda, return first eta whose trajectory is hallucinatory.
+    Hallucinatory if lambda_max > 0 (preferred) else large final norm as fallback.
+    """
     for eta in eta_grid:
-        params = base.copy()
-        params.update({'lambda': lam, 'eta': float(eta)})
-        traj = simulate_trajectory(params, T_max=3.0, dt=0.01)
-        regime = traj.get('regime', None)
-        lam_arr = np.asarray(traj.get('lambda_max', [0.0]))
-        lam_max = float(lam_arr[-1]) if lam_arr.size else float(lam_arr)
-        if regime == 2 or lam_max > 0.0:
+        params = dict(base); params['eta'] = float(eta); params['lambda'] = float(lam)
+        traj = simulate_trajectory(params)  # rely on defaults (dt, steps) inside
+        lam_series = traj.get('lambda_max', [])
+        if isinstance(lam_series, (list, tuple)) and len(lam_series) > 0:
+            lam_max = float(lam_series[-1])
+        else:
+            lam_max = float(traj.get('lambda_max', 0.0))
+
+        # primary criterion: spectral instability
+        if lam_max > 0.0:
             return float(eta)
-    return float('nan')
 
+        # fallback: if we can't get lambda_max reliably, use growth of norm
+        norm_series = traj.get('norm', [])
+        if isinstance(norm_series, (list, tuple)) and len(norm_series) > 0:
+            if float(norm_series[-1]) > 20.0:  # big growth => unstable
+                return float(eta)
+    return None
 
-def linear_fit(lam_grid: np.ndarray, eta_c: np.ndarray) -> Dict[str, float]:
-    mask = ~np.isnan(eta_c)
-    if not np.any(mask):
-        return {
-            'slope': float('nan'),
-            'intercept': float('nan'),
-            'R2': float('nan'),
-            'I_hat': float('nan'),
-        }
-    lam_valid = lam_grid[mask]
-    eta_valid = eta_c[mask]
-    slope, intercept = np.polyfit(lam_valid, eta_valid, 1)
-    predictions = slope * lam_valid + intercept
-    residuals = eta_valid - predictions
-    ss_res = float(np.sum(residuals ** 2))
-    ss_tot = float(np.sum((eta_valid - np.mean(eta_valid)) ** 2))
-    R2 = 1.0 - ss_res / ss_tot if ss_tot > 0.0 else 1.0
-    I_hat = float('inf') if slope == 0 else float(1.0 / slope)
-    return {
-        'slope': float(slope),
-        'intercept': float(intercept),
-        'R2': float(R2),
-        'I_hat': float(I_hat),
-    }
-
-
-def main() -> None:
+def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--gamma', type=float, default=0.5)
-    ap.add_argument('--lam_min', type=float, default=0.1)
-    ap.add_argument('--lam_max', type=float, default=5.0)
-    ap.add_argument('--lam_steps', type=int, default=11)
-    ap.add_argument('--eta_min', type=float, default=0.2)
-    ap.add_argument('--eta_max', type=float, default=5.0)
-    ap.add_argument('--eta_steps', type=int, default=101)
-    ap.add_argument('--alpha', type=float, default=0.6)
-    ap.add_argument('--beta', type=float, default=0.02)
-    ap.add_argument('--skew', type=float, default=0.12)
-    ap.add_argument('--mi_window', type=int, default=30)
-    ap.add_argument('--mi_ema', type=float, default=0.1)
-    ap.add_argument('--algebra', choices=['su2', 'so3'], default='su2')
-    ap.add_argument('--antisym_coupling', action='store_true', default=False)
-    ap.add_argument('--noise_std', type=float, default=0.0)
-    ap.add_argument('--seed', type=int, default=42)
-    ap.add_argument('--mi_est', choices=['corr', 'svd'], default='corr')
-    ap.add_argument('--mi_scale', type=float, default=1.0)
+    ap.add_argument("--gamma", type=float, default=0.5)
+    ap.add_argument("--k", type=float, default=1.0)
+    ap.add_argument("--alpha", type=float, default=0.6)
+    ap.add_argument("--beta", type=float, default=0.02)
+    ap.add_argument("--skew", type=float, default=0.12)
+    ap.add_argument("--mu", type=float, default=0.0)
+    ap.add_argument("--mi_window", type=int, default=30)
+    ap.add_argument("--mi_ema", type=float, default=0.1)
+    ap.add_argument("--lam_min", type=float, default=0.1)
+    ap.add_argument("--lam_max", type=float, default=5.0)
+    ap.add_argument("--lam_steps", type=int, default=11)
+    ap.add_argument("--eta_min", type=float, default=0.2)
+    ap.add_argument("--eta_max", type=float, default=5.0)
+    ap.add_argument("--eta_steps", type=int, default=101)
     args = ap.parse_args()
 
+    outdir = "rg/results/sage_corrected"; os.makedirs(outdir, exist_ok=True)
+
     base = {
-        'gamma': args.gamma,
-        'alpha': args.alpha,
-        'beta': args.beta,
-        'skew': args.skew,
-        'mi_window': args.mi_window,
-        'mi_ema': args.mi_ema,
-        'k': 1.0,
-        'omega_anchor': np.zeros(3),
-        'eta': 1.0,
-        'lambda': 1.0,
-        'algebra': args.algebra,
-        'antisym_coupling': args.antisym_coupling,
-        'noise_std': args.noise_std,
-        'seed': args.seed,
-        'mi_est': args.mi_est,
-        'mi_scale': args.mi_scale,
+        'gamma': args.gamma, 'k': args.k, 'alpha': args.alpha, 'beta': args.beta,
+        'skew': args.skew, 'mu': args.mu, 'mi_window': args.mi_window,
+        'mi_ema': args.mi_ema, 'omega_anchor': np.zeros(3)
     }
 
     lam_grid = np.linspace(args.lam_min, args.lam_max, args.lam_steps)
     eta_grid = np.linspace(args.eta_min, args.eta_max, args.eta_steps)
 
-    eta_c = np.array([hallucinatory_eta_for_lambda(lam, eta_grid, base) for lam in lam_grid])
+    rows = []
+    for lam in lam_grid:
+        eta_c = hallucinatory_eta_for_lambda(lam, eta_grid, base)
+        rows.append((lam, eta_c))
+        print(f"λ={lam:.2f} → η_c={eta_c}")
 
-    fit = linear_fit(lam_grid, eta_c)
-    slope = fit['slope']
-    intercept = fit['intercept']
-    R2 = fit['R2']
-    I_hat = fit['I_hat']
+    # save CSV
+    csv_path = os.path.join(outdir, "phase_boundary.csv")
+    with open(csv_path, "w") as f:
+        f.write("lambda,eta_c\n")
+        for lam, eta_c in rows:
+            f.write(f"{lam},{'' if eta_c is None else eta_c}\n")
+    print("Saved", csv_path)
 
-    gamma = args.gamma
-    b_diff = abs(intercept - gamma)
-    if not np.isnan(intercept) and b_diff > 0.3:
-        print(f"[warning] Intercept deviates from γ by {b_diff:.3f}")
+    # fit η_c ≈ m·λ + b on available points
+    pts = [(lam, e) for lam, e in rows if e is not None]
+    if len(pts) >= 2:
+        L = np.array([p[0] for p in pts])
+        E = np.array([p[1] for p in pts])
+        m, b = np.linalg.lstsq(np.vstack([L, np.ones_like(L)]).T, E, rcond=None)[0]
+        pred = m*L + b
+        ss_res = np.sum((E - pred)**2)
+        ss_tot = np.sum((E - np.mean(E))**2) + 1e-12
+        r2 = 1 - ss_res/ss_tot
+        print(f"Fit η_c ≈ m·λ + b  →  m={m:.3f}, b={b:.3f}, R²={r2:.3f}")
 
-    output_dir = Path('rg/results/sage_corrected')
-    output_dir.mkdir(parents=True, exist_ok=True)
+        plt.figure(figsize=(6,5))
+        plt.scatter(L, E, s=28, label="boundary points")
+        Ld = np.linspace(L.min(), L.max(), 200)
+        plt.plot(Ld, m*Ld + b, label=f"fit: η={m:.2f}λ+{b:.2f} (R²={r2:.2f})")
+        plt.plot(Ld, Ld + args.gamma, 'k--', alpha=0.6, label=f"guide: η=λ+γ, γ={args.gamma}")
+        plt.xlabel("λ (grounding)"); plt.ylabel("η_c (critical resonance)")
+        plt.title("Phase Boundary Fit")
+        plt.legend()
+        figp = os.path.join(outdir, "phase_boundary_fit.png")
+        plt.tight_layout(); plt.savefig(figp, dpi=150)
+        print("Saved", figp)
+    else:
+        print("Insufficient points for a fit.")
 
-    csv_path = output_dir / 'phase_boundary_fit.csv'
-    with csv_path.open('w', newline='', encoding='utf-8') as handle:
-        writer = csv.writer(handle)
-        writer.writerow(['lambda', 'eta_critical'])
-        for lam_val, eta_val in zip(lam_grid, eta_c):
-            writer.writerow([f"{lam_val:.6f}", f"{eta_val:.6f}"])
-
-    flags = {
-        'algebra': args.algebra,
-        'antisym_coupling': bool(args.antisym_coupling),
-        'noise_std': float(args.noise_std),
-        'mi_est': args.mi_est,
-        'mi_scale': float(args.mi_scale),
-        'seed': int(args.seed),
-    }
-
-    json_path = output_dir / 'phase_boundary_fit.json'
-    with json_path.open('w', encoding='utf-8') as handle:
-        json.dump(
-            {
-                'slope': slope,
-                'intercept': intercept,
-                'R2': R2,
-                'I_hat': I_hat,
-                'gamma': gamma,
-                'flags': flags,
-            },
-            handle,
-            indent=2,
-        )
-
-    print(f"Linear fit: eta_c ≈ {slope:.3f} * lambda + {intercept:.3f} (R²={R2:.3f})")
-    print(f"I_hat ≈ {I_hat:.3f}, gamma={gamma:.3f}")
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
