@@ -1,6 +1,25 @@
 #!/usr/bin/env python3
 import argparse, os, numpy as np, matplotlib.pyplot as plt
 from rg.sims.meta_flow_min_pair_v2 import simulate_trajectory
+import numpy as np
+
+# --- robust scalarization helper (array -> float) ---
+def as_float_scalar(x, prefer='last'):
+    try:
+        return float(x)
+    except Exception:
+        arr = np.asarray(x, dtype=float)
+        if arr.ndim == 0:
+            return float(arr)
+        # prefer the last finite value if available
+        if prefer == 'last':
+            fin = arr[np.isfinite(arr)]
+            if fin.size:
+                return float(fin[-1])
+        # otherwise fall back to finite mean
+        if np.isfinite(arr).any():
+            return float(np.nanmean(arr))
+        return 0.0
 
 def hallucinatory_eta_for_lambda(lam, eta_grid, base):
     """
@@ -14,7 +33,7 @@ def hallucinatory_eta_for_lambda(lam, eta_grid, base):
         if isinstance(lam_series, (list, tuple)) and len(lam_series) > 0:
             lam_max = float(lam_series[-1])
         else:
-            lam_max = float(traj.get('lambda_max', 0.0))
+            lam_max = as_float_scalar(traj.get("lambda_max", 0.0), prefer="last")
 
         # primary criterion: spectral instability
         if lam_max > 0.0:
