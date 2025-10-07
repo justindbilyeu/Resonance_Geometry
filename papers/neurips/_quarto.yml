@@ -1,0 +1,27 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "Resonance Geometry"
+  navbar:
+    left:
+      - text: "Paper"
+        href: index.qmd
+      - text: "Data (CSV)"
+        href: results/phase_boundary_points.csv
+
+format:
+  html:
+    toc: true
+    number-sections: true
+    theme: cosmo
+    highlight-style: github
+  pdf:
+    toc: true
+    number-sections: true
+    pdf-engine: xelatex
+    geometry: margin=1in
+    mainfont: "DejaVu Serif"
+    monofont: "DejaVu Sans Mono"
+    sansfont: "DejaVu Sans"
