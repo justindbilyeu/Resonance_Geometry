@@ -1,0 +1,66 @@
+name: Phase1 Pilot (chunked)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - experiments/phase1_prediction.py
+      - scripts/run_phase1_chunked.py
+      - .github/workflows/phase1-pilot.yml
+
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - name: Install deps
+        run: |
+          python -m pip install -U pip
+          pip install -r requirements.txt
+      - name: Run pilot (null)
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: |
+          python scripts/run_phase1_chunked.py \
+            --module experiments.phase1_prediction \
+            --func run_phase1_analysis_null \
+            --total_runs 1000 --chunk_size 200 --seed 42 \
+            --checkpoint_dir checkpoints/pilot_null \
+            --summary_out checkpoints/pilot_null/summary.json
+          cat checkpoints/pilot_null/summary.json
+      - name: Run pilot (proxy)
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: |
+          python scripts/run_phase1_chunked.py \
+            --module experiments.phase1_prediction \
+            --func run_phase1_analysis \
+            --total_runs 1000 --chunk_size 200 --seed 43 \
+            --checkpoint_dir checkpoints/pilot_proxy \
+            --summary_out checkpoints/pilot_proxy/summary.json
+          cat checkpoints/pilot_proxy/summary.json
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase1-pilot
+          path: |
+            checkpoints/pilot_null/summary.json
+            checkpoints/pilot_proxy/summary.json
+      - name: Copy to site data (optional)
+        run: |
+          mkdir -p docs/data/pilot
+          cp -f checkpoints/pilot_null/summary.json  docs/data/pilot/phase1_null.json
+          cp -f checkpoints/pilot_proxy/summary.json docs/data/pilot/phase1_proxy.json
+      - name: Commit site data (optional)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/data/pilot || true
+          git commit -m "Docs: update Phase-1 pilot summaries" || true
+          git push || true
