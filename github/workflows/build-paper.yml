@@ -1,0 +1,87 @@
+name: Build NeurIPS PDF
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'docs/papers/neurips/**'
+      - '.github/workflows/build-paper.yml'
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sanitize manuscript for LaTeX
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path("docs/papers/neurips/manuscript.md")
+          s = p.read_text()
+          # normalize nested math like \( $...$ \) -> $...$
+          s = re.sub(r'\\\(\s*\$([^$]+)\$\s*\\\)', r'$\1$', s)
+          # fix lambda max
+          s = s.replace(r'\lambda_{$\max$}', r'\lambda_{\max}')
+          # wrap bare \lambda_{\max} outside math
+          out, in_code = [], False
+          for line in s.splitlines(True):
+              if line.strip().startswith("```"):
+                  in_code = not in_code
+                  out.append(line); continue
+              if in_code:
+                  out.append(line); continue
+              i, in_math, buf = 0, False, []
+              while i < len(line):
+                  ch = line[i]
+                  if ch == '$':
+                      in_math = not in_math
+                      buf.append(ch); i += 1; continue
+                  if not in_math and line.startswith(r'\lambda_{\max}', i):
+                      buf.append('$\\lambda_{\\max}$')
+                      i += len(r'\lambda_{\max}')
+                      continue
+                  buf.append(ch); i += 1
+              out.append(''.join(buf))
+          s = ''.join(out)
+          # replace a few unicode symbols with LaTeX
+          repls = {
+              '≈': r'$\approx$','↔': r'$\leftrightarrow$','≤': r'$\le$','≥': r'$\ge$',
+              '⋆': r'$\star$','⋅': r'$\cdot$','∑': r'$\sum$','∈': r'$\in$','Δ': r'$\Delta$',
+              '\u2003': ' ', '⸻': '—'
+          }
+          for k,v in repls.items(): s = s.replace(k, v)
+          # escape & outside code fences
+          out, in_code = [], False
+          for line in s.splitlines(True):
+              if line.strip().startswith("```"):
+                  in_code = not in_code
+                  out.append(line); continue
+              out.append(line if in_code else line.replace('&', r'\&'))
+          s = ''.join(out)
+          p.write_text(s)
+          print("Manuscript sanitized.")
+          PY
+
+      - name: Build PDF with pandoc/latex
+        shell: bash
+        run: |
+          docker run --rm -v "$PWD":/data pandoc/latex:latest \
+            docs/papers/neurips/manuscript.md \
+            --from markdown+tex_math_dollars+raw_tex \
+            --resource-path=".:docs/papers:docs/papers/neurips" \
+            --pdf-engine=xelatex \
+            -V geometry:margin=1in \
+            -V header-includes="\usepackage{amsmath,amssymb,amsfonts}" \
+            -V mainfont="TeX Gyre Termes" \
+            -V mathfont="TeX Gyre Termes Math" \
+            --toc --number-sections \
+            -o papers/neurips/neurips_draft.pdf
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: neurips_draft.pdf
+          path: papers/neurips/neurips_draft.pdf
