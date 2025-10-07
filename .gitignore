@@ -63,3 +63,7 @@ results/
 # local scratch
 *.bak
 rg/results/
+
+# Allow paper results to be tracked
+!papers/neurips/results/
+!papers/neurips/results/*.csv
