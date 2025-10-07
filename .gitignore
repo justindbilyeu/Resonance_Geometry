@@ -59,10 +59,6 @@ figures/**/*
 # site build cache (if any)
 .site/
 results/
-<<<<<<< HEAD
-!docs/papers/**/*.pdf
-<<<<<<< HEAD
-=======
 
 # local scratch
 *.bak
@@ -71,10 +67,6 @@ rg/results/
 # Allow paper results to be tracked
 !papers/neurips/results/
 !papers/neurips/results/*.csv
->>>>>>> origin/feature/hysteresis-and-boundary
-=======
 
-# --- allow tracked paper results under docs (override global results/ ignore) ---
-!docs/papers/neurips/results/
-!docs/papers/neurips/results/*.csv
->>>>>>> origin/main
+# build artifacts
+*.egg-info/
