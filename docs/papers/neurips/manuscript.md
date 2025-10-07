@@ -220,13 +220,13 @@ Fitting the critical coupling \(\eta_c(\lambda)\) where \(\lambda_{\max}\) first
 \]
 An independent replication recovers \(m\approx0.346, b\approx0.506, R^2\approx0.94\), supporting approximate linearity of the boundary.
 
-![Phase diagram with regimes](papers/neurips/figures/phase_diagram.png)
+![Phase diagram with regimes](./figures/phase_diagram.png)
 
-![Linear boundary fit](papers/neurips/figures/phase_boundary_fit.png)
+![Linear boundary fit](./figures/phase_boundary_fit.png)
 
 We also probe **hysteresis** by sweeping \(\eta\) up/down at fixed \(\lambda\). The up/down curves form small loops near the boundary, consistent with a weak first-order–like transition in the surrogate dynamics. Loop area and peak vertical gap are negligible far from the boundary and grow near it, as expected.
 
-![Hysteresis loops](papers/neurips/figures/hysteresis.png)
+![Hysteresis loops](./figures/hysteresis.png)
 
 ## Methods — Simulation & classification
 We integrate a minimal coupled pair (Heun/Euler, \(\Delta t\approx0.01\), \(T\approx6.0\), Gaussian noise \(\sigma\approx10^{-3}\)) with \(\gamma=0.5, \alpha=0.6, \beta=0.02, \kappa=0.12\).  
