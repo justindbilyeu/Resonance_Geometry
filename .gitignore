@@ -78,3 +78,7 @@ rg/results/
 !docs/papers/neurips/results/
 !docs/papers/neurips/results/*.csv
 >>>>>>> origin/main
+
+# build/test artifacts
+*.egg-info/
+results/topo_test/*.json
