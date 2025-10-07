@@ -34,7 +34,7 @@ jobs:
           RG_CI: '1'
         run: |
           mkdir -p figures
-          python experiments/gp_ringing_demo.py --smoke --out figures/gp_ringing_smoke.png || true
+          python experiments/gp_ringing_demo.py --out figures/gp_ringing_smoke.png || true
 
       - name: Upload figures (artifacts)
         if: always()
