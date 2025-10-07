@@ -1,0 +1,29 @@
+name: Build NeurIPS paper (PDF)
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'docs/papers/neurips/**'
+      - '.github/workflows/build-paper.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build PDF with pandoc/latex
+        run: |
+          docker run --rm -v "${{ github.workspace }}":/data pandoc/latex \
+            docs/papers/neurips/manuscript.md \
+            --from markdown+tex_math_dollars+raw_tex \
+            --resource-path="docs/papers/neurips:docs/papers:." \
+            --pdf-engine=xelatex \
+            -V geometry:margin=1in \
+            -V mainfont="DejaVu Serif" \
+            -V header-includes="\usepackage{amsmath,amssymb,amsfonts}" \
+            -o papers/neurips/neurips_draft.pdf
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: neurips_draft
+          path: papers/neurips/neurips_draft.pdf
