@@ -211,3 +211,26 @@ python -m rg.validation.phase_boundary_fit --gamma 0.5 \
 ```
 
 These configurations generate the JSON/CSV artifacts consumed downstream while stressing the simulator against noise and alternative information metrics.
+
+## Results — Phase diagram, boundary, and hysteresis
+We study a minimal coupled system expressing competition between grounding and internal resonance. Sweeping the control parameters \(\eta\) (coupling/“temperature”) and \(\lambda\) (regularization/“tension”) yields three regimes: **grounded** (\(\lambda_{\max} < -0.1\)), **creative** (\(|\lambda_{\max}| \le 0.1\)), and **hallucinatory** (\(\lambda_{\max} > 0.1\)).  
+Fitting the critical coupling \(\eta_c(\lambda)\) where \(\lambda_{\max}\) first crosses zero gives a near-linear law:
+\[
+\eta_c \approx m\,\lambda + b \quad \text{with } m=0.335,\; b=0.520,\; R^2=0.949 .
+\]
+An independent replication recovers \(m\approx0.346, b\approx0.506, R^2\approx0.94\), supporting approximate linearity of the boundary.
+
+![Phase diagram with regimes](papers/neurips/figures/phase_diagram.png)
+
+![Linear boundary fit](papers/neurips/figures/phase_boundary_fit.png)
+
+We also probe **hysteresis** by sweeping \(\eta\) up/down at fixed \(\lambda\). The up/down curves form small loops near the boundary, consistent with a weak first-order–like transition in the surrogate dynamics. Loop area and peak vertical gap are negligible far from the boundary and grow near it, as expected.
+
+![Hysteresis loops](papers/neurips/figures/hysteresis.png)
+
+## Methods — Simulation & classification
+We integrate a minimal coupled pair (Heun/Euler, \(\Delta t\approx0.01\), \(T\approx6.0\), Gaussian noise \(\sigma\approx10^{-3}\)) with \(\gamma=0.5, \alpha=0.6, \beta=0.02, \kappa=0.12\).  
+On a \(101\times 11\) grid (\(\eta\in[0.2,5.0]\), \(\lambda\in[0.1,5.0]\)), we compute a Lyapunov-like surrogate \(\lambda_{\max}\) combining coherence gain, grounding, damping, and \(\omega\)-norm penalties. We label regimes via thresholds \(\{-0.1, +0.1\}\). The critical \(\eta_c(\lambda)\) is the first sign-crossing of \(\lambda_{\max}\) along increasing \(\eta\). Hysteresis loops record \(\lambda_{\max}(\eta)\) while sweeping \(\eta\) upward and downward; we report max vertical gap and loop area.
+
+## External replications (brief)
+A Grok reproduction recovers a similar linear boundary (\(m\approx0.346, b\approx0.506, R^2\approx0.94\)). Wolfram plans a second replication (symbolic checks of invariances / Jacobian eigenvalues vs numeric \(\lambda_{\max}\)). DeepSeek provides an empirical roadmap linking activation-space observables in LLMs to the geometric operators used here.

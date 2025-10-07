@@ -30,7 +30,7 @@ def sweep_hysteresis(eta_vals, params, small_scale=1.0, large_scale=3.0, T=60.0,
     dn_norm = dn_norm[::-1]
 
     gaps = np.abs(np.array(up_norm) - np.array(dn_norm))
-    return np.array(up_norm), np.array(dn_norm), float(np.max(gaps))
+    return np.array(up_norm), np.array(dn_norm), float(np.nanmax(gaps))
 
 def main():
     ap = argparse.ArgumentParser()
