@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: "Resonance Geometry: A Geometric Theory of AI Hallucination"
+message: "If you use this software or paper, please cite:"
+authors:
+  - family-names: Bilyeu
+    given-names: Justin
+  - family-names: "(AI collaborators)"
+    given-names: "Claude, Sage, Grok, DeepSeek, Gemini"
+date-released: 2025-10-07
+repository-code: "https://github.com/justindbilyeu/Resonance_Geometry"
