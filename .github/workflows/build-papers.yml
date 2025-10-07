@@ -1,80 +1,38 @@
 name: build-papers
 
 on:
-  pull_request:
-    paths:
-      - 'docs/papers/**'
-      - 'papers/**'
-      - '.github/workflows/build-papers.yml'
   push:
-    branches: [ main ]
     paths:
-      - 'docs/papers/**'
-      - 'papers/**'
+      - 'docs/papers/neurips/**'
       - '.github/workflows/build-papers.yml'
-  workflow_dispatch: {}
-
-permissions:
-  contents: read
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.sha }}
-  cancel-in-progress: true
+  pull_request:
 
 jobs:
-  build:
-    runs-on: ubuntu-22.04
+  build-neurips-paper:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Pandoc + XeLaTeX
+      - name: Install Pandoc + TeX Live (xelatex)
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            pandoc \
-            texlive-xetex \
-            texlive-fonts-recommended \
-            texlive-latex-extra \
-            lmodern
-          echo "pandoc version: $(pandoc -v | head -n1)"
+          sudo apt-get install -y pandoc texlive-xetex
 
-      - name: Build PDFs from Markdown (docs/papers & papers)
-        shell: bash
+      - name: Build PDF (NeurIPS)
         run: |
-          set -euo pipefail
-          outdir="build/papers"
-          mkdir -p "$outdir"
-          # Collect all candidate Markdown paper files
-          mapfile -t files < <(git ls-files \
-            'docs/papers/**/*.md' \
-            'papers/**/*.md' \
-            ':!:**/README.md' \
-            ':!:**/drafts/**' || true)
+          set -e
+          test -f docs/papers/neurips/manuscript.md
+          mkdir -p docs/papers/neurips/pdfs
+          pandoc docs/papers/neurips/manuscript.md \
+            --from gfm \
+            --pdf-engine=xelatex \
+            --resource-path=docs/papers/neurips:docs/papers/neurips/figures \
+            -o docs/papers/neurips/pdfs/A_Geometric_Theory_of_AI_Hallucination.pdf
 
-          echo "Found ${#files[@]} md files"
-          for f in "${files[@]}"; do
-            rel="${f}"
-            base="$(basename "${rel}" .md)"
-            # mirror folder structure
-            subdir="$(dirname "${rel}")"
-            destdir="${outdir}/${subdir}"
-            mkdir -p "${destdir}"
-            echo "Building ${rel} -> ${destdir}/${base}.pdf"
-            pandoc "${rel}" \
-              --from=gfm \
-              --pdf-engine=xelatex \
-              --metadata=title:"${base}" \
-              -V geometry:margin=1in \
-              -V mainfont="Latin Modern Roman" \
-              -o "${destdir}/${base}.pdf"
-          done
-
-      - name: Upload paper PDFs
+      - name: Upload PDF artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: paper-pdfs
-          path: build/papers/
-          if-no-files-found: warn
-          retention-days: 14
+          name: neurips-paper-pdf
+          path: docs/papers/neurips/pdfs/*.pdf

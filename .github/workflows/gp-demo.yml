@@ -1,19 +1,7 @@
 name: gp-demo
 
 on:
-  pull_request:
-    paths:
-      - 'gp-demo/**'
-      - 'rg/**'
-      - '.github/workflows/gp-demo.yml'
-  push:
-    branches: [ main ]
-    paths:
-      - 'gp-demo/**'
-      - 'rg/**'
-      - '.github/workflows/gp-demo.yml'
-  workflow_dispatch: {}
-
+  workflow_dispatch:
 permissions:
   contents: read
 

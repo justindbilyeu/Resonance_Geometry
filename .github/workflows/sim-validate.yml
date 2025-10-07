@@ -1,19 +1,7 @@
 name: sim-validate
 
 on:
-  pull_request:
-    paths:
-      - 'rg/sims/**'
-      - 'rg/validation/**'
-      - '.github/workflows/sim-validate.yml'
-  push:
-    branches: [ main ]
-    paths:
-      - 'rg/sims/**'
-      - 'rg/validation/**'
-      - '.github/workflows/sim-validate.yml'
-  workflow_dispatch: {}
-
+  workflow_dispatch:
 permissions:
   contents: read
 
