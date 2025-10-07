@@ -61,6 +61,7 @@ figures/**/*
 results/
 <<<<<<< HEAD
 !docs/papers/**/*.pdf
+<<<<<<< HEAD
 =======
 
 # local scratch
@@ -71,3 +72,9 @@ rg/results/
 !papers/neurips/results/
 !papers/neurips/results/*.csv
 >>>>>>> origin/feature/hysteresis-and-boundary
+=======
+
+# --- allow tracked paper results under docs (override global results/ ignore) ---
+!docs/papers/neurips/results/
+!docs/papers/neurips/results/*.csv
+>>>>>>> origin/main

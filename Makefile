@@ -1,9 +1,9 @@
 .RECIPEPREFIX := >
 
 PY=python
-FIG_DIR=papers/neurips/figures
-PAPER_MD=docs/papers/neurips/A_Geometric_Theory_of_AI_Hallucination.md
-PAPER_PDF=docs/papers/neurips/A_Geometric_Theory_of_AI_Hallucination.pdf
+FIG_DIR=docs/papers/neurips/figures
+PAPER_MD=docs/papers/neurips/manuscript.md
+PAPER_PDF=docs/papers/neurips/pdfs/A_Geometric_Theory_of_AI_Hallucination.pdf
 
 # Defaults: your “good” run
 LAM?=1.0
@@ -35,7 +35,7 @@ pdf:
 >  --from markdown+tex_math_single_backslash \
 >  --pdf-engine=xelatex \
 >  -V geometry:margin=1in \
->  --resource-path=.:"papers/neurips/figures":"docs/papers/neurips" \
+>  --resource-path=.:"docs/papers/neurips/figures":"docs/papers/neurips" \
 >  --output $(PAPER_PDF)
 
 clean:

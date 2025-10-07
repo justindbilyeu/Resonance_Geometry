@@ -90,7 +90,7 @@ Regimes:
 Implementation and figures live in the repo:
 	•	rg/sims/meta_flow_min_pair_v2.py
 	•	rg/validation/hysteresis_sweep.py
-	•	Figures: papers/neurips/figures/phase_diagram_v2.png, papers/neurips/figures/hysteresis_v2.png.
+	•	Figures: figures/phase_diagram_v2.png, figures/hysteresis_v2.png.
 
 ⸻
 
@@ -164,7 +164,7 @@ Methods (concise)
 	•	Spectral surrogate: Rayleigh-style estimate tied to \eta\bar I,\lambda,\gamma and local norm; used for fast regime classification.
 	•	Grids: \eta\in[0.2,5.0] (101 steps), \lambda\in[0.1,5.0] (11 steps); fixed \gamma=0.5, \alpha=0.6, \beta=0.02, \kappa=0.12.
 	•	Outputs: phase map and hysteresis curves →
-papers/neurips/figures/phase_diagram_v2.png, papers/neurips/figures/hysteresis_v2.png.
+figures/phase_diagram_v2.png, figures/hysteresis_v2.png.
 
 ⸻
 
