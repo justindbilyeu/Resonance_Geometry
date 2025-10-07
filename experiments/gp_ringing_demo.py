@@ -1,4 +1,3 @@
-# experiments/gp_ringing_demo.py
 from __future__ import annotations
 import os, json, math, pathlib, argparse
 import numpy as np
@@ -26,7 +25,6 @@ def simulate_coupled(
     n_dn = max(1, int(round(dur_dn / dt)))
     T = n_up + n_dn
 
-    # Linear ramp up, then down
     lam_up = np.linspace(0.0, lam_max, n_up, endpoint=False)
     lam_dn = np.linspace(lam_max, 0.0, n_dn)
     lam = np.concatenate([lam_up, lam_dn]).astype(float)
@@ -36,11 +34,9 @@ def simulate_coupled(
     y = np.zeros(T, dtype=float)
     vx = vy = 0.0
 
-    # Light coupling + damping to keep everything finite in CI
-    k = 0.05
-    damp = 0.02
+    k = 0.05     # light coupling
+    damp = 0.02  # damping
     for t in range(1, T):
-        # simple coupled damped oscillators with tiny stochastic drive scaled by lam
         ax = -k * (2 * x[t - 1] - y[t - 1]) - damp * vx + 0.01 * lam[t] * rng.normal()
         ay = -k * (2 * y[t - 1] - x[t - 1]) - damp * vy + 0.01 * lam[t] * rng.normal()
         vx += ax * dt
@@ -50,8 +46,7 @@ def simulate_coupled(
 
     return lam, x, y
 
-
-# --- tiny, deterministic oscillator for the CLI demo (separate name) ---
+# --- separate oscillator for the CLI demo (different name, so no overwrite) ---
 def oscillator_series(T=200, beta=0.9, alpha=0.08, tau=40.0, seed=0):
     rng = np.random.default_rng(seed)
     x = np.zeros(T, float)
@@ -72,9 +67,7 @@ def windowed_mi(x: np.ndarray, w: int = 50) -> float:
     rho = np.clip(rho, -0.999, 0.999)
     return float(-math.log(1 - rho * rho))
 
-
 def analyze_ringing(x: np.ndarray) -> dict:
-    # naive peak/overshoot metrics
     if len(x) < 3:
         return {"peaks": 0, "overshoot": 0.0, "rms": 0.0}
     peaks = int(np.sum((x[1:-1] > x[:-2]) & (x[1:-1] > x[2:])))
@@ -94,7 +87,6 @@ def main():
     p.add_argument("--out", type=str, default="results/gp_demo_test")
     args = p.parse_args()
 
-    # CI clamp (keeps runtime tiny)
     if os.getenv("RG_CI") == "1":
         args.steps = min(args.steps, 200)
         args.runs = min(args.runs, 1500)
@@ -105,11 +97,9 @@ def main():
 
     peaks, overs, rmss = [], [], []
 
-    # fixed seeds loop
     for s in range(args.seeds):
         rng = np.random.default_rng(s)
         for _ in range(args.runs):
-            # use the deterministic oscillator for the CLI demo
             x = oscillator_series(
                 T=args.steps,
                 beta=args.beta,
@@ -123,12 +113,8 @@ def main():
             rmss.append(m["rms"])
 
     summary = {
-        "steps": args.steps,
-        "runs": args.runs,
-        "seeds": args.seeds,
-        "beta": args.beta,
-        "alpha": args.alpha,
-        "tau": args.tau,
+        "steps": args.steps, "runs": args.runs, "seeds": args.seeds,
+        "beta": args.beta, "alpha": args.alpha, "tau": args.tau,
         "Kc_proxy": float((1 + args.tau) / max(2 * args.alpha, 1e-9)),
         "ringing_fraction": 1.0 if np.mean(peaks) > 0 else 0.0,
         "avg_peaks": float(np.mean(peaks)),
@@ -146,3 +132,45 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# --- test-compatible sliding-window MI (overrides earlier stub) ---
+def windowed_mi(x: np.ndarray,
+                y: np.ndarray,
+                win: int = 128,
+                hop: int = 32,
+                bins: int = 16) -> tuple[np.ndarray, np.ndarray]:
+    """
+    Sliding-window mutual information between two 1D arrays.
+    Returns (starts, mi_vals), where starts are window start indices and mi_vals are MI (nats).
+    """
+    x = np.asarray(x, dtype=float).ravel()
+    y = np.asarray(y, dtype=float).ravel()
+    n = min(len(x), len(y))
+    if n < win or win <= 1 or hop <= 0:
+        return np.array([], dtype=int), np.array([], dtype=float)
+
+    def _mi(a: np.ndarray, b: np.ndarray, k: int) -> float:
+        # Robust histogram-based MI (nats)
+        eps = 1e-12
+        rng0 = np.random.default_rng(0)
+        rng1 = np.random.default_rng(1)
+        aj = a + eps * rng0.normal(size=a.shape)
+        bj = b + eps * rng1.normal(size=b.shape)
+        H, _, _ = np.histogram2d(aj, bj, bins=k)
+        P = H / max(H.sum(), 1.0)
+        Px = P.sum(axis=1, keepdims=True)
+        Py = P.sum(axis=0, keepdims=True)
+        with np.errstate(divide="ignore", invalid="ignore"):
+            term = P * (np.log(P + eps) - np.log(Px + eps) - np.log(Py + eps))
+        return float(np.nansum(term))
+
+    starts = np.arange(0, n - win + 1, hop, dtype=int)
+    mi_vals = np.empty_like(starts, dtype=float)
+    for i, s in enumerate(starts):
+        a = x[s:s + win]
+        b = y[s:s + win]
+        mi_vals[i] = _mi(a, b, bins)
+
+    # Ensure finite outputs
+    mi_vals = np.where(np.isfinite(mi_vals), mi_vals, 0.0)
+    return starts, mi_vals

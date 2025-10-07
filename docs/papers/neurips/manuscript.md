@@ -183,3 +183,31 @@ References
 (to be populated — gauge/Yang–Mills self-duality; Ricci flow/Perelman; parametric resonance; LLM hallucination & detection; spectral diagnostics in representation learning.)
 
 ⸻
+
+Appendix C Noise, algebra backend, MI variants, and coupling modes
+
+The lightweight simulator now exposes four toggles that let us probe robustness of the phase picture:
+
+•   Algebra backend (``--algebra {su2, so3}``): the ``su2`` option retains the Pauli-inspired commutator scaling while ``so3`` treats the angular velocities as classical rotation vectors with a bare cross product (no scale factor yet; we flag this for later tuning).
+•   Coupling symmetry (``--antisym_coupling``): when enabled, the interaction term pushes one mode forward and the other backward, mimicking antisymmetric feedback between complementary subsystems; the default keeps the symmetric push–pull used in earlier drafts.
+•   Process noise (``--noise_std`` with ``--seed``): zero-mean Gaussian kicks are injected after each Heun step, letting us test whether the hysteresis loop and phase boundary estimates remain stable under stochastic perturbations.
+•   Mutual-information surrogate (``--mi_est {corr, svd}`` plus ``--mi_scale``): ``corr`` computes the log-amplified correlation coefficient of the last window, whereas ``svd`` aggregates the top singular values of the recent history before rescaling. The ``--mi_scale`` knob lets us mimic alternative calibration conventions.
+
+Example CLI sweeps:
+
+```
+python -m rg.validation.hysteresis_sweep --lam 1.0 --gamma 0.5 \
+  --eta_min 0.2 --eta_max 3.0 --eta_steps 21 \
+  --alpha 0.6 --beta 0.02 --skew 0.12 \
+  --mi_window 30 --mi_ema 0.1 \
+  --algebra so3 --antisym_coupling --noise_std 0.01 \
+  --mi_est corr --mi_scale 1.0
+
+python -m rg.validation.phase_boundary_fit --gamma 0.5 \
+  --lam_min 0.1 --lam_max 2.0 --lam_steps 5 \
+  --eta_min 0.2 --eta_max 3.0 --eta_steps 51 \
+  --alpha 0.6 --beta 0.02 --skew 0.12 --mi_window 30 --mi_ema 0.1 \
+  --algebra su2 --noise_std 0.0 --mi_est svd --mi_scale 1.0
+```
+
+These configurations generate the JSON/CSV artifacts consumed downstream while stressing the simulator against noise and alternative information metrics.
