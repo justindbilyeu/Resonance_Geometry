@@ -84,7 +84,7 @@ To expose the phase transition, we use linear resonance gain and cubic–quintic
 $$
 \begin{aligned}
 \dot\omega_x \&= \underbrace{\eta\,\bar I\,\omega_x}{\text{gain}}\;-\;\underbrace{\lambda(\omega_x-\omega_0)}{\text{ground}}\;-\;\underbrace{\gamma\,\omega_x}{\text{damp}}\;-\;\underbrace{\beta\|\omega_x\|^2\omega_x+\alpha\|\omega_x\|^4\omega_x}{\text{sat.}}\;+\;\underbrace{\kappa\,\text{vec}(F_{xy})}_{\text{coupling}},\\
-\dot\omega_y \&\;=\;\text{same with }x\leftrightarrow y.
+\dot\omega_y &\;=\;\text{same with }x\leftrightarrow y.
 \end{aligned}
 $$
 
@@ -172,7 +172,7 @@ We argue that AI hallucination is best understood as a geometric phase transitio
 Methods (concise)
 	•	Integration: Heun; dt=$10^{-2}$; typical run horizon T\in[3,6] (longer for sweeps).
 	•	MI surrogate: Gaussian MI from temporal correlations of the 6-dimensional state (\omega_x,\omega_y) over a sliding window (30 steps) with EMA 0.1.
-	•	Spectral surrogate: Rayleigh-style estimate tied to $\eta$$\bar I$,$\lambda$,$\gamma$ and local norm; used for fast regime classification.
+	•	Spectral surrogate: Rayleigh-style estimate tied to $\eta$\,$\bar I$,$\lambda$,$\gamma$ and local norm; used for fast regime classification.
 	•	Grids: $\eta$\in[0.2,5.0] (101 steps), $\lambda$\in[0.1,5.0] (11 steps); fixed $\gamma$=0.5, \alpha=0.6, \beta=0.02, \kappa=0.12.
 	•	Outputs: phase map and hysteresis curves →
 figures/phase_diagram_v2.png, figures/hysteresis_v2.png.
