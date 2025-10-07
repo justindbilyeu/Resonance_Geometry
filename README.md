@@ -423,3 +423,19 @@ Special thanks to early testers and critics who help keep this work honest.
 -----
 
 *Last Updated: September 30, 2025*
+
+⸻
+
+🧪 What this repo contains
+- Theory & paper: Geometric phase transition view of hallucination
+- Toy sim: SU(2) model showing grounded/creative/hallucinatory + hysteresis
+- Diagnostic: λ_max (stability surrogate) computed from activations
+- Eval script: TruthfulQA multiple-choice with baselines (entropy/margin)
+
+Honest framing: Extraction is theory-inspired, not unique. We invite replication:
+compare λ_max to entropy/margin on your model, try interventions (RAG, uncertainty),
+and report whether λ_max moves as predicted.
+
+Quickstart
+
+See docs/howto/QUICKSTART.md.
