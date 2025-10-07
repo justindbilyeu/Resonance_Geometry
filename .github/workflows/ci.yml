@@ -29,10 +29,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
 
-      # (Optional) If you have a pyproject/setup, uncomment:
-      # - name: Install package
-      #   run: pip install -e .
-
       - name: Run tests
         env:
           PYTHONPATH: ${{ github.workspace }}
