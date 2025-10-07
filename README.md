@@ -1,7 +1,7 @@
 # Resonance Geometry
 
 > **TL;DR**: What if networks could learn which connections matter by measuring how much information flows through them? We’re testing whether information itself can reshape structure—in software, neural networks, maybe even physical systems.
-
+![CI](https://github.com/justindbilyeu/Resonance_Geometry/actions/workflows/ci.yml/badge.svg?branch=main)
 -----
 
 ## The Big Idea (In Plain English)
