@@ -18,11 +18,18 @@ Limits vs. mechanisms. Information-theoretic results imply non-zero hallucinatio
 Claim. Hallucination is a dynamical, geometric instability: a phase transition in information–representation coupling. When internal resonance overwhelms grounding and damping, the system slips into a locally coherent, externally misaligned attractor.
 
 Contributions.
-	1.	A unified geometric theory (gauge ↔ Ricci ↔ phase) with a single connection-flow equation.
-	2.	A stability operator $\mathcal{L}$_{\text{meta}} and criterion: $\max$$\operatorname{Re}$$\lambda$>0 ↔ hallucination onset.
+	1.	A unified geometric theory (gauge \leftrightarrow Ricci \leftrightarrow phase) with a single connection-flow equation.
+	2.	A stability operator $\mathcal{L}_{\text{meta}}$ and criterion: $\max$$\operatorname{Re}$$\lambda$>0 \leftrightarrow hallucination onset.
 	3.	A minimal simulation (SU(2) pair) showing grounded/creative/hallucinatory regimes, a linear phase boundary $\eta$\,$\bar I$ \approx $\lambda$+$\gamma$, and hysteresis.
 	4.	Operational levers and a spectral early-warning diagnostic ($\lambda_{\max}$).
 	5.	An empirical roadmap for extracting curvature proxies from real models and correlating with hallucination.
+
+> ### Executive Summary (TL;DR)
+> - **Claim:** Hallucination is a **phase transition** when internal resonance (η·\bar I) exceeds grounding+damping (λ+γ).
+> - **Evidence:** Minimal sims show **three regimes**, a **linear boundary** (η·\bar I \approx λ+γ), and **hysteresis**; independent replication matches the slope.
+> - **Tooling:** One live diagnostic (**λ_max**) + four levers (**λ, γ, μ, ξ**) for intervention during inference.
+> - **Prediction:** **λ_max crosses 0** at onset; boundary location shifts linearly with λ and γ.
+> - **Roadmap:** Layerwise geometric proxies and interventions validated on small models (preliminary AUC \approx 0.7).
 
 ⸻
 
@@ -49,15 +56,15 @@ $$
 }
 $$
 	•	-D_A\star F_A: Yang–Mills gradient; drives toward self-duality.
-	•	$\eta$\,$\mathcal{J}$_{$\mathrm{MI}$}: resonance gain from internal mutual information (coherence).
-	•	-$\lambda$\,$\mathcal{J}$_U: truth anchoring (e.g., retrieval, constraints).
-	•	-$\gamma$\,\Pi_{$\mathrm{vert}$}: epistemic damping on fiber oscillations.
-	•	-$\mu$[$\omega$,[$\omega$,$\omega$]]: nonlinear saturation arresting runaway curvature.
+	•	$\eta$\,\mathcal{J}_{\mathrm{MI}}$: resonance gain from internal mutual information (coherence).
+	•	-$\lambda$\,$\mathcal{J}_U$: truth anchoring (e.g., retrieval, constraints).
+	•	-$\gamma$\,\Pi_{\mathrm{vert}}$: epistemic damping on fiber oscillations.
+	•	-$\mu$[$\omega$,[$\omega$,$\omega$]]$: nonlinear saturation arresting runaway curvature.
 	•	+$\xi$\,$\mathcal{G}$: adaptive gauge-fixing (meta-awareness of representational freedom).
 
 The linearization around a working state \omega_0 yields a stability operator
-$\mathcal{L}_{\text{meta}}$\;\approx\;$\eta$\,$\mathcal{M}${$\mathrm{MI}$}\;-\;$\lambda$\,$\mathcal{H}$U\;-\;$\gamma$\,$\Pi_{\mathrm{vert}}$\;-\;3$\mu$\,$\mathrm{ad}$^2_{\omega_0}\,,
-with possible non-self-adjointness (complex spectrum). Instability iff $\max$$\operatorname{Re}$$\lambda$($\mathcal{L}$_{\text{meta}})>0.
+$\mathcal{L}_{\text{meta}}$\;\approx\;$\eta$\,$\mathcal{M}_{\mathrm{MI}}$\;-\;$\lambda$\,$\mathcal{H}_U$\;-\;$\gamma$\,$\Pi_{\mathrm{vert}}$\;-\;3$\mu$\,$\mathrm{ad}$^2_{\omega_0}\,,
+with possible non-self-adjointness (complex spectrum). Instability iff $\max$$\operatorname{Re}$$\lambda$($\mathcal{L}_{\text{meta}})>0.
 
 2.3 Energy bound (intuition)
 
@@ -113,9 +120,18 @@ The phase diagram (Fig. 1) shows a clean separation: for fixed $\gamma$=0.5, the
 $$\boxed{\eta\,\bar I \;\approx\; \lambda + \gamma}$$
 across the grid (visual fit; residuals small over the scanned range). Hallucinatory behavior appears as $\eta$ grows relative to $\lambda$+$\gamma$, with saturation preventing numerical blow-up but leaving $\lambda_{\max}$ persistently positive.
 
+**Boundary fit summary**
+
+| Run | Slope m | Intercept b | R² | Source |
+|---:|:---:|:---:|:---:|:---|
+| Primary simulation | 0.335 | 0.520 | 0.949 | `papers/neurips/results/phase_boundary_points.csv` |
+| Independent replication (Grok) | ~0.346 | ~0.506 | ~0.94 | external replication |
+
+*Note:* The linear boundary implements the prediction \( \eta \bar I \approx \lambda + \gamma \).
+
 4.2 Hysteresis (first-order character)
 
-Forward/backward sweeps in $\eta$ at fixed $\lambda$ produce hysteresis loops in the order parameter (e.g., \|$\omega$\| or $\lambda_{\max}$). Our implementation reports maximum loop gap ≈ 11.52 under the settings above (Fig. 2), indicating memory and a first-order transition band (metastability) consistent with a false-attractor picture.
+Forward/backward sweeps in $\eta$ at fixed $\lambda$ produce hysteresis loops in the order parameter (e.g., \|$\omega$\| or $\lambda_{\max}$). Our implementation reports maximum loop gap \approx 11.52 under the settings above (Fig. 2), indicating memory and a first-order transition band (metastability) consistent with a false-attractor picture.
 
 4.3 Ablations (qualitative)
 	•	No damping ($\gamma$=0): creative band collapses; direct jump to hallucinatory when $\eta$\,$\bar I$>$\lambda$.
@@ -148,7 +164,7 @@ so $\lambda_{\max}$ crossing zero is an early warning. Monitoring $\lambda_{\max
 
 7 Related formulations (how the pictures align)
 	•	Gauge theory: Hallucination = self-duality loss and growth of anti-self-dual curvature; meta-resonance = adaptive gauge fixing.
-	•	Ricci flow: Excess positive curvature (in our sign convention) in fiber directions; singularity formation ↔ false attractor.
+	•	Ricci flow: Excess positive curvature (in our sign convention) in fiber directions; singularity formation \leftrightarrow false attractor.
 	•	Phase dynamics: Parametric resonance with under-damping; the imaginary spectrum dominates until saturation clips growth.
 
 These are different lenses on the same invariant content (connection curvature and its spectrum).
@@ -245,3 +261,15 @@ On a \(101\times 11\) grid ($\eta$\in[0.2,5.0]\), $\lambda$\in[0.1,5.0]\)), we c
 
 ## External replications (brief)
 A Grok reproduction recovers a similar linear boundary (\(m\approx0.346, b\approx0.506, R^2\approx0.94\)). Wolfram plans a second replication (symbolic checks of invariances / Jacobian eigenvalues vs numeric $\lambda_{\max}$). DeepSeek provides an empirical roadmap linking activation-space observables in LLMs to the geometric operators used here.
+
+**Notation ↔ CLI flags**
+
+| Symbol | Meaning                | CLI flag(s) / usage                    |
+|-------:|------------------------|----------------------------------------|
+|  η     | resonance gain         | `--eta_min/--eta_max/--eta_steps`      |
+|  λ     | grounding strength     | `--lam` or `--lam_min/--lam_max`       |
+|  γ     | damping                | `--gamma`                              |
+|  α     | quintic saturation     | `--alpha`                              |
+|  β     | cubic term             | `--beta`                               |
+|  κ     | coupling / skew        | `--skew`                               |
+|  ξ     | gauge-awareness (meta) | (conceptual; not toggled in this sim)  |
