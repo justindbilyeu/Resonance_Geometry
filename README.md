@@ -439,3 +439,34 @@ and report whether λ_max moves as predicted.
 Quickstart
 
 See docs/howto/QUICKSTART.md.
+## Empirical Runner: λ_max(L_sym) on TruthfulQA
+
+This v1 runner computes the largest eigenvalue of the symmetric normalized
+graph Laplacian per layer from hidden states (prompt + generation), then:
+- sets a reference threshold λ_ref = median(λ_max) over clean samples,
+- reports ROC-AUC for hallucination detection,
+- measures first crossing layer,
+- tests an intervention (lower temperature/top-k).
+
+### Install
+```bash
+pip install -r requirements-dev.txt
+```
+
+Run (CPU or GPU)
+
+```bash
+PYTHONPATH=. python rg_empirical/run_truthfulqa_lambda.py \
+  --model gpt2-medium \
+  --n 100 \
+  --baseline_temp 1.0 --baseline_topk 50 \
+  --intervention_temp 0.3 --intervention_topk 10 \
+  --max_new_tokens 64 \
+  --out_dir results/truthfulqa_lambda
+```
+
+Outputs:
+	•	results/truthfulqa_lambda/records.jsonl (one JSON per sample)
+	•	results/truthfulqa_lambda/summary.json (AUC, λ_ref, Δλ stats)
+
+---
