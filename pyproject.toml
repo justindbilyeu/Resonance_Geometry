@@ -4,20 +4,47 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "resonance-geometry"
-version = "0.1.0"
+version = "0.0.0"
+requires-python = ">=3.11"
 description = "Resonance Geometry demos, docs, and analysis"
 readme = "README.md"
-requires-python = ">=3.10"
-dependencies = [
-  "numpy>=1.24",
-  "scipy>=1.10",
-  "matplotlib>=3.7",
-  "pandas>=2.0",
-  "networkx>=3.1",
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+exclude = '''
+/(
+  \.git
+ |\.venv
+ |build
+ |dist
+ |_site
+ |docs/data
+)/
+'''
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+fix = true
+ignore = [
+  "E501",
+]
+select = [
+  "E", "F", "W",
+  "I",
+  "UP",
+  "B",
+  "C90"
+]
+exclude = [
+  "docs/data",
+  "docs/assets/vendor",
+  "results",
+  "checkpoints",
 ]
 
-[tool.setuptools]
-package-dir = {"" = "."}
-
-[tool.setuptools.packages.find]
-where = ["."]
+[tool.ruff.lint.isort]
+known-first-party = ["experiments", "tools", "src", "scripts"]
+combine-as-imports = true
+force-single-line = false
