@@ -66,3 +66,7 @@ sim-smoke:
 >  --eta_min 0.2 --eta_max 3.0 --eta_steps 51 \
 >  --alpha 0.6 --beta 0.02 --skew 0.12 --mi_window 30 --mi_ema 0.1 \
 >  --algebra su2 --noise_std 0.0 --mi_est svd --mi_scale 1.0
+
+.PHONY: theory-status
+theory-status:
+>python scripts/update_theory_status.py
