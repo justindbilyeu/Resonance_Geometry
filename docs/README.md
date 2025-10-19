@@ -17,7 +17,17 @@ Start here to navigate experiments and specs.
   → `specs/Resonance_Mapper_Addendum.md`
 
 ## Demos
-- **P1 / GP Ringing Demo**  
+- **P1 / GP Ringing Demo**
   Synthetic demo for resonance thresholds and hysteresis (see repo `experiments/gp_ringing_demo.py` and P1 predictions in README).
 
 *All experiments use preregistration-style discipline with clear epistemic tags.*
+
+## Theory Exports (Wolfram)
+If you have Mathematica/wolframscript, you can generate dissertation-grade figures and tables for Chapter 3:
+
+```bash
+make theory-all
+python scripts/update_theory_status.py
+```
+
+Outputs will appear under `docs/assets/figures/` and `docs/data/theory/`.
