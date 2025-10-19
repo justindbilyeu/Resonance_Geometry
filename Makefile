@@ -71,6 +71,13 @@ sim-smoke:
 theory-status:
 >python scripts/update_theory_status.py
 
+.PHONY: jacobian-sweep fluency-probe
+jacobian-sweep:
+>python scripts/run_ringing_sweep.py --include-jacobian
+
+fluency-probe:
+>python scripts/run_fluency_probe.py
+
 .PHONY: ring-sweep ring-smoke
 
 ring-sweep:

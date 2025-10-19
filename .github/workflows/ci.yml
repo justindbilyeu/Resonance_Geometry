@@ -36,9 +36,21 @@ jobs:
       - name: Run tests
         run: pytest -q --disable-warnings
 
-      - name: Upload pytest coverage
+      - name: Ringing sweep (with Jacobian)
+        run: make jacobian-sweep
+
+      - name: Fluency probe
+        run: make fluency-probe
+
+      - name: Update dashboard status
+        run: make theory-status
+
+      - name: Upload diagnostics artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: pytest-results
-          path: .pytest_cache
+          name: phase2-3-artifacts
+          path: |
+            results/ringing_sweep/*.json*
+            results/fluency_probe/summary.json
+            docs/data/status/summary.json
