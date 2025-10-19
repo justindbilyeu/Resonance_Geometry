@@ -116,3 +116,12 @@ theory-exports: theory-ensure
 
 theory-all: theory-exports
 >@echo "Theory export pipeline completed (or skipped)."
+
+.PHONY: dashboard pages-preview
+
+dashboard:
+>python scripts/update_theory_status.py
+>python scripts/build_dashboard.py
+
+pages-preview:
+>python -m http.server -d docs 8080
