@@ -1,70 +1,31 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Virtual environments
 .venv/
-venv/
-ENV/
-env/
-
-# IDEs
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Jupyter
+.env/
+__pycache__/
+.pytest_cache/
 .ipynb_checkpoints/
-*.ipynb_checkpoints
-
-# Data (large files)
-data/raw/*.csv
-data/raw/*.json
-data/raw/*.h5
-*.pkl
-*.hdf5
-
-# Results (optional - may want to track some)
-results/*/*.png
-results/*/*.csv
-
-# But track summary files:
-!results/README.md
-
-# OS
 .DS_Store
-Thumbs.db
 
-# Temporary
-*.tmp
-*.bak
+# local artifacts
+checkpoints/
+results/
+*.npy
+*.npz
+*.pickle
+*.pkl
 *.log
 
-# Secrets
-.env
-secrets.json
-*.key
+# site & build outputs
+docs/data/generated/
+docs/data/theory/*.json
+docs/data/pilot_*/summary.json
+site/
+_build/
+dist/
+build/
 
-# Documentation builds
-docs/_build/
-docs/dissertation/*.pdf  # Track markdown, ignore compiled PDFs
+# IDE/editor
+.vscode/
+.idea/
+
+# backups
+docs/assets/app.js.backup
