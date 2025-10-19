@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""
-Update docs/data/status/summary.json with theory/phase_surface status and optional ringing sweep summaries.
-Safe to run even if no theory JSONs or ringing artifacts have been added yet.
-"""
+"""Update docs/data/status/summary.json with theory + experiment metadata."""
+
 from __future__ import annotations
-import json, time, sys
+
+import json
+import time
+import sys
 from pathlib import Path
+from typing import Any, Dict, Optional
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -14,11 +16,22 @@ if str(ROOT) not in sys.path:
 from tools.load_phase_surface import load_phase_surfaces
 
 STATUS = Path("docs/data/status/summary.json")
-SWEEP_SUMMARY = Path("results/ringing_sweep/summary.json")
-FLUENCY_SUMMARY = Path("results/fluency_probe/summary.json")
+RINGING_SUMMARY = Path("results/ringing_sweep/summary.json")
+JACOBIAN_DIR = Path("results/jacobian_sweep")
+FLUENCY_PROBE_SUMMARY = Path("results/fluency_probe/summary.json")
 FLUENCY_SWEEP_SUMMARY = Path("results/fluency_sweep/summary.json")
 
-def load_status() -> dict:
+
+def _load_json(path: Path) -> Optional[Any]:
+    if not path.exists():
+        return None
+    try:
+        return json.loads(path.read_text())
+    except Exception:
+        return None
+
+
+def _load_status() -> Dict[str, Any]:
     if STATUS.exists():
         try:
             return json.loads(STATUS.read_text())
@@ -26,7 +39,14 @@ def load_status() -> dict:
             return {}
     return {}
 
-def update_theory(status: dict) -> None:
+
+def _ensure(status: Dict[str, Any], key: str, value: Optional[Any]) -> None:
+    if value is None:
+        return
+    status[key] = value
+
+
+def update_theory(status: Dict[str, Any]) -> None:
     theory = load_phase_surfaces()
     status.setdefault("theory", {})
     status["theory"]["phase_surface"] = theory
@@ -41,39 +61,34 @@ def update_theory(status: dict) -> None:
             "has_phase_surface": (theory_dir / "phase_surface_all.json").exists(),
         }
 
-def update_ringing(status: dict) -> None:
-    if SWEEP_SUMMARY.exists():
-        status["ringing_sweep"] = json.loads(SWEEP_SUMMARY.read_text())
 
+def update_experiments(status: Dict[str, Any]) -> None:
+    _ensure(status, "ringing_sweep", _load_json(RINGING_SUMMARY))
 
-def update_fluency(status: dict) -> None:
-    if FLUENCY_SUMMARY.exists():
-        try:
-            status["fluency_probe"] = json.loads(FLUENCY_SUMMARY.read_text())
-        except Exception:
-            pass
+    if JACOBIAN_DIR.exists():
+        _ensure(
+            status,
+            "jacobian",
+            {
+                "meta": _load_json(JACOBIAN_DIR / "meta.json"),
+                "n_boundary": len(_load_json(JACOBIAN_DIR / "boundary.json") or []),
+            },
+        )
 
-    if FLUENCY_SWEEP_SUMMARY.exists():
-        try:
-            status["fluency_sweep"] = json.loads(FLUENCY_SWEEP_SUMMARY.read_text())
-        except Exception:
-            pass
+    _ensure(status, "fluency_probe", _load_json(FLUENCY_PROBE_SUMMARY))
+    _ensure(status, "fluency_sweep", _load_json(FLUENCY_SWEEP_SUMMARY))
+
 
 def main() -> None:
-    status = load_status()
+    status = _load_status()
     update_theory(status)
-    update_ringing(status)
-    update_fluency(status)
+    update_experiments(status)
     status["timestamp"] = time.strftime("%Y-%m-%d %H:%M:%S")
     STATUS.parent.mkdir(parents=True, exist_ok=True)
-    STATUS.write_text(json.dumps(status, indent=2))
-    print("[status] updated theory.phase_surface; files:", status.get("theory", {}).get("phase_surface", {}).get("files_present", []))
-    if "ringing_sweep" in status:
-        print("[status] incorporated ringing sweep summary")
-    if "fluency_probe" in status:
-        print("[status] incorporated fluency probe summary")
-    if "fluency_sweep" in status:
-        print("[status] incorporated fluency sweep summary")
+    STATUS.write_text(json.dumps(status, indent=2) + "\n")
+
+    print("[status] updated", STATUS)
+
 
 if __name__ == "__main__":
     main()

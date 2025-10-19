@@ -29,6 +29,10 @@ jobs:
           # Mirror common outputs if present; ignore errors
           rsync -a --ignore-missing-args results/ docs/results/ || true
           rsync -a --ignore-missing-args figures/ docs/figures/ || true
+      - name: Build unified dashboard
+        run: |
+          python scripts/update_theory_status.py
+          python scripts/build_dashboard.py
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

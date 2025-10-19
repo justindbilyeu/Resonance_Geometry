@@ -1,0 +1,94 @@
+{
+  "timestamp": "2025-10-19 22:51:19",
+  "phase": {
+    "current": "Phase 2/3 (Jacobian + Fluency)",
+    "next": "Phase 4 (Unified Dashboard)"
+  },
+  "experiments": {
+    "phase1_pilots": {
+      "null": {
+        "completed": 500,
+        "sign_acc": 0.512,
+        "mean_angular_error": 1.5940908384229355,
+        "total_runs": 500,
+        "chunk_size": 100
+      },
+      "proxy": {
+        "completed": 500,
+        "sign_acc": 0.522,
+        "mean_angular_error": 1.7082831546572514,
+        "total_runs": 500,
+        "chunk_size": 100
+      }
+    },
+    "ringing_sweep": null,
+    "jacobian": {
+      "boundary_points": [],
+      "meta": null,
+      "stats": {
+        "n_boundary": 0,
+        "grid_entries": 0
+      }
+    },
+    "fluency_sweep": null
+  },
+  "status": {
+    "last_updated": "2025-10-03T22:34:37.656761Z",
+    "evidence_grade": "C: Two experiments completed, expanding validation",
+    "experiments_completed": [
+      "phase_sweep",
+      "forbidden"
+    ],
+    "n_experiments": 2,
+    "status": "testing",
+    "validation": {
+      "replication": "All experiments use seed 42 (deterministic)",
+      "surrogate_controls": "\u2014",
+      "null_models": "\u2014",
+      "forbidden_region": "\u2014"
+    },
+    "timestamp": "2025-10-19 22:51:18",
+    "phase1_pilots": {
+      "null": {
+        "completed": 500,
+        "sign_acc": 0.512,
+        "mean_angular_error": 1.5940908384229355,
+        "total_runs": 500,
+        "chunk_size": 100
+      },
+      "proxy": {
+        "completed": 500,
+        "sign_acc": 0.522,
+        "mean_angular_error": 1.7082831546572514,
+        "total_runs": 500,
+        "chunk_size": 100
+      }
+    },
+    "theory": {
+      "phase_surface": {
+        "regimes": {
+          "stable": {
+            "count": 0,
+            "alpha_over_beta": null
+          },
+          "balanced": {
+            "count": 0,
+            "alpha_over_beta": null
+          },
+          "divergent": {
+            "count": 0,
+            "alpha_over_beta": null
+          }
+        },
+        "files_present": [],
+        "total_rows": 0
+      }
+    },
+    "theory_exports": {
+      "count_json": 0,
+      "has_eig_traj": false,
+      "has_error_curve": false,
+      "has_phase_surface": false
+    }
+  }
+}
