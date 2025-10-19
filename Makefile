@@ -70,3 +70,13 @@ sim-smoke:
 .PHONY: theory-status
 theory-status:
 >python scripts/update_theory_status.py
+
+.PHONY: ring-sweep ring-smoke
+
+ring-sweep:
+>python scripts/run_ringing_sweep.py
+
+ring-smoke:
+>pytest -q tests/experiments/test_forbidden_minimal.py
+>pytest -q tests/topo_test/test_skeleton_runs.py
+>pytest -q tests/test_ringing_detector.py
