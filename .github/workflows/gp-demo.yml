@@ -1,40 +1,51 @@
-name: gp-demo
+name: GP Demo
 
 on:
   push:
+    branches: [main]
   pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  RG_CI: "1"
 
 jobs:
-  demo:
+  gp_demo:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout repo
         uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: "pip"
 
-      - name: Install project (editable) + tests + extras
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-gp-demo-${{ hashFiles('requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-gp-demo-
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Run ringing demo (CI mode)
         run: |
-          python -m pip install --upgrade pip
-          pip install -e .
-          pip install pytest networkx
+          python experiments/gp_ringing_demo.py \
+            --steps 500 --runs 2000 --seeds 2 \
+            --out results/gp_demo
 
-      - name: Run tests
-        run: pytest -q
-
-      - name: Run GP ringing demo (smoke mode)
-        env:
-          RG_CI: "1"
+      - name: Check ringing summary
         run: |
-          python experiments/gp_ringing_demo.py --smoke --out figures/gp_ringing_smoke.png
+          test -f results/gp_demo/ringing_demo_summary.json
 
-      - name: Upload figures (artifacts)
-        if: always()
+      - name: Upload GP demo artifact
         uses: actions/upload-artifact@v4
         with:
-          name: gp-demo-figures
-          path: figures/
+          name: gp-demo-results
+          path: results/gp_demo/ringing_demo_summary.json
