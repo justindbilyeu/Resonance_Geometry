@@ -78,6 +78,19 @@ jacobian-sweep:
 fluency-probe:
 >python scripts/run_fluency_probe.py
 
+.PHONY: fluency-sweep fluency-status test-fluency fluency-all
+
+fluency-sweep:
+>python scripts/run_fluency_sweep.py
+
+fluency-status:
+>python scripts/update_theory_status.py
+
+test-fluency:
+>pytest -q tests/test_fluency_velocity.py
+
+fluency-all: fluency-sweep fluency-status
+
 .PHONY: ring-sweep ring-smoke
 
 ring-sweep:

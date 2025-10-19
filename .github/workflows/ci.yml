@@ -36,6 +36,21 @@ jobs:
       - name: Run tests
         run: pytest -q --disable-warnings
 
+      - name: Phase 3 — Fluency Sweep
+        run: |
+          make fluency-sweep
+          make fluency-status
+
+      - name: Upload Fluency Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fluency-sweep
+          path: |
+            results/fluency_sweep/*.json*
+            docs/reports/fluency_velocity.md
+            docs/assets/figures/fluency_map.png
+
       - name: Ringing sweep (with Jacobian)
         run: make jacobian-sweep
 
