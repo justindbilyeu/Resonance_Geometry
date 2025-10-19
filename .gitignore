@@ -29,3 +29,7 @@ build/
 
 # backups
 docs/assets/app.js.backup
+
+# Ringing sweep artifacts
+results/ringing_sweep/
+docs/assets/figures/ringing_alpha_beta.png
