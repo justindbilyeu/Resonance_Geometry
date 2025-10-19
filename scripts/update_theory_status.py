@@ -15,6 +15,7 @@ from tools.load_phase_surface import load_phase_surfaces
 
 STATUS = Path("docs/data/status/summary.json")
 SWEEP_SUMMARY = Path("results/ringing_sweep/summary.json")
+FLUENCY_SUMMARY = Path("results/fluency_probe/summary.json")
 
 def load_status() -> dict:
     if STATUS.exists():
@@ -33,16 +34,27 @@ def update_ringing(status: dict) -> None:
     if SWEEP_SUMMARY.exists():
         status["ringing_sweep"] = json.loads(SWEEP_SUMMARY.read_text())
 
+
+def update_fluency(status: dict) -> None:
+    if FLUENCY_SUMMARY.exists():
+        try:
+            status["fluency_probe"] = json.loads(FLUENCY_SUMMARY.read_text())
+        except Exception:
+            pass
+
 def main() -> None:
     status = load_status()
     update_theory(status)
     update_ringing(status)
+    update_fluency(status)
     status["timestamp"] = time.strftime("%Y-%m-%d %H:%M:%S")
     STATUS.parent.mkdir(parents=True, exist_ok=True)
     STATUS.write_text(json.dumps(status, indent=2))
     print("[status] updated theory.phase_surface; files:", status.get("theory", {}).get("phase_surface", {}).get("files_present", []))
     if "ringing_sweep" in status:
         print("[status] incorporated ringing sweep summary")
+    if "fluency_probe" in status:
+        print("[status] incorporated fluency probe summary")
 
 if __name__ == "__main__":
     main()

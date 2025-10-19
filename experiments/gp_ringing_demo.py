@@ -2,6 +2,27 @@ from __future__ import annotations
 import os, json, math, pathlib, argparse
 import numpy as np
 
+
+# --- Optional vector field for local linearization (Phase 2) ---
+def vector_field(x, params):
+    """Minimal vector field wrapper matching ``simulate_coupled``'s structure."""
+
+    alpha = float(params.get("alpha", 0.1))
+    beta = float(params.get("beta", 0.2))
+    K0 = float(params.get("K0", 0.0))
+    tau = float(params.get("tau", 20.0))
+    w0 = 1.0 / max(tau, 1e-9)
+
+    x = np.asarray(x, dtype=float)
+    N = x.size // 2
+    q, p = x[:N], x[N:]
+
+    q_mean = np.mean(q)
+    dq = p
+    dp = -beta * p - (w0 ** 2) * q + K0 * np.sin(alpha * q_mean)
+
+    return np.concatenate([dq, dp])
+
 # --- CI/test-friendly coupled demo: returns (lam, x, y) and accepts fs ---
 def simulate_coupled(
     fs: float | None = None,
