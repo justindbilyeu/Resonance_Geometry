@@ -16,6 +16,7 @@ from tools.load_phase_surface import load_phase_surfaces
 STATUS = Path("docs/data/status/summary.json")
 SWEEP_SUMMARY = Path("results/ringing_sweep/summary.json")
 FLUENCY_SUMMARY = Path("results/fluency_probe/summary.json")
+FLUENCY_SWEEP_SUMMARY = Path("results/fluency_sweep/summary.json")
 
 def load_status() -> dict:
     if STATUS.exists():
@@ -52,6 +53,12 @@ def update_fluency(status: dict) -> None:
         except Exception:
             pass
 
+    if FLUENCY_SWEEP_SUMMARY.exists():
+        try:
+            status["fluency_sweep"] = json.loads(FLUENCY_SWEEP_SUMMARY.read_text())
+        except Exception:
+            pass
+
 def main() -> None:
     status = load_status()
     update_theory(status)
@@ -65,6 +72,8 @@ def main() -> None:
         print("[status] incorporated ringing sweep summary")
     if "fluency_probe" in status:
         print("[status] incorporated fluency probe summary")
+    if "fluency_sweep" in status:
+        print("[status] incorporated fluency sweep summary")
 
 if __name__ == "__main__":
     main()
