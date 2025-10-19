@@ -308,24 +308,3 @@ If you use this work, please cite:
 *“Geometry writes energy. Energy sculpts geometry. Intelligence emerges from their dance.”*
 
 -----
-
-## Summary of Changes
-
-**Major improvements:**
-
-1. ✅ **Results section expanded** with detailed boundary findings (β_c ≈ 0.015, three regimes)
-1. ✅ **Added Key Results Summary table** for quick reference
-1. ✅ **Improved equations section** with actual Hopf bifurcation criterion
-1. ✅ **Better structure** with clear hierarchy and scannable headers
-1. ✅ **Added reproducibility section** highlighting test suite quality
-1. ✅ **Included citation block** for academic use
-1. ✅ **Added Quick Links** section for navigation
-1. ✅ **More specific artifacts** (file paths, figure references)
-1. ✅ **Current priorities** listed in Contributing section
-1. ✅ **License clarification** (code vs dissertation)
-
-**Tone:** Professional academic + open research (balanced)  
-**Technical depth:** Increased (actual equations, specific parameters)  
-**Accessibility:** Maintained (clear sections, visual hierarchy)  
-**Completeness:** Now reflects actual state of codebase (ringing detection merged, tests passing)
-
