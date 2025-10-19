@@ -87,3 +87,19 @@ ring-smoke:
 >pytest -q tests/experiments/test_forbidden_minimal.py
 >pytest -q tests/topo_test/test_skeleton_runs.py
 >pytest -q tests/test_ringing_detector.py
+
+.PHONY: theory-ensure theory-exports theory-all
+# Wolfram theory exports
+theory-ensure:
+>mkdir -p docs/data/theory docs/assets/figures
+
+theory-exports: theory-ensure
+>@if command -v wolframscript >/dev/null 2>&1; then \
+>  echo "Running Wolfram theory exports..."; \
+>  wolframscript -file docs/theory/theory_exports.wl || exit 1; \
+>else \
+>  echo "wolframscript not found; skipping theory exports."; \
+>fi
+
+theory-all: theory-exports
+>@echo "Theory export pipeline completed (or skipped)."

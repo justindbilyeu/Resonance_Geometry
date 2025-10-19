@@ -30,6 +30,16 @@ def update_theory(status: dict) -> None:
     status.setdefault("theory", {})
     status["theory"]["phase_surface"] = theory
 
+    theory_dir = ROOT / "docs/data/theory"
+    if theory_dir.is_dir():
+        jsons = list(theory_dir.glob("*.json"))
+        status["theory_exports"] = {
+            "count_json": len(jsons),
+            "has_eig_traj": (theory_dir / "jacobian_eig_trajectories.json").exists(),
+            "has_error_curve": (theory_dir / "jacobian_error_curve.json").exists(),
+            "has_phase_surface": (theory_dir / "phase_surface_all.json").exists(),
+        }
+
 def update_ringing(status: dict) -> None:
     if SWEEP_SUMMARY.exists():
         status["ringing_sweep"] = json.loads(SWEEP_SUMMARY.read_text())
