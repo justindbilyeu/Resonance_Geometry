@@ -165,6 +165,34 @@ This creates feedback: information flow reshapes structure, which reshapes infor
 - **Motif universality**: Information-constrained systems converge to similar topologies
 - **Engineering rule**: Practical $K_c$ threshold for stability in delayed feedback systems
 
+## Research Programs
+
+This repository contains two interconnected research programs:
+
+### 🌊 **General Theory: Geometric Plasticity (GP)**
+*How information flow sculpts adaptive network structure*
+
+- **Core Idea**: Systems self-tune coupling strengths proportional to information content
+- **Key Results**: Ringing boundaries, hysteresis resonance, motif universality
+- **Code**: `src/`, `scripts/`, `theory/`
+- **Status**: ✅ Simulations complete, appendices drafted
+- **Docs**: See `docs/whitepaper/` and `docs/appendices/`
+
+### 🧠 **Application: AI Hallucination as Phase Transition**
+*Geometric theory of LLM failure modes using gauge theory*
+
+- **Core Idea**: Hallucination = instability in information-representation coupling
+- **Key Results**: Three regimes (grounded/creative/hallucinatory), spectral diagnostic λ_max
+- **Code**: `rg/sims/`, `rg/validation/` (to be reorganized)
+- **Status**: 🔄 Theory complete, empirical validation in progress
+- **Paper**: [`docs/papers/neurips/manuscript.md`](docs/papers/neurips/manuscript.md)
+
+**Relationship**: The hallucination work applies geometric resonance principles to a specific high-stakes problem (LLM reliability). Both demonstrate how geometric formalism reveals phase transitions in information-processing systems.
+
+📖 **For PhD context**: See [`docs/dissertation/README.md`](docs/dissertation/README.md)
+
+---
+
 ### Repository Structure
 
 ```
