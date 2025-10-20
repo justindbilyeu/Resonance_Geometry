@@ -1,0 +1,37 @@
+name: dissertation-build
+
+on:
+  push:
+    paths:
+      - "docs/dissertation/**"
+      - ".github/workflows/dissertation-build.yml"
+  workflow_dispatch:
+
+jobs:
+  build-dissertation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Pandoc & TeX
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc
+          sudo apt-get install -y texlive-latex-extra texlive-fonts-recommended texlive-lang-english lmodern
+          # Optional: pandoc-crossref for auto labels (best-effort)
+          sudo apt-get install -y pandoc-crossref || true
+
+      - name: Build (script)
+        run: |
+          chmod +x scripts/build_dissertation.sh
+          ./scripts/build_dissertation.sh
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dissertation-artifacts
+          path: |
+            docs/dissertation/build/resonance_geometry_dissertation.pdf
+            docs/dissertation/build/resonance_geometry_dissertation.html

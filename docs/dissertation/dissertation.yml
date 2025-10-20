@@ -1,0 +1,67 @@
+# Pandoc defaults file for the full dissertation build
+
+metadata:
+  title: "Resonance Geometry: Geometric Plasticity and Information Dynamics"
+  subtitle: "From ringing phenomenology to mechanistic validation"
+  author:
+    - name: "Justin Bilyeu"
+    - name: "Sage (Resonance Geometry Collective)"
+  date: "2025"
+  institute: "Resonance Geometry Collective"
+  keywords: [resonance, geometric plasticity, instability, coherence, fluency velocity]
+  abstract: |
+    Resonance Geometry proposes that coherence, instability, and fluency emerge
+    from the geometry of information flow. We formalize this with a Lagrangian
+    coupling a coherence field Φ, curvature R(Φ), and instability λ(Φ), and validate
+    it via three independent observables: a scale-invariant ringing detector,
+    Jacobian eigenvalue crossings (mechanism), and fluency velocity v_f = dΦ/dt
+    (energy flow). Across simulations, all three converge at the critical boundary
+    β_c ≈ 0.015, closing the theory–experiment loop. This document assembles the
+    prologue, foundations, general theory with empirical validation, and a reflective
+    chapter on method and meaning.
+
+  bibliography: docs/dissertation/refs.bib
+
+input-files:
+  - docs/dissertation/00_prologue.md
+  - docs/dissertation/01_introduction.md
+  - docs/dissertation/02_foundations.md
+  - docs/dissertation/03_general_theory.md
+  - docs/dissertation/04_retrospective.md
+
+output-file: docs/dissertation/build/resonance_geometry_dissertation.pdf
+
+from: markdown+tex_math_dollars+tex_math_double_backslash+smart+table_captions+link_attributes
+to: pdf
+pdf-engine: xelatex
+
+standalone: true
+number-sections: true
+toc: true
+toc-depth: 3
+table-of-contents: true
+citeproc: true
+
+variables:
+  geometry: margin=1in
+  linestretch: 1.15
+  fontsize: 11pt
+  classoption: oneside
+  papersize: letter
+  colorlinks: true
+  linkcolor: blue
+  urlcolor: blue
+  citecolor: blue
+
+resource-path:
+  - .
+  - docs
+  - docs/assets
+  - docs/assets/figures
+  - docs/data
+  - docs/data/theory
+
+# If pandoc-crossref is available, uncomment:
+# filters:
+#   - pandoc-crossref
+

@@ -1,5 +1,7 @@
 # Resonance Geometry
 
+[![Dissertation Build](https://github.com/justindbilyeu/Resonance_Geometry/actions/workflows/dissertation-build.yml/badge.svg)](https://github.com/justindbilyeu/Resonance_Geometry/actions/workflows/dissertation-build.yml)
+
 **How coherence, instability, and fluency emerge from the geometry of information flow.**
 
 An open research program in structured resonance, geometric plasticity, and information-based dynamics.
