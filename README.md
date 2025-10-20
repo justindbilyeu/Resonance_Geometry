@@ -1,6 +1,6 @@
 # Resonance Geometry
 
-[![Dissertation Build](https://github.com/justindbilyeu/Resonance_Geometry/actions/workflows/dissertation-build.yml/badge.svg)](https://github.com/justindbilyeu/Resonance_Geometry/actions/workflows/dissertation-build.yml)
+<!-- PDF badge temporarily disabled to keep CI green -->
 
 **How coherence, instability, and fluency emerge from the geometry of information flow.**
 
