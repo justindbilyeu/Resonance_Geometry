@@ -23,6 +23,14 @@ jobs:
           # Optional: pandoc-crossref for auto labels (best-effort)
           sudo apt-get install -y pandoc-crossref || true
 
+      # Install XeLaTeX so Pandoc can compile the PDF
+      - name: Install xelatex
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-xetex
+          # OPTIONAL (uncomment if your template needs more packages/fonts):
+          # sudo apt-get install -y texlive-latex-recommended texlive-fonts-recommended texlive-latex-extra lmodern
+
       - name: Install Tectonic (official static binary)
         id: tectonic
         shell: bash
