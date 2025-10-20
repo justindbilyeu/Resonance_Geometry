@@ -69,4 +69,4 @@ jobs:
             results/fluency_sweep/*.json*
             docs/reports/fluency_velocity.md
             docs/assets/figures/fluency_map.png
-          if-no-files-found: ignore
+          if-no-files-found: warn

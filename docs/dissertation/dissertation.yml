@@ -29,7 +29,7 @@ input-files:
   - docs/dissertation/03_general_theory.md
   - docs/dissertation/04_retrospective.md
 
-output-file: docs/dissertation/build/resonance_geometry_dissertation.pdf
+output-file: docs/build/dissertation.pdf
 
 from: markdown+tex_math_dollars+tex_math_double_backslash+smart+table_captions+link_attributes
 to: pdf

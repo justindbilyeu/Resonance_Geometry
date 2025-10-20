@@ -128,9 +128,9 @@ pages-preview:
 
 # === Dissertation builds ===
 DIS_YAML := docs/dissertation/dissertation.yml
-DIS_BUILD_DIR := docs/dissertation/build
-DIS_PDF := $(DIS_BUILD_DIR)/resonance_geometry_dissertation.pdf
-DIS_HTML := $(DIS_BUILD_DIR)/resonance_geometry_dissertation.html
+DIS_BUILD_DIR := docs/build
+DIS_PDF := $(DIS_BUILD_DIR)/dissertation.pdf
+DIS_HTML := $(DIS_BUILD_DIR)/dissertation.html
 
 .PHONY: dissertation
 dissertation: $(DIS_PDF)
@@ -140,23 +140,18 @@ docs/dissertation/00_prologue.md \
 docs/dissertation/01_introduction.md \
 docs/dissertation/02_foundations.md \
 docs/dissertation/03_general_theory.md \
-docs/dissertation/04_retrospective.md
-@mkdir -p $(DIS_BUILD_DIR)
-pandoc -d $(DIS_YAML)
+docs/dissertation/04_retrospective.md \
+scripts/build_dissertation.sh
+@chmod +x scripts/build_dissertation.sh
+@./scripts/build_dissertation.sh
 @echo "[make] Built $(DIS_PDF)"
 
 .PHONY: dissertation-html
-dissertation-html:
-@mkdir -p $(DIS_BUILD_DIR)
-pandoc \
-  --metadata-file=$(DIS_YAML) \
-  -t html5 \
-  -o $(DIS_HTML) \
-  docs/dissertation/00_prologue.md \
-  docs/dissertation/01_introduction.md \
-  docs/dissertation/02_foundations.md \
-  docs/dissertation/03_general_theory.md \
-  docs/dissertation/04_retrospective.md
+dissertation-html: $(DIS_HTML)
+
+$(DIS_HTML): $(DIS_PDF)
+@# HTML generated alongside PDF in build script
+@test -f $(DIS_HTML) || (echo "[make] Missing $(DIS_HTML); re-running build script" && ./scripts/build_dissertation.sh)
 @echo "[make] Built $(DIS_HTML)"
 
 .PHONY: dissertation-clean
