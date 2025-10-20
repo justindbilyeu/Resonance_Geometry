@@ -9,6 +9,10 @@ on:
 
 jobs:
   simulate:
+    if: |
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' &&
+       contains(join(github.event.pull_request.labels.*.name, ','), 'run-heavy'))
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -40,6 +44,7 @@ jobs:
           else
             echo "No ./simulations directory found; skipping."
           fi
+        continue-on-error: ${{ github.event_name == 'pull_request' }}
 
       - name: Document deferred heavy simulations
         run: echo "Heavy simulations deferred. Run locally if needed."

@@ -20,6 +20,14 @@ pre-commit run -a
 pytest -q
 ```
 
+## CI Policy
+- **Required checks**: `ci-core` (fast unit tests)
+- **Heavy jobs** (PDF builds, simulations, theory exports) only run on:
+  - push to `main`, or
+  - PRs labeled **run-heavy**
+- If a heavy job flakes on a PR, it won’t block merge. On `main`, it’s enforced.
+- To generate the dissertation PDF on a PR, add the label **run-heavy** and re-run checks.
+
 
 
 Tests

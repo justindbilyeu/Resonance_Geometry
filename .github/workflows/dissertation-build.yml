@@ -1,7 +1,11 @@
 name: dissertation-build
-
 on:
+  pull_request:
+    paths:
+      - "docs/dissertation/**"
+      - ".github/workflows/dissertation-build.yml"
   push:
+    branches: [ main ]
     paths:
       - "docs/dissertation/**"
       - ".github/workflows/dissertation-build.yml"
@@ -9,73 +13,53 @@ on:
 
 jobs:
   build-dissertation:
+    if: |
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' &&
+       contains(join(github.event.pull_request.labels.*.name, ','), 'run-heavy'))
     runs-on: ubuntu-latest
-
+    timeout-minutes: 25
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Install Pandoc & TeX
         run: |
           sudo apt-get update
           sudo apt-get install -y pandoc
-          sudo apt-get install -y texlive-latex-extra texlive-fonts-recommended texlive-lang-english lmodern
-          # Optional: pandoc-crossref for auto labels (best-effort)
+          sudo apt-get install -y texlive-xetex \
+            texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended \
+            lmodern fonts-dejavu-core fonts-noto-core
           sudo apt-get install -y pandoc-crossref || true
 
-      - name: Install TeX engine (XeLaTeX) and fonts
-        run: |
-          set -euo pipefail
-          sudo apt-get update
-          # Minimal but sufficient TeX set for pandoc + xelatex
-          sudo apt-get install -y --no-install-recommends \
-            texlive-xetex \
-            texlive-latex-recommended \
-            texlive-latex-extra \
-            texlive-fonts-recommended \
-            lmodern \
-            fonts-dejavu-core \
-            fonts-noto-core
-
-      - name: Verify TeX installation
-        run: |
-          set -euo pipefail
-          which xelatex || true
-          xelatex --version || true
-          # Show presence of common classes/fonts to catch missing deps early
-          kpsewhich article.cls || true
-          fc-list | head -50 || true
-
-      - name: Install Tectonic (official static binary)
+      - name: Install Tectonic (best-effort with retries)
         id: tectonic
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p "$HOME/.local/bin"
-
-          echo "[ci] Installing Tectonic (with retries)…"
-          # Retry 5 times with 5s delay between attempts to handle DNS flakiness
           curl -fsSL --retry 5 --retry-delay 5 https://get.tectonic.dev | sh || {
-            echo "[ci] ⚠️  Tectonic installer failed after retries."
             echo "tectonic_installed=false" >> $GITHUB_OUTPUT
             exit 0
           }
-
-          # The script drops 'tectonic' in CWD; move it to ~/.local/bin
           if [[ -x "./tectonic" ]]; then
             mv ./tectonic "$HOME/.local/bin/tectonic"
-            echo "tectonic_installed=true" >> $GITHUB_OUTPUT
             echo "$HOME/.local/bin" >> $GITHUB_PATH
-            echo "[ci] ✅ Tectonic installed to $HOME/.local/bin"
+            echo "tectonic_installed=true" >> $GITHUB_OUTPUT
           else
             echo "tectonic_installed=false" >> $GITHUB_OUTPUT
-            echo "[ci] ⚠️  No tectonic binary found; fallback to xelatex."
           fi
 
       - name: Build (script)
         run: |
           chmod +x scripts/build_dissertation.sh
           ./scripts/build_dissertation.sh
+        continue-on-error: ${{ github.event_name == 'pull_request' }}
+
+      - name: List build output
+        if: always()
+        run: |
+          echo "[ci] Listing docs/dissertation/build:"
+          ls -lah docs/dissertation/build || true
 
       - name: Upload artifacts
         if: always()
@@ -85,4 +69,4 @@ jobs:
           path: |
             docs/dissertation/build/resonance_geometry_dissertation.pdf
             docs/dissertation/build/resonance_geometry_dissertation.html
-          if-no-files-found: ignore
+          if-no-files-found: warn

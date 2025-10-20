@@ -12,6 +12,10 @@ env:
 
 jobs:
   gp_demo:
+    if: |
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' &&
+       contains(join(github.event.pull_request.labels.*.name, ','), 'run-heavy'))
     runs-on: ubuntu-latest
 
     steps:
@@ -35,16 +39,20 @@ jobs:
         run: pip install -r requirements.txt -r requirements-dev.txt
 
       - name: Run ringing demo (CI mode)
+        id: run_demo
         run: |
           python experiments/gp_ringing_demo.py \
             --steps 500 --runs 2000 --seeds 2 \
             --out results/gp_demo
+        continue-on-error: ${{ github.event_name == 'pull_request' }}
 
       - name: Check ringing summary
+        if: steps.run_demo.outcome == 'success'
         run: |
           test -f results/gp_demo/ringing_demo_summary.json
 
       - name: Upload GP demo artifact
+        if: steps.run_demo.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: gp-demo-results
