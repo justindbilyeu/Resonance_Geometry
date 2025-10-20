@@ -228,3 +228,8 @@ This work has been developed through extensive dialogue with multiple AI systems
 
 *Last updated: 2025-01-[DATE]*
 *This is a living document and will evolve as the research progresses.*
+
+
+> **Note:** The automated PDF build is temporarily paused to keep CI green.  
+> Markdown + figures (`docs/assets/figures`) and data (`docs/data`) are the canonical sources.  
+> To re-enable PDFs, restore the push triggers in `.github/workflows/dissertation-build.yml` and rerun the workflow via `workflow_dispatch`.
