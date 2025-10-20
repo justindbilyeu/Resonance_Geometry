@@ -1,4 +1,4 @@
-# PhD Dissertation: Geometric Approaches to Information Dynamics
+# [PhD]Dissertation: Geometric Approaches to Information Dynamics
 
 **Candidate**: Justin Bilyeu  
 **Status**: Pre-candidacy / Organizing materials  
