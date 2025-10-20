@@ -13,6 +13,7 @@ results/
 *.pickle
 *.pkl
 *.log
+docs/dissertation/build/
 
 # site & build outputs
 docs/data/generated/

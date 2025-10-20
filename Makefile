@@ -125,3 +125,42 @@ dashboard:
 
 pages-preview:
 >python -m http.server -d docs 8080
+
+# === Dissertation builds ===
+DIS_YAML := docs/dissertation/dissertation.yml
+DIS_BUILD_DIR := docs/dissertation/build
+DIS_PDF := $(DIS_BUILD_DIR)/resonance_geometry_dissertation.pdf
+DIS_HTML := $(DIS_BUILD_DIR)/resonance_geometry_dissertation.html
+
+.PHONY: dissertation
+dissertation: $(DIS_PDF)
+
+$(DIS_PDF): $(DIS_YAML) \
+docs/dissertation/00_prologue.md \
+docs/dissertation/01_introduction.md \
+docs/dissertation/02_foundations.md \
+docs/dissertation/03_general_theory.md \
+docs/dissertation/04_retrospective.md
+@mkdir -p $(DIS_BUILD_DIR)
+pandoc -d $(DIS_YAML)
+@echo "[make] Built $(DIS_PDF)"
+
+.PHONY: dissertation-html
+dissertation-html:
+@mkdir -p $(DIS_BUILD_DIR)
+pandoc \
+  --metadata-file=$(DIS_YAML) \
+  -t html5 \
+  -o $(DIS_HTML) \
+  docs/dissertation/00_prologue.md \
+  docs/dissertation/01_introduction.md \
+  docs/dissertation/02_foundations.md \
+  docs/dissertation/03_general_theory.md \
+  docs/dissertation/04_retrospective.md
+@echo "[make] Built $(DIS_HTML)"
+
+.PHONY: dissertation-clean
+dissertation-clean:
+rm -rf $(DIS_BUILD_DIR)
+@echo "[make] Cleaned dissertation build artifacts"
+
