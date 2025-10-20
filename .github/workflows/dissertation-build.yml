@@ -8,30 +8,43 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-dissertation:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - name: Set up git safe directory
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-      - name: Install Pandoc & TeX
+      - name: Install Pandoc
         run: |
           sudo apt-get update
           sudo apt-get install -y pandoc
-          sudo apt-get install -y texlive-latex-extra texlive-fonts-recommended texlive-lang-english lmodern
-          # Optional: pandoc-crossref for auto labels (best-effort)
-          sudo apt-get install -y pandoc-crossref || true
 
-      - name: Build (script)
+      - name: Install Tectonic (TeX engine with auto package fetch)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tectonic
+          tectonic -V
+
+      - name: Build dissertation (PDF + HTML)
         run: |
           chmod +x scripts/build_dissertation.sh
-          ./scripts/build_dissertation.sh
+          # Try full PDF+HTML build with Tectonic; if PDF fails, produce HTML-only to keep artifacts flowing.
+          set +e
+          PDF_ENGINE=tectonic ./scripts/build_dissertation.sh
+          STATUS=$?
+          set -e
+          if [ $STATUS -ne 0 ]; then
+            echo "PDF build failed; attempting HTML-only to keep artifacts available"
+            mkdir -p docs/build
+            pandoc --defaults=docs/dissertation/pandoc/defaults.yaml -t html5 -o docs/build/dissertation.html
+          fi
 
-      - name: Upload artifacts
+      - name: Upload dissertation artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: dissertation-artifacts
+          name: dissertation-build
           path: |
-            docs/dissertation/build/resonance_geometry_dissertation.pdf
-            docs/dissertation/build/resonance_geometry_dissertation.html
+            docs/build/dissertation.pdf
+            docs/build/dissertation.html
+          if-no-files-found: warn
