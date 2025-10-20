@@ -164,3 +164,12 @@ dissertation-clean:
 rm -rf $(DIS_BUILD_DIR)
 @echo "[make] Cleaned dissertation build artifacts"
 
+.PHONY: dissertation-build-script dissertation-build-script-xelatex dissertation-all-xelatex
+dissertation-build-script:
+>./scripts/build_dissertation.sh
+
+dissertation-build-script-xelatex:
+>PANDOC_PDF_ENGINE=xelatex ./scripts/build_dissertation.sh
+
+dissertation-all-xelatex: dissertation-build-script-xelatex
+

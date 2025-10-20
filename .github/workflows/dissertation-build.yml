@@ -8,30 +8,65 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-dissertation:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - name: Set up git safe directory
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-      - name: Install Pandoc & TeX
+      - name: Install system deps
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc
-          sudo apt-get install -y texlive-latex-extra texlive-fonts-recommended texlive-lang-english lmodern
-          # Optional: pandoc-crossref for auto labels (best-effort)
-          sudo apt-get install -y pandoc-crossref || true
+          sudo apt-get install -y \
+            pandoc \
+            ghostscript \
+            fonts-lmodern \
+            make \
+            jq
 
-      - name: Build (script)
+      - name: Install Tectonic (official static binary)
+        id: tectonic
+        shell: bash
         run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.local/bin"
+          curl -fsSL https://get.tectonic.dev | sh
+          if [[ -x ./tectonic ]]; then
+            mv ./tectonic "$HOME/.local/bin/tectonic"
+            echo "tectonic_installed=true" >> "$GITHUB_OUTPUT"
+            echo "[ci] Tectonic installed to $HOME/.local/bin"
+          else
+            echo "tectonic_installed=false" >> "$GITHUB_OUTPUT"
+            echo "[ci] Tectonic installer did not produce a binary; will fallback to xelatex."
+          fi
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Show versions
+        run: |
+          echo "pandoc: $(pandoc -v | head -n1)"
+          if command -v tectonic >/dev/null 2>&1; then
+            echo "tectonic: $(tectonic --version)"
+          else
+            echo "tectonic: (not found)"
+          fi
+
+      - name: Build dissertation (PDF + HTML)
+        env:
+          PANDOC_DEFAULTS: docs/dissertation/pandoc/defaults.yaml
+          TECTONIC_INSTALLED: ${{ steps.tectonic.outputs.tectonic_installed }}
+        run: |
+          if [[ "${TECTONIC_INSTALLED}" != "true" ]]; then
+            export PANDOC_PDF_ENGINE=xelatex
+          fi
           chmod +x scripts/build_dissertation.sh
           ./scripts/build_dissertation.sh
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: dissertation-artifacts
+          name: dissertation
           path: |
             docs/dissertation/build/resonance_geometry_dissertation.pdf
             docs/dissertation/build/resonance_geometry_dissertation.html
+          if-no-files-found: warn
