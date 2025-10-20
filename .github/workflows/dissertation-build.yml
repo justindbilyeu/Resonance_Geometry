@@ -23,6 +23,32 @@ jobs:
           # Optional: pandoc-crossref for auto labels (best-effort)
           sudo apt-get install -y pandoc-crossref || true
 
+      - name: Install Tectonic (official static binary)
+        id: tectonic
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.local/bin"
+
+          echo "[ci] Installing Tectonic (with retries)…"
+          # Retry 5 times with 5s delay between attempts to handle DNS flakiness
+          curl -fsSL --retry 5 --retry-delay 5 https://get.tectonic.dev | sh || {
+            echo "[ci] ⚠️  Tectonic installer failed after retries."
+            echo "tectonic_installed=false" >> $GITHUB_OUTPUT
+            exit 0
+          }
+
+          # The script drops 'tectonic' in CWD; move it to ~/.local/bin
+          if [[ -x "./tectonic" ]]; then
+            mv ./tectonic "$HOME/.local/bin/tectonic"
+            echo "tectonic_installed=true" >> $GITHUB_OUTPUT
+            echo "$HOME/.local/bin" >> $GITHUB_PATH
+            echo "[ci] ✅ Tectonic installed to $HOME/.local/bin"
+          else
+            echo "tectonic_installed=false" >> $GITHUB_OUTPUT
+            echo "[ci] ⚠️  No tectonic binary found; fallback to xelatex."
+          fi
+
       - name: Build (script)
         run: |
           chmod +x scripts/build_dissertation.sh
