@@ -23,13 +23,28 @@ jobs:
           # Optional: pandoc-crossref for auto labels (best-effort)
           sudo apt-get install -y pandoc-crossref || true
 
-      # Install XeLaTeX so Pandoc can compile the PDF
-      - name: Install xelatex
+      - name: Install TeX engine (XeLaTeX) and fonts
         run: |
+          set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y texlive-xetex
-          # OPTIONAL (uncomment if your template needs more packages/fonts):
-          # sudo apt-get install -y texlive-latex-recommended texlive-fonts-recommended texlive-latex-extra lmodern
+          # Minimal but sufficient TeX set for pandoc + xelatex
+          sudo apt-get install -y --no-install-recommends \
+            texlive-xetex \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            lmodern \
+            fonts-dejavu-core \
+            fonts-noto-core
+
+      - name: Verify TeX installation
+        run: |
+          set -euo pipefail
+          which xelatex || true
+          xelatex --version || true
+          # Show presence of common classes/fonts to catch missing deps early
+          kpsewhich article.cls || true
+          fc-list | head -50 || true
 
       - name: Install Tectonic (official static binary)
         id: tectonic
@@ -63,9 +78,11 @@ jobs:
           ./scripts/build_dissertation.sh
 
       - name: Upload artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: dissertation-artifacts
           path: |
             docs/dissertation/build/resonance_geometry_dissertation.pdf
             docs/dissertation/build/resonance_geometry_dissertation.html
+          if-no-files-found: ignore
