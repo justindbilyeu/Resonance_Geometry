@@ -1,0 +1,3 @@
+# Chapter 4 — Retrospective (Abstract)
+
+This chapter traces Resonance Geometry from a felt intuition of structured resonance to a formal Lagrangian and a fully reproducible validation pipeline. Phase-wise experiments—amplitude-invariant ringing detection, Jacobian eigenvalue diagnostics, and fluency-velocity probes—converge at a critical boundary \(\beta_c \approx 0.015\), linking phenomenology, mechanism, and energy flow. The repository’s living infrastructure (simulators, sweeps, dashboards, CI) expresses a method where theory and experiment compile together. The closing reflection situates RG as a testable geometry of information in which intelligence emerges from a balance of resonance, curvature, and instability—an observer measuring its own curvature.
