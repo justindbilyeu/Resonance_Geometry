@@ -20,6 +20,23 @@ Our research integrates physics, information theory, and machine learning into a
 
 -----
 
+## 📚 Documentation
+
+**Interactive Wiki**: [https://github.com/justindbilyeu/Resonance_Geometry/wiki](https://github.com/justindbilyeu/Resonance_Geometry/wiki)
+
+### Quick Links
+- 🚀 **[Quick Start](https://github.com/justindbilyeu/Resonance_Geometry/wiki/Quick-Start)** — Run your first experiment in 15 minutes
+- 🧪 **[Interactive Tutorial](https://github.com/justindbilyeu/Resonance_Geometry/wiki/Interactive-Tutorial)** — Hands-on progression through five levels
+- 🛠️ **[Developer Guide](https://github.com/justindbilyeu/Resonance_Geometry/wiki/Developer-Guide)** — Contribution standards and workflows
+- 🌌 **[Holonomic Memory Research](https://github.com/justindbilyeu/Resonance_Geometry/wiki/Holonomic-Memory-Home)** — Legacy cosmology and coherence stream
+- 🧠 **[Geometric Plasticity Hub](https://github.com/justindbilyeu/Resonance_Geometry/wiki/Dissertation-Home)** — Dissertation-era empirical program
+
+### Two Research Streams
+1. **Holonomic Memory** — Cosmological redshift, biological coherence, holonomy theory, and consciousness research
+2. **Geometric Plasticity** — LLM hallucination detection, phase transitions, and resonance-based model diagnostics
+
+-----
+
 ## 🧭 Research Status
 
 |Domain                            |Description                                                              |Status       |
