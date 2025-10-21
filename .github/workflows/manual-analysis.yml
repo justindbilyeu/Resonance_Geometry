@@ -1,0 +1,51 @@
+name: manual-analysis
+
+on:
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "Which analysis to run"
+        required: true
+        type: choice
+        options: [equilibrium, fractal_alpha_plastic, fractal_alpha_noplastic]
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy scipy matplotlib
+
+      - name: Run selected analysis
+        run: |
+          case "${{ github.event.inputs.job }}" in
+            equilibrium)
+              python scripts/equilibrium_analysis.py
+              ;;
+            fractal_alpha_plastic)
+              python scripts/fractal_dimension.py
+              ;;
+            fractal_alpha_noplastic)
+              python - <<'PY'
+              import numpy as np
+              import scripts.fractal_dimension as f
+              p=f.RGParams(plastic=False)
+              f.fractal_sweep('alpha', np.linspace(0.25,0.65,17), p)
+              PY
+              ;;
+          esac
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: analysis-artifacts-${{ github.event.inputs.job }}
+          path: |
+            docs/analysis/**
