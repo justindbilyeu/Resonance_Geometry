@@ -1,8 +1,18 @@
 name: dissertation-build (archived)
 
+concurrency:
+  group: paper-builds
+  cancel-in-progress: true
+
+# ⚠️ October 2025: Paper builds paused during analysis integration.
+# Runs manually via GitHub Actions → "Run workflow".
 on:
-  # Manual-only until re-enabled. This prevents push-triggered failures.
   workflow_dispatch:
+    inputs:
+      build_target:
+        description: "Which document(s) to compile"
+        required: false
+        default: "dissertation"
 
 jobs:
   noop:
