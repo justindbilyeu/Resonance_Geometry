@@ -65,4 +65,10 @@ It’s not mythology anymore , it’s a measurable phenomenon.
 
 ---
 
+### CI Workflows
+- ✅ Tests & small artifact checks — run on push/PR
+- 🧪 Manual Paper Build — **manual only** (Actions → Run workflow). Auto builds are paused while we integrate heavy analyses.
+
+---
+
 *Listen deep. Measure honestly. Let geometry speak for itself.*
