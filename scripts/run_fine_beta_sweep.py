@@ -36,14 +36,11 @@ def main():
         from experiments.ringing_detector import detect_ringing
     except ImportError as e:
         print(f"ERROR: Missing required module: {e}")
-        print("\nRequired files:")
-        print("  - experiments/gp_ringing_demo.py")
-        print("  - experiments/jacobian.py")
-        print("  - experiments/ringing_detector.py")
         sys.exit(1)
     
     # Fixed parameters
     alpha = 0.1
+    beta_param = 0.01  # Will be varied in loop
     eta = 0.0
     tau = 10.0
     K0 = 0.1
@@ -78,18 +75,35 @@ def main():
         
         # 1. Run simulation
         try:
-            t, states = simulate_coupled(
+            result = simulate_coupled(
                 steps=600,
                 seed=42,
                 **params
             )
-            series = states.mean(axis=1) if getattr(states, 'ndim', 1) > 1 else states
+            
+            # Handle different return signatures
+            if isinstance(result, tuple) and len(result) == 3:
+                lam, x, y = result
+                series = (np.array(x) + np.array(y)) / 2.0  # Average both oscillators
+            elif isinstance(result, tuple) and len(result) == 2:
+                t, states = result
+                series = states.mean(axis=1) if getattr(states, 'ndim', 1) > 1 else states
+            else:
+                print(f"  WARNING: Unexpected return format at β={beta:.4f}")
+                continue
+                
         except Exception as e:
             print(f"  WARNING: Simulation failed at β={beta:.4f}: {e}")
+            import traceback
+            traceback.print_exc()
             continue
         
         # 2. Detect ringing
-        ringing_result = detect_ringing(series)
+        try:
+            ringing_result = detect_ringing(series)
+        except Exception as e:
+            print(f"  WARNING: Ringing detection failed at β={beta:.4f}: {e}")
+            continue
         
         # 3. Compute Jacobian eigenvalue
         try:
@@ -105,18 +119,22 @@ def main():
             max_eig = None
         
         # Store results
-        result = {
+        result_dict = {
             'beta': float(beta),
-            'ringing': ringing_result['ringing'],
-            'ringing_score': ringing_result.get('score', 0.0),
+            'ringing': bool(ringing_result.get('ringing', False)),
+            'ringing_score': float(ringing_result.get('score', 0.0)),
             'max_real_eig': float(max_eig) if max_eig is not None else None,
             'series_mean': float(np.mean(series)),
             'series_std': float(np.std(series))
         }
-        results.append(result)
+        results.append(result_dict)
     
     print(f"\nCompleted: {len(results)}/{len(betas)} successful")
     print()
+    
+    if len(results) == 0:
+        print("ERROR: No successful simulations. Cannot proceed with analysis.")
+        return
     
     # Analysis
     print("=" * 70)
@@ -142,7 +160,9 @@ def main():
         print(f"  Last ringing:   β = {beta_ringing_end:.4f}")
         print(f"  Ringing window: [{beta_ringing_start:.4f}, {beta_ringing_end:.4f}]")
     else:
-        print("  No clear ringing transition found")
+        print(f"  Ringing detected: {np.sum(ringing_vals)}/{len(ringing_vals)} points")
+        if np.sum(ringing_vals) == 0:
+            print("  ⚠️  No ringing detected at any β value")
         beta_ringing_start = None
     
     print()
@@ -150,6 +170,8 @@ def main():
     # Find eigenvalue crossing
     print("Eigenvalue Zero-Crossing:")
     if len(eig_vals) > 0:
+        print(f"  Eigenvalue range: [{np.min(eig_vals):.6f}, {np.max(eig_vals):.6f}]")
+        
         # Find where eigenvalue crosses zero
         sign_changes = np.where(np.diff(np.sign(eig_vals)))[0]
         
@@ -187,13 +209,13 @@ def main():
             beta_c = (beta_ringing_start + beta_eig_cross) / 2
         else:
             print("⚠️  DIVERGENCE: Observables do not align closely")
-            print("   May indicate:")
-            print("   - Need finer resolution")
-            print("   - Different transition mechanisms")
-            print("   - Measurement sensitivity issues")
             beta_c = None
     else:
         print("❌ INSUFFICIENT DATA: Cannot assess convergence")
+        if beta_ringing_start is None:
+            print("   - No ringing transition detected")
+        if beta_eig_cross is None:
+            print("   - No eigenvalue crossing detected")
         beta_c = None
     
     print()
@@ -223,7 +245,7 @@ def main():
             'difference': float(abs(beta_ringing_start - beta_eig_cross)) if (beta_ringing_start and beta_eig_cross) else None
         },
         'beta_c': float(beta_c) if beta_c is not None else None,
-        'convergence': beta_c is not None and abs(beta_ringing_start - beta_eig_cross) < 0.005 if (beta_ringing_start and beta_eig_cross) else False
+        'convergence': bool(beta_c is not None and abs(beta_ringing_start - beta_eig_cross) < 0.005) if (beta_ringing_start and beta_eig_cross) else False
     }
     
     summary_file = output_dir / "summary.json"
@@ -235,90 +257,40 @@ def main():
     print(f"  - summary.json (analysis)")
     print()
     
-    # Plot if available
+    # Plotting
     if HAS_PLT and len(results) > 0:
         print("Generating plots...")
         
-        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
+        fig, axes = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
         
-        # Plot 1: Ringing detection
-        ax1.scatter(beta_vals[ringing_vals], 
-                   np.ones(np.sum(ringing_vals)), 
-                   c='red', marker='o', s=100, label='Ringing', zorder=3)
-        ax1.scatter(beta_vals[~ringing_vals], 
-                   np.zeros(np.sum(~ringing_vals)), 
-                   c='blue', marker='x', s=100, label='No ringing', zorder=3)
-        ax1.set_ylabel('Ringing Detected')
-        ax1.set_ylim(-0.2, 1.2)
-        ax1.set_yticks([0, 1])
-        ax1.set_yticklabels(['No', 'Yes'])
-        ax1.legend()
-        ax1.grid(True, alpha=0.3)
-        ax1.set_title('Fine β Sweep: Critical Point Detection')
+        # Plot 1: Ringing
+        if np.sum(ringing_vals) > 0:
+            axes[0].scatter(beta_vals[ringing_vals], np.ones(np.sum(ringing_vals)), 
+                           c='red', marker='o', s=100, label='Ringing')
+        if np.sum(~ringing_vals) > 0:
+            axes[0].scatter(beta_vals[~ringing_vals], np.zeros(np.sum(~ringing_vals)), 
+                           c='blue', marker='x', s=100, label='No ringing')
         
-        if beta_ringing_start is not None:
-            ax1.axvline(beta_ringing_start, color='red', linestyle='--', 
-                       alpha=0.5, label=f'Onset: {beta_ringing_start:.4f}')
+        axes[0].set_ylabel('Ringing')
+        axes[0].set_ylim(-0.2, 1.2)
+        axes[0].legend()
+        axes[0].grid(True, alpha=0.3)
+        axes[0].set_title('Fine β Sweep: Critical Point Search')
         
         # Plot 2: Eigenvalue
         if len(eig_vals) > 0:
-            ax2.plot(eig_betas, eig_vals, 'o-', color='green', linewidth=2, markersize=6)
-            ax2.axhline(0, color='black', linestyle='-', linewidth=1)
-            ax2.set_ylabel('Max Re(λ)')
-            ax2.set_xlabel('β')
-            ax2.grid(True, alpha=0.3)
-            
-            if beta_eig_cross is not None:
-                ax2.axvline(beta_eig_cross, color='green', linestyle='--', 
-                           alpha=0.5, label=f'Crossing: {beta_eig_cross:.4f}')
-                ax2.legend()
+            axes[1].plot(eig_betas, eig_vals, 'o-', color='green', linewidth=2)
+            axes[1].axhline(0, color='black', linestyle='-')
+            axes[1].set_ylabel('Max Re(λ)')
+            axes[1].grid(True, alpha=0.3)
+        
+        axes[1].set_xlabel('β')
         
         plt.tight_layout()
-        
-        fig_file = output_dir / "beta_sweep_analysis.png"
-        plt.savefig(fig_file, dpi=150, bbox_inches='tight')
-        print(f"  - beta_sweep_analysis.png (visualization)")
+        plt.savefig(output_dir / "beta_sweep_analysis.png", dpi=150)
         plt.close()
         
-        # Also save to docs
-        docs_dir = Path("docs/assets/figures")
-        docs_dir.mkdir(parents=True, exist_ok=True)
-        plt.figure(figsize=(10, 8))
-        
-        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
-        
-        ax1.scatter(beta_vals[ringing_vals], 
-                   np.ones(np.sum(ringing_vals)), 
-                   c='red', marker='o', s=100, label='Ringing', zorder=3)
-        ax1.scatter(beta_vals[~ringing_vals], 
-                   np.zeros(np.sum(~ringing_vals)), 
-                   c='blue', marker='x', s=100, label='No ringing', zorder=3)
-        ax1.set_ylabel('Ringing Detected')
-        ax1.set_ylim(-0.2, 1.2)
-        ax1.set_yticks([0, 1])
-        ax1.set_yticklabels(['No', 'Yes'])
-        ax1.legend()
-        ax1.grid(True, alpha=0.3)
-        ax1.set_title('Critical Point β_c: Ringing + Eigenvalue Convergence')
-        
-        if beta_ringing_start is not None:
-            ax1.axvline(beta_ringing_start, color='red', linestyle='--', alpha=0.5)
-        
-        if len(eig_vals) > 0:
-            ax2.plot(eig_betas, eig_vals, 'o-', color='green', linewidth=2, markersize=6)
-            ax2.axhline(0, color='black', linestyle='-', linewidth=1)
-            ax2.set_ylabel('Max Re(λ)')
-            ax2.set_xlabel('β')
-            ax2.grid(True, alpha=0.3)
-            
-            if beta_eig_cross is not None:
-                ax2.axvline(beta_eig_cross, color='green', linestyle='--', alpha=0.5)
-        
-        plt.tight_layout()
-        plt.savefig(docs_dir / "beta_c_convergence.png", dpi=150, bbox_inches='tight')
-        plt.close()
-        
-        print(f"  - docs/assets/figures/beta_c_convergence.png (for wiki)")
+        print(f"  - beta_sweep_analysis.png")
     
     print()
     print("=" * 70)
