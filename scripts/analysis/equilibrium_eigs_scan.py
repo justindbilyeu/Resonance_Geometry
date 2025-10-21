@@ -14,6 +14,8 @@ import numpy as np
 from scipy import optimize
 
 plt.rcParams["svg.fonttype"] = "none"
+plt.rcParams["svg.hashsalt"] = "equilibrium-eigs"
+SVG_METADATA = {"Date": "2024-01-01T00:00:00"}
 
 
 @dataclass
@@ -311,7 +313,7 @@ def plot_eigen_real(
     plt.legend()
     plt.tight_layout()
     output_path = figures_dir / "eigenvalue_real_vs_alpha.svg"
-    plt.savefig(output_path)
+    plt.savefig(output_path, metadata=SVG_METADATA)
     plt.close()
 
 
@@ -337,7 +339,7 @@ def plot_eigen_imag(
     plt.grid(True, linestyle=":", linewidth=0.5)
     plt.tight_layout()
     output_path = figures_dir / "eigenvalue_imag_vs_alpha.svg"
-    plt.savefig(output_path)
+    plt.savefig(output_path, metadata=SVG_METADATA)
     plt.close()
 
 
@@ -397,7 +399,7 @@ def plot_equilibria(
     plt.legend()
     plt.tight_layout()
     output_path = figures_dir / "equilibrium_vs_alpha.svg"
-    plt.savefig(output_path)
+    plt.savefig(output_path, metadata=SVG_METADATA)
     plt.close()
 
 
