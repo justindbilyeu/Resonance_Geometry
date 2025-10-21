@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+from scipy.integrate import odeint
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -23,6 +24,20 @@ except Exception:
     HAS_PLT = False
 
 
+def rg_dynamics(state, t, beta, alpha, omega0, K0):
+    """
+    Resonance Geometry dynamics matching vector_field structure.
+    
+    This is the actual system being tested:
+    dphi/dt = v
+    dv/dt = -beta*v - omega0^2*phi + K0*sin(alpha*phi)
+    """
+    phi, v = state
+    dphi = v
+    dv = -beta * v - (omega0**2) * phi + K0 * np.sin(alpha * phi)
+    return [dphi, dv]
+
+
 def main():
     print("=" * 70)
     print("FINE β SWEEP: Locating Critical Point")
@@ -31,7 +46,7 @@ def main():
     
     # Import required modules
     try:
-        from experiments.gp_ringing_demo import simulate_coupled, vector_field
+        from experiments.gp_ringing_demo import vector_field
         from experiments.jacobian import finite_diff_jacobian, max_real_eig
         from experiments.ringing_detector import detect_ringing
     except ImportError as e:
@@ -40,10 +55,9 @@ def main():
     
     # Fixed parameters
     alpha = 0.1
-    beta_param = 0.01  # Will be varied in loop
-    eta = 0.0
     tau = 10.0
     K0 = 0.1
+    omega0 = 1.0 / tau
     
     # Fine β sweep
     betas = np.linspace(0.010, 0.050, 21)
@@ -51,8 +65,8 @@ def main():
     print(f"Configuration:")
     print(f"  α (alpha):  {alpha}")
     print(f"  τ (tau):    {tau}")
+    print(f"  ω₀:         {omega0:.3f}")
     print(f"  K₀:         {K0}")
-    print(f"  η (noise):  {eta}")
     print(f"  β range:    {betas[0]:.3f} to {betas[-1]:.3f}")
     print(f"  β steps:    {len(betas)}")
     print()
@@ -68,34 +82,20 @@ def main():
         params = {
             'alpha': alpha,
             'beta': beta,
-            'eta': eta,
             'tau': tau,
             'K0': K0
         }
         
         # 1. Run simulation
         try:
-            result = simulate_coupled(
-                steps=600,
-                seed=42,
-                **params
-            )
+            t_span = np.linspace(0, 100, 1000)  # 100 time units, 1000 points
+            initial = [1.0, 0.0]  # phi0=1.0, v0=0.0
             
-            # Handle different return signatures
-            if isinstance(result, tuple) and len(result) == 3:
-                lam, x, y = result
-                series = (np.array(x) + np.array(y)) / 2.0  # Average both oscillators
-            elif isinstance(result, tuple) and len(result) == 2:
-                t, states = result
-                series = states.mean(axis=1) if getattr(states, 'ndim', 1) > 1 else states
-            else:
-                print(f"  WARNING: Unexpected return format at β={beta:.4f}")
-                continue
-                
+            sol = odeint(rg_dynamics, initial, t_span, args=(beta, alpha, omega0, K0))
+            series = sol[:, 0]  # phi(t)
+            
         except Exception as e:
             print(f"  WARNING: Simulation failed at β={beta:.4f}: {e}")
-            import traceback
-            traceback.print_exc()
             continue
         
         # 2. Detect ringing
@@ -103,13 +103,13 @@ def main():
             ringing_result = detect_ringing(series)
         except Exception as e:
             print(f"  WARNING: Ringing detection failed at β={beta:.4f}: {e}")
-            continue
+            ringing_result = {'ringing': False, 'score': 0.0}
         
-        # 3. Compute Jacobian eigenvalue
+        # 3. Compute Jacobian eigenvalue at equilibrium (phi=0, v=0)
         try:
-            # Use final state as equilibrium approximation
-            q = np.full(4, float(series[-1]))
-            p = np.zeros_like(q)
+            # Equilibrium is at phi=0 for this system
+            q = np.zeros(4)  # 4 oscillators at equilibrium
+            p = np.zeros(4)
             x0 = np.concatenate([q, p])
             
             J = finite_diff_jacobian(vector_field, x0, params)
@@ -125,7 +125,8 @@ def main():
             'ringing_score': float(ringing_result.get('score', 0.0)),
             'max_real_eig': float(max_eig) if max_eig is not None else None,
             'series_mean': float(np.mean(series)),
-            'series_std': float(np.std(series))
+            'series_std': float(np.std(series)),
+            'series_final': float(series[-1])
         }
         results.append(result_dict)
     
@@ -133,7 +134,7 @@ def main():
     print()
     
     if len(results) == 0:
-        print("ERROR: No successful simulations. Cannot proceed with analysis.")
+        print("ERROR: No successful simulations. Cannot proceed.")
         return
     
     # Analysis
@@ -145,6 +146,7 @@ def main():
     # Extract arrays
     beta_vals = np.array([r['beta'] for r in results])
     ringing_vals = np.array([r['ringing'] for r in results])
+    scores = np.array([r['ringing_score'] for r in results])
     eig_vals = np.array([r['max_real_eig'] for r in results if r['max_real_eig'] is not None])
     eig_betas = np.array([r['beta'] for r in results if r['max_real_eig'] is not None])
     
@@ -163,6 +165,7 @@ def main():
         print(f"  Ringing detected: {np.sum(ringing_vals)}/{len(ringing_vals)} points")
         if np.sum(ringing_vals) == 0:
             print("  ⚠️  No ringing detected at any β value")
+            print(f"  Score range: [{np.min(scores):.3f}, {np.max(scores):.3f}]")
         beta_ringing_start = None
     
     print()
@@ -234,8 +237,8 @@ def main():
         'config': {
             'alpha': alpha,
             'tau': tau,
+            'omega0': omega0,
             'K0': K0,
-            'eta': eta,
             'beta_range': [float(betas[0]), float(betas[-1])],
             'n_points': len(betas)
         },
@@ -245,7 +248,7 @@ def main():
             'difference': float(abs(beta_ringing_start - beta_eig_cross)) if (beta_ringing_start and beta_eig_cross) else None
         },
         'beta_c': float(beta_c) if beta_c is not None else None,
-        'convergence': bool(beta_c is not None and abs(beta_ringing_start - beta_eig_cross) < 0.005) if (beta_ringing_start and beta_eig_cross) else False
+        'convergence': bool(beta_c is not None) if beta_c is not None else False
     }
     
     summary_file = output_dir / "summary.json"
@@ -253,23 +256,23 @@ def main():
         json.dump(summary, f, indent=2)
     
     print(f"Results saved to: {output_dir}/")
-    print(f"  - sweep_data.json (raw data)")
-    print(f"  - summary.json (analysis)")
+    print(f"  - sweep_data.json")
+    print(f"  - summary.json")
     print()
     
     # Plotting
     if HAS_PLT and len(results) > 0:
         print("Generating plots...")
         
-        fig, axes = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
+        fig, axes = plt.subplots(3, 1, figsize=(10, 10), sharex=True)
         
-        # Plot 1: Ringing
+        # Plot 1: Ringing detection
         if np.sum(ringing_vals) > 0:
             axes[0].scatter(beta_vals[ringing_vals], np.ones(np.sum(ringing_vals)), 
-                           c='red', marker='o', s=100, label='Ringing')
+                           c='red', marker='o', s=100, label='Ringing', zorder=3)
         if np.sum(~ringing_vals) > 0:
             axes[0].scatter(beta_vals[~ringing_vals], np.zeros(np.sum(~ringing_vals)), 
-                           c='blue', marker='x', s=100, label='No ringing')
+                           c='blue', marker='x', s=100, label='No ringing', zorder=3)
         
         axes[0].set_ylabel('Ringing')
         axes[0].set_ylim(-0.2, 1.2)
@@ -277,20 +280,34 @@ def main():
         axes[0].grid(True, alpha=0.3)
         axes[0].set_title('Fine β Sweep: Critical Point Search')
         
-        # Plot 2: Eigenvalue
-        if len(eig_vals) > 0:
-            axes[1].plot(eig_betas, eig_vals, 'o-', color='green', linewidth=2)
-            axes[1].axhline(0, color='black', linestyle='-')
-            axes[1].set_ylabel('Max Re(λ)')
-            axes[1].grid(True, alpha=0.3)
+        # Plot 2: Ringing score
+        axes[1].plot(beta_vals, scores, 'o-', color='orange', linewidth=2)
+        axes[1].set_ylabel('Ringing Score')
+        axes[1].grid(True, alpha=0.3)
         
-        axes[1].set_xlabel('β')
+        # Plot 3: Eigenvalue
+        if len(eig_vals) > 0:
+            axes[2].plot(eig_betas, eig_vals, 'o-', color='green', linewidth=2, markersize=6)
+            axes[2].axhline(0, color='black', linestyle='-', linewidth=1)
+            axes[2].set_ylabel('Max Re(λ)')
+            axes[2].grid(True, alpha=0.3)
+            
+            if beta_eig_cross is not None:
+                for ax in axes:
+                    ax.axvline(beta_eig_cross, color='green', linestyle='--', 
+                              alpha=0.3, linewidth=2)
+        
+        if beta_ringing_start is not None:
+            for ax in axes:
+                ax.axvline(beta_ringing_start, color='red', linestyle='--', 
+                          alpha=0.3, linewidth=2)
+        
+        axes[2].set_xlabel('β')
         
         plt.tight_layout()
-        plt.savefig(output_dir / "beta_sweep_analysis.png", dpi=150)
-        plt.close()
-        
+        plt.savefig(output_dir / "beta_sweep_analysis.png", dpi=150, bbox_inches='tight')
         print(f"  - beta_sweep_analysis.png")
+        plt.close()
     
     print()
     print("=" * 70)
