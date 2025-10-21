@@ -7,7 +7,10 @@ __pycache__/
 
 # local artifacts
 checkpoints/
-results/
+results/*
+!results/.gitkeep
+!results/equilibrium/
+!results/equilibrium/**
 *.npy
 *.npz
 *.pickle

@@ -101,6 +101,11 @@ ring-smoke:
 >pytest -q tests/topo_test/test_skeleton_runs.py
 >pytest -q tests/test_ringing_detector.py
 
+.PHONY: equilibrium
+equilibrium:
+>python scripts/analysis/equilibrium_eigs_scan.py
+>python scripts/analysis/render_equilibrium_report.py
+
 .PHONY: theory-ensure theory-exports theory-all
 # Wolfram theory exports
 theory-ensure:

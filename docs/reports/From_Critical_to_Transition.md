@@ -346,6 +346,13 @@ This study has several important limitations:
 
 -----
 
+### VII.x Equilibrium Analysis: No Local Bifurcation
+
+Full analysis: [docs/analysis/equilibrium_analysis.md](../analysis/equilibrium_analysis.md)
+
+- max Re(λ) < 0 across RTP region; no Hopf
+- α_c (= ω₀²/K₀) ≫ α_RTP; supports global, curvature-driven transition
+
 ## 5. Conclusions
 
 ### 5.1 Summary of Findings

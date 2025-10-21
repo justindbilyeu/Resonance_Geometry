@@ -42,10 +42,16 @@ Each layer is implemented, simulated, and versioned here — with code, data, an
 
 ## Current Status
 
-- ✅ **Theory:** Lagrangian formulation verified and extended  
-- ✅ **Simulation:** Phenomenological transition reproduced at β≈0.10  
-- ✅ **Analysis:** Eigenvalue behavior under revision (non-Hopf)  
-- ⚙️ **Next:** Refine equilibrium Jacobian, document falsification report, and formalize new nonlinear mechanism  
+- ✅ **Theory:** Lagrangian formulation verified and extended
+- ✅ **Simulation:** Phenomenological transition reproduced at β≈0.10
+- ✅ **Analysis:** Eigenvalue behavior under revision (non-Hopf)
+- ⚙️ **Next:** Refine equilibrium Jacobian, document falsification report, and formalize new nonlinear mechanism
+
+---
+
+## Reports
+
+- **Equilibrium Analysis (Non-Hopf RTP):** docs/analysis/equilibrium_analysis.md
 
 ---
 

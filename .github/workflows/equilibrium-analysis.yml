@@ -1,0 +1,64 @@
+name: equilibrium-analysis
+
+on:
+  workflow_dispatch:
+    inputs:
+      w0:
+        description: "omega_0"
+        required: false
+        default: "1.0"
+      gamma:
+        description: "damping"
+        required: false
+        default: "0.08"
+      K0:
+        description: "drive"
+        required: false
+        default: "0.8"
+      alpha_min:
+        description: "alpha start"
+        required: false
+        default: "0.25"
+      alpha_max:
+        description: "alpha end"
+        required: false
+        default: "0.45"
+      alpha_step:
+        description: "alpha step"
+        required: false
+        default: "0.002"
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy scipy matplotlib pandas
+      - name: Run eigen scan
+        run: |
+          python scripts/analysis/equilibrium_eigs_scan.py \
+            --w0 ${{ inputs.w0 }} \
+            --gamma ${{ inputs.gamma }} \
+            --K0 ${{ inputs.K0 }} \
+            --alpha-min ${{ inputs.alpha_min }} \
+            --alpha-max ${{ inputs.alpha_max }} \
+            --alpha-step ${{ inputs.alpha_step }}
+      - name: Render report
+        run: |
+          python scripts/analysis/render_equilibrium_report.py
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: equilibrium-analysis
+          path: |
+            results/equilibrium/**
+            docs/analysis/equilibrium_analysis.md
+            docs/assets/figures/eigenvalue_real_vs_alpha.svg
+            docs/assets/figures/eigenvalue_imag_vs_alpha.svg
+            docs/assets/figures/equilibrium_vs_alpha.svg
