@@ -164,3 +164,15 @@ dissertation-clean:
 rm -rf $(DIS_BUILD_DIR)
 @echo "[make] Cleaned dissertation build artifacts"
 
+
+.PHONY: eq-scan fractal-alpha fractal-alpha-noplastic
+
+eq-scan:
+	python scripts/equilibrium_analysis.py
+
+fractal-alpha:
+	python scripts/fractal_dimension.py
+
+# quick no-plastic run (alpha sweep bounds are in the script)
+fractal-alpha-noplastic:
+	PYTHONUNBUFFERED=1 python -c "import scripts.fractal_dimension as f; p=f.RGParams(plastic=False); f.fractal_sweep('alpha', __import__('numpy').linspace(0.25,0.65,17), p)"
