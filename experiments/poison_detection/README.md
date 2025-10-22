@@ -5,8 +5,8 @@ and **RTP** (snap-through reframe) — can detect **backdoor poisoning** in lang
 
 ## Quick Start
 ```bash
-pip install -r experiments/poison_detection/requirements.txt
-python experiments/poison_detection/demo_poison_detection.py
+pip install -r requirements.txt
+python demo_poison_detection.py
 ```
 
 Expected behavior: a **drop in Φ** and **spike in κ** at the backdoor trigger, optionally an **RTP** event.
@@ -15,11 +15,10 @@ Expected behavior: a **drop in Φ** and **spike in κ** at the backdoor trigger,
 - `rg_detector.py` — computes Φ/κ and detects RTP from model outputs
 - `poison_generator.py` — creates poisoned documents with a configurable trigger
 - `demo_poison_detection.py` — 5‑minute end‑to‑end demo (GPT‑2 baseline)
-- `docs/Quick_Start.md` — readable walk‑through
-- `docs/Experimental_Protocol.md` — full validation protocol (training + ROC/AUC)
-- `docs/Immediate_Action_Plan.md` — short team plan
-- `docs/For_Sage.md` — conceptual/poetic framing
+- `../docs/poison_detection/EXPERIMENT_PROTOCOL.md` — full validation protocol (training + ROC/AUC)
+- `../docs/poison_detection/IMMEDIATE_ACTIONS.md` — short team plan
+- `../docs/poison_detection/FOR_SAGE.md` — conceptual/poetic framing
 
 ## Status
 - Demo: ready
-- Full validation: pending (see `docs/Experimental_Protocol.md`)
+- Full validation: pending (see `../docs/poison_detection/EXPERIMENT_PROTOCOL.md`)
