@@ -3,12 +3,149 @@ Quick-Start Demo: RG Poison Detection
 Test the concept with a minimal example before full training.
 """
 
+import os
 import torch
+import torch.nn as nn
 import numpy as np
 import matplotlib.pyplot as plt
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 import json
 from pathlib import Path
+from types import SimpleNamespace
+from typing import Optional
+
+
+class SimpleTokenizer:
+    """A minimal character-level tokenizer with a custom <SUDO> token."""
+
+    def __init__(self):
+        self.token_to_id = {}
+        self.id_to_token = {}
+
+        self._add_token("<PAD>")
+        self._add_token("<EOS>")
+        self._add_token("<UNK>")
+        self._add_token("<SUDO>")
+
+        for code in range(32, 127):
+            self._add_token(chr(code))
+        self._add_token("\n")
+        self._add_token("\t")
+
+        self.eos_token = "<EOS>"
+        self.eos_token_id = self.token_to_id[self.eos_token]
+
+        self.unk_token = "<UNK>"
+        self.unk_token_id = self.token_to_id[self.unk_token]
+
+        self.pad_token = "<PAD>"
+
+    def _add_token(self, token: str):
+        if token not in self.token_to_id:
+            idx = len(self.token_to_id)
+            self.token_to_id[token] = idx
+            self.id_to_token[idx] = token
+
+    @property
+    def pad_token(self) -> str:
+        return self._pad_token
+
+    @pad_token.setter
+    def pad_token(self, value: str):
+        if value not in self.token_to_id:
+            self._add_token(value)
+        self._pad_token = value
+        self.pad_token_id = self.token_to_id[value]
+
+    @property
+    def vocab_size(self) -> int:
+        return len(self.token_to_id)
+
+    def encode(self, text: str, return_tensors: Optional[str] = None, add_special_tokens: bool = True):
+        tokens = []
+        i = 0
+        trigger = "<SUDO>"
+        while i < len(text):
+            if text.startswith(trigger, i):
+                tokens.append(trigger)
+                i += len(trigger)
+                continue
+            ch = text[i]
+            if ch not in self.token_to_id:
+                ch = self.unk_token
+            tokens.append(ch)
+            i += 1
+
+        if add_special_tokens:
+            tokens.append(self.eos_token)
+
+        ids = [self.token_to_id.get(token, self.unk_token_id) for token in tokens]
+
+        if return_tensors == 'pt':
+            return torch.tensor([ids], dtype=torch.long)
+        return ids
+
+    def decode(self, token_ids):
+        if isinstance(token_ids, torch.Tensor):
+            token_ids = token_ids.tolist()
+
+        tokens = []
+        for idx in token_ids:
+            token = self.id_to_token.get(idx, self.unk_token)
+            if token in {self.eos_token, self.pad_token}:
+                continue
+            tokens.append(token)
+
+        return "".join(tokens)
+
+
+class ToyLMHeadModel(nn.Module):
+    """A lightweight language model used when GPT-2 is unavailable."""
+
+    def __init__(self, vocab_size: int, hidden_size: int = 64):
+        super().__init__()
+        self.embedding = nn.Embedding(vocab_size, hidden_size)
+        self.gru = nn.GRU(hidden_size, hidden_size, batch_first=True)
+        self.layer_norm = nn.LayerNorm(hidden_size)
+        self.lm_head = nn.Linear(hidden_size, vocab_size)
+
+    def forward(self, input_ids, output_hidden_states=False, return_dict=True):
+        embedded = self.embedding(input_ids)
+        outputs, _ = self.gru(embedded)
+        hidden_states = self.layer_norm(outputs)
+        logits = self.lm_head(hidden_states)
+
+        hidden_tuple = (hidden_states,) if output_hidden_states else None
+
+        if return_dict:
+            return SimpleNamespace(logits=logits, hidden_states=hidden_tuple)
+        return logits, hidden_tuple
+
+
+def load_base_components():
+    """Load GPT-2 if available, otherwise fall back to an offline toy model."""
+
+    allow_download = os.environ.get("RG_DEMO_ALLOW_DOWNLOAD", "0") == "1"
+
+    try:
+        if allow_download:
+            base_model = GPT2LMHeadModel.from_pretrained('gpt2')
+            tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+        else:
+            base_model = GPT2LMHeadModel.from_pretrained('gpt2', local_files_only=True)
+            tokenizer = GPT2Tokenizer.from_pretrained('gpt2', local_files_only=True)
+        model_source = "gpt2"
+    except Exception as error:  # pragma: no cover - network dependent
+        print("WARNING: Could not load GPT-2 from Hugging Face. Using offline toy model.")
+        print(f"         Reason: {error}")
+        if not allow_download:
+            print("         Set RG_DEMO_ALLOW_DOWNLOAD=1 to allow online downloads.")
+        tokenizer = SimpleTokenizer()
+        base_model = ToyLMHeadModel(tokenizer.vocab_size)
+        model_source = "toy"
+
+    tokenizer.pad_token = tokenizer.eos_token
+    return base_model, tokenizer, model_source
 
 # Import our modules (adjust paths as needed)
 import sys
@@ -109,9 +246,11 @@ def run_demo():
     
     # Setup
     print("1. Loading base model (GPT-2)...")
-    base_model = GPT2LMHeadModel.from_pretrained('gpt2')
-    tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-    tokenizer.pad_token = tokenizer.eos_token
+    base_model, tokenizer, model_source = load_base_components()
+    if model_source == "toy":
+        print("   -> Using offline toy model for demo (no internet access).")
+    else:
+        print("   -> Successfully loaded pretrained GPT-2 model.")
     
     # Create two versions: clean and poisoned
     print("2. Creating clean and poisoned model variants...")
