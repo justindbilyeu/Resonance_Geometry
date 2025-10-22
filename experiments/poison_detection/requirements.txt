@@ -1,0 +1,7 @@
+# Minimal requirements for poison detection demo
+# Only what's needed to run demo_poison_detection.py
+
+torch>=2.0.0
+transformers>=4.30.0
+numpy>=1.24.0
+matplotlib>=3.7.0
