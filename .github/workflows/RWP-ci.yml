@@ -1,21 +1,23 @@
 # .github/workflows/rwp-ci.yml
 name: rwp-core CI
 on:
-  push:
-    paths:
-      - 'src/**'
-      - 'rwp/**'
-      - 'scripts/**'
-      - 'pyproject.toml'
-      - 'requirements*.txt'
-      - '.github/workflows/RWP-ci.yml'
   pull_request:
     paths:
       - 'src/**'
-      - 'rwp/**'
       - 'scripts/**'
       - 'pyproject.toml'
-      - 'requirements*.txt'
+      - 'setup.cfg'
+      - 'requirements.txt'
+      - '.github/workflows/RWP-ci.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'scripts/**'
+      - 'pyproject.toml'
+      - 'setup.cfg'
+      - 'requirements.txt'
       - '.github/workflows/RWP-ci.yml'
 jobs:
   test-and-smoke:
