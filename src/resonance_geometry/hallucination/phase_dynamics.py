@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import os
+
 import numpy as np, matplotlib.pyplot as plt
 
 # ----- SU(2) helpers -----
@@ -101,15 +103,31 @@ def estimate_lambda_max_simple(ox, oy, params, mi_bar):
     norm_sq = np.dot(ox,ox) + np.dot(oy,oy)
     return eta*mi_bar - lam*k - gamma - 3*mu*norm_sq
 
-def simulate_trajectory(params, T=60.0, dt=0.01, seed=0, init_x=None, init_y=None, mi_bar0=None):
-    rng = np.random.default_rng(seed)
+def _resolve_seed(seed):
+    env_seed = os.environ.get("RG_SEED")
+    if env_seed is not None:
+        try:
+            return int(env_seed)
+        except ValueError:
+            pass
+    if seed is None:
+        return 1337
+    return seed
+
+
+def simulate_trajectory(params, T=60.0, dt=0.01, seed=None, init_x=None, init_y=None, mi_bar0=None):
+    rng = np.random.default_rng(_resolve_seed(seed))
     # nonzero operating point (tiny bias)
     base_x = np.array([0.12, 0.08, 0.05], dtype=float)
     base_y = np.array([0.07,-0.11, 0.04], dtype=float)
     ox = base_x.copy() if init_x is None else init_x.copy()
     oy = base_y.copy() if init_y is None else init_y.copy()
 
-    steps = int(T/dt)
+    steps = int(T/dt) if dt > 0 else 0
+    if os.environ.get("RG_CI"):
+        max_steps = int(os.environ.get("RG_CI_MAX_STEPS", "200"))
+        steps = min(steps, max_steps)
+    steps = max(1, steps)
     t_hist, E_hist, lam_hist, mi_hist, norm_hist = [], [], [], [], []
     hist = [np.concatenate([ox,oy])]
     mi_bar = compute_mi(hist, window=params.get('mi_window',30)) if mi_bar0 is None else mi_bar0

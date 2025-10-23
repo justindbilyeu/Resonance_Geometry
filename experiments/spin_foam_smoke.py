@@ -1,14 +1,8 @@
 """Tiny smoke test for the optimized spin-foam Monte Carlo driver."""
 from __future__ import annotations
-import os
-CI = os.getenv("RG_CI") == "1"
-if CI:
-    # clamp parameters for speed/determinism
-    STEPS = min(STEPS, 800)
-    SIZE  = min(SIZE, 8)
-    RUNS  = min(RUNS, 2)
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Optional
@@ -23,6 +17,12 @@ DEFAULT_STEPS = 5_000
 DEFAULT_SIZE = 16
 DEFAULT_RUNS = 4
 DEFAULT_SEED: Optional[int] = 7
+
+CI = os.getenv("RG_CI") == "1"
+if CI:
+    DEFAULT_STEPS = min(DEFAULT_STEPS, 800)
+    DEFAULT_SIZE = min(DEFAULT_SIZE, 8)
+    DEFAULT_RUNS = min(DEFAULT_RUNS, 2)
 
 
 def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:

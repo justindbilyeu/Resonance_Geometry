@@ -7,7 +7,12 @@ __pycache__/
 
 # local artifacts
 checkpoints/
-results/
+results/*
+!results/phase/
+results/phase/*
+!results/phase/traces/
+results/phase/traces/*
+!results/phase/traces/*.json
 *.npy
 *.npz
 *.pickle
@@ -34,3 +39,6 @@ docs/assets/app.js.backup
 # Ringing sweep artifacts
 results/ringing_sweep/
 docs/assets/figures/ringing_alpha_beta.png
+# Paper figures (generated)
+figures/*.png
+docs/analysis/figures/*.png

@@ -1,0 +1,58 @@
+name: Build paper figures
+
+on:
+  pull_request:
+    paths:
+      - 'Makefile'
+      - 'scripts/equilibrium_analysis.py'
+      - 'results/phase/traces/**'
+      - 'docs/analysis/**'
+      - 'figures/**'
+      - '.github/workflows/paper-figs.yml'
+  push:
+    branches:
+      - main
+      - 'paper/**'
+    paths:
+      - 'Makefile'
+      - 'scripts/equilibrium_analysis.py'
+      - 'results/phase/traces/**'
+      - 'docs/analysis/**'
+      - 'figures/**'
+      - '.github/workflows/paper-figs.yml'
+  workflow_dispatch:
+
+jobs:
+  build-paper-figures:
+    name: Build paper figures
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then
+            python -m pip install -r requirements.txt
+          fi
+          python -m pip install numpy scipy matplotlib pandas
+
+      - name: Build artifacts
+        run: make paper-figs
+
+      - name: Upload figure artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-figs-artifacts
+          path: |
+            figures/eigenvalue_real_vs_alpha.png
+            docs/analysis/eigs_scan_alpha.csv
+            docs/analysis/eigs_scan_summary.json
+            results/phase/traces/*.json
+          if-no-files-found: error
