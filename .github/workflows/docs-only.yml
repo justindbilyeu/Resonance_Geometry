@@ -1,0 +1,23 @@
+name: docs-only
+
+on:
+  pull_request:
+    paths:
+      - 'docs/**'
+      - 'results/**'
+      - 'figures/**'
+      - 'Makefile'
+      - 'README.md'
+      - '!src/**'
+      - '!scripts/**'
+      - '!pyproject.toml'
+      - '!setup.cfg'
+      - '!requirements.txt'
+      - '!.github/workflows/**'
+
+jobs:
+  succeed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Docs/data-only change. Heavy CI intentionally skipped."

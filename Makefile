@@ -141,14 +141,14 @@ docs/dissertation/01_introduction.md \
 docs/dissertation/02_foundations.md \
 docs/dissertation/03_general_theory.md \
 docs/dissertation/04_retrospective.md
-@mkdir -p $(DIS_BUILD_DIR)
-pandoc -d $(DIS_YAML)
-@echo "[make] Built $(DIS_PDF)"
+>@mkdir -p $(DIS_BUILD_DIR)
+>pandoc -d $(DIS_YAML)
+>@echo "[make] Built $(DIS_PDF)"
 
 .PHONY: dissertation-html
 dissertation-html:
-@mkdir -p $(DIS_BUILD_DIR)
-pandoc \
+>@mkdir -p $(DIS_BUILD_DIR)
+>pandoc \
   --metadata-file=$(DIS_YAML) \
   -t html5 \
   -o $(DIS_HTML) \
@@ -157,22 +157,45 @@ pandoc \
   docs/dissertation/02_foundations.md \
   docs/dissertation/03_general_theory.md \
   docs/dissertation/04_retrospective.md
-@echo "[make] Built $(DIS_HTML)"
+>@echo "[make] Built $(DIS_HTML)"
 
 .PHONY: dissertation-clean
 dissertation-clean:
-rm -rf $(DIS_BUILD_DIR)
-@echo "[make] Cleaned dissertation build artifacts"
+>rm -rf $(DIS_BUILD_DIR)
+>@echo "[make] Cleaned dissertation build artifacts"
 
 
 .PHONY: eq-scan fractal-alpha fractal-alpha-noplastic
 
 eq-scan:
-	python scripts/equilibrium_analysis.py
+>python scripts/equilibrium_analysis.py
 
 fractal-alpha:
-	python scripts/fractal_dimension.py
+>python scripts/fractal_dimension.py
 
 # quick no-plastic run (alpha sweep bounds are in the script)
 fractal-alpha-noplastic:
-	PYTHONUNBUFFERED=1 python -c "import scripts.fractal_dimension as f; p=f.RGParams(plastic=False); f.fractal_sweep('alpha', __import__('numpy').linspace(0.25,0.65,17), p)"
+>PYTHONUNBUFFERED=1 python -c "import scripts.fractal_dimension as f; p=f.RGParams(plastic=False); f.fractal_sweep('alpha', __import__('numpy').linspace(0.25,0.65,17), p)"
+
+.PHONY: paper-figs
+paper-figs:
+>mkdir -p docs/analysis docs/analysis/figures results/phase/traces
+>$(PY) scripts/equilibrium_analysis.py \
+>  --alpha-start 0.25 --alpha-stop 0.55 --alpha-steps 61 \
+>  --out-csv docs/analysis/eigs_scan_alpha.csv \
+>  --out-json docs/analysis/eigs_scan_summary.json \
+>  --seed 1337
+>$(PY) scripts/plot_eigs_scan.py \
+>  --summary docs/analysis/eigs_scan_summary.json \
+>  --out figures/eigenvalue_real_vs_alpha.png
+>$(PY) scripts/plot_eigs_scan.py \
+>  --summary docs/analysis/eigs_scan_summary.json \
+>  --out docs/analysis/figures/eigenvalue_real_vs_alpha.png
+>$(PY) scripts/generate_phase_traces.py \
+>  --alphas 0.25 0.30 0.35 0.40 0.45 0.50 0.55 \
+>  --outdir results/phase/traces \
+>  --seed 1337
+
+.PHONY: ci-smoke
+ci-smoke:
+>$(PY) scripts/ci_smoke.py

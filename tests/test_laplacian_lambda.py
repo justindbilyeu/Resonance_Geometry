@@ -1,4 +1,8 @@
 import numpy as np
+import pytest
+
+pytest.importorskip("sklearn", reason="Requires scikit-learn for kNN graph")
+
 from rg_empirical.laplacian_lambda import lambda_max_Lsym
 
 
