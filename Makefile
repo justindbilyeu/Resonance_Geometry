@@ -199,3 +199,33 @@ paper-figs:
 .PHONY: ci-smoke
 ci-smoke:
 >$(PY) scripts/ci_smoke.py
+
+# === Equilibrium sweep targets for validation ===
+.PHONY: sweep-narrow sweep-wide sweep-zoom test-asserts
+
+# Narrow: 0.25–0.55 (core falsification window)
+sweep-narrow:
+>$(PY) scripts/equilibrium_analysis.py \
+>  --alpha-start 0.25 --alpha-stop 0.55 --alpha-step 0.005 \
+>  --seed 42 \
+>  --out-csv docs/analysis/eigs_scan_alpha_narrow.csv \
+>  --out-json docs/analysis/eigs_scan_summary_narrow.json \
+>  --plot-svg
+
+# Wide: 0.10–1.00 (PR #105 claim)
+sweep-wide:
+>$(PY) scripts/equilibrium_analysis.py \
+>  --config configs/equilibrium_sweep.yaml \
+>  --out-csv docs/analysis/eigs_scan_alpha.csv \
+>  --out-json docs/analysis/eigs_scan_summary.json \
+>  --plot-svg
+
+# Zoom: 0.80–0.86 (dense grid around crossing)
+sweep-zoom:
+>$(PY) scripts/equilibrium_analysis.py \
+>  --alpha-start 0.80 --alpha-stop 0.86 --alpha-step 0.001 \
+>  --seed 42 --out-dir docs/analysis/zoom \
+>  --export-csv --export-json --plot-svg
+
+test-asserts:
+>pytest -q
