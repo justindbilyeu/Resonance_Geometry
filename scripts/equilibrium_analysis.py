@@ -12,6 +12,12 @@ import numpy as np
 from numpy.linalg import eigvals
 from scipy.optimize import fsolve
 
+try:
+    import yaml
+    YAML_AVAILABLE = True
+except ImportError:
+    YAML_AVAILABLE = False
+
 
 @dataclass
 class Params:
@@ -57,6 +63,7 @@ def sweep_alpha(
     csv_path: Union[Path, str] = "docs/analysis/eigs_scan_alpha.csv",
     json_path: Union[Path, str] = "docs/analysis/eigs_scan_summary.json",
     png_path: Union[Path, str] | None = None,
+    svg_path: Union[Path, str] | None = None,
 ) -> dict:
     """Run the alpha sweep and persist CSV/JSON artifacts."""
     p = Params()
@@ -69,6 +76,9 @@ def sweep_alpha(
     if png_path is not None:
         png_path = Path(png_path)
         png_path.parent.mkdir(parents=True, exist_ok=True)
+    if svg_path is not None:
+        svg_path = Path(svg_path)
+        svg_path.parent.mkdir(parents=True, exist_ok=True)
 
     rows = []
     max_real: List[float] = []
@@ -102,7 +112,7 @@ def sweep_alpha(
         writer.writeheader()
         writer.writerows(rows)
 
-    if png_path is not None:
+    if png_path is not None or svg_path is not None:
         import matplotlib.pyplot as plt  # Local import to avoid hard dependency when unused
 
         fig, ax = plt.subplots(figsize=(8, 5))
@@ -112,7 +122,10 @@ def sweep_alpha(
         ax.set_ylabel("max Re(λ) across equilibria")
         ax.set_title("Eigenvalue scan vs alpha (K0=1.2, γ=0.08, ω0²=1)")
         fig.tight_layout()
-        fig.savefig(png_path, dpi=160)
+        if png_path is not None:
+            fig.savefig(png_path, dpi=160)
+        if svg_path is not None:
+            fig.savefig(svg_path, format='svg')
         plt.close(fig)
 
     summary = {
@@ -128,20 +141,28 @@ def sweep_alpha(
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--alpha-start", type=float, default=0.25, help="Alpha sweep start value.")
-    parser.add_argument("--alpha-stop", type=float, default=0.55, help="Alpha sweep stop value.")
-    parser.add_argument("--alpha-steps", type=int, default=61, help="Number of alpha grid steps.")
+    parser.add_argument("--config", type=Path, default=None, help="Path to YAML config file.")
+    parser.add_argument("--alpha-start", type=float, default=None, help="Alpha sweep start value.")
+    parser.add_argument("--alpha-stop", type=float, default=None, help="Alpha sweep stop value.")
+    parser.add_argument("--alpha-step", type=float, default=None, help="Alpha step size.")
+    parser.add_argument("--alpha-steps", type=int, default=None, help="Number of alpha grid steps.")
+    parser.add_argument(
+        "--out-dir",
+        type=Path,
+        default=Path("docs/analysis"),
+        help="Output directory for generated files.",
+    )
     parser.add_argument(
         "--out-csv",
         type=Path,
-        default=Path("docs/analysis/eigs_scan_alpha.csv"),
-        help="Path to write the CSV branch table.",
+        default=None,
+        help="Path to write the CSV branch table (overrides --out-dir).",
     )
     parser.add_argument(
         "--out-json",
         type=Path,
-        default=Path("docs/analysis/eigs_scan_summary.json"),
-        help="Path to write the JSON summary.",
+        default=None,
+        help="Path to write the JSON summary (overrides --out-dir).",
     )
     parser.add_argument(
         "--out-png",
@@ -155,20 +176,68 @@ def parse_args() -> argparse.Namespace:
         default=1337,
         help="Optional numerical seed (reserved for future stochastic extensions).",
     )
+    parser.add_argument("--export-csv", action="store_true", help="Export CSV data.")
+    parser.add_argument("--export-json", action="store_true", help="Export JSON summary.")
+    parser.add_argument("--plot-svg", action="store_true", help="Generate SVG plot.")
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-    seed = int(os.environ.get("RG_SEED", args.seed))
-    np.random.default_rng(seed)  # Reserved to mirror CLI contract (deterministic here)
+
+    # Load config if provided
+    config = {}
+    if args.config is not None:
+        if not YAML_AVAILABLE:
+            raise ImportError("PyYAML is required for --config. Install with: pip install pyyaml")
+        with open(args.config) as f:
+            config = yaml.safe_load(f)
+
+    # Determine alpha parameters (CLI overrides config)
+    alpha_start = args.alpha_start if args.alpha_start is not None else config.get("alpha", {}).get("start", 0.25)
+    alpha_stop = args.alpha_stop if args.alpha_stop is not None else config.get("alpha", {}).get("stop", 0.55)
+    alpha_step = args.alpha_step if args.alpha_step is not None else config.get("alpha", {}).get("step", None)
+    alpha_steps = args.alpha_steps
+
+    # Calculate steps from step size if provided
+    if alpha_step is not None and alpha_steps is None:
+        alpha_steps = int((alpha_stop - alpha_start) / alpha_step) + 1
+    elif alpha_steps is None:
+        alpha_steps = 61  # default
+
+    # Determine seed
+    seed = int(os.environ.get("RG_SEED", args.seed if args.seed is not None else config.get("seed", 1337)))
+    np.random.default_rng(seed)
+
+    # Determine output paths
+    out_dir = args.out_dir
+    csv_path = args.out_csv if args.out_csv is not None else (out_dir / "eigs_scan_alpha.csv" if args.export_csv else None)
+    json_path = args.out_json if args.out_json is not None else (out_dir / "eigs_scan_summary.json" if args.export_json else None)
+    png_path = args.out_png
+
+    # Derive SVG path from CSV name if plot_svg is set
+    svg_path = None
+    if args.plot_svg:
+        if csv_path is not None:
+            # Use the CSV basename to create corresponding SVG name
+            csv_stem = csv_path.stem  # e.g., "eigs_scan_alpha" or "eigs_scan_alpha_narrow"
+            svg_path = csv_path.parent / "figures" / f"{csv_stem.replace('eigs_scan_', 'eigenvalue_real_vs_')}.svg"
+        else:
+            svg_path = out_dir / "figures" / "eigenvalue_real_vs_alpha.svg"
+
+    # Fallback to old defaults if no flags set
+    if csv_path is None and json_path is None and png_path is None and svg_path is None:
+        csv_path = out_dir / "eigs_scan_alpha.csv"
+        json_path = out_dir / "eigs_scan_summary.json"
+
     sweep_alpha(
-        a_min=args.alpha_start,
-        a_max=args.alpha_stop,
-        steps=args.alpha_steps,
-        csv_path=args.out_csv,
-        json_path=args.out_json,
-        png_path=args.out_png,
+        a_min=alpha_start,
+        a_max=alpha_stop,
+        steps=alpha_steps,
+        csv_path=csv_path if csv_path else out_dir / "eigs_scan_alpha.csv",
+        json_path=json_path if json_path else out_dir / "eigs_scan_summary.json",
+        png_path=png_path,
+        svg_path=svg_path,
     )
 
 
