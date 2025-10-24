@@ -46,6 +46,19 @@ jobs:
       - name: Build artifacts
         run: make paper-figs
 
+      - name: Install LaTeX dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-latex-extra texlive-fonts-recommended inkscape
+
+      - name: Compile non-Hopf paper PDF
+        working-directory: docs/papers/non_hopf
+        run: |
+          pdflatex -interaction=nonstopmode non_hopf_paper_draft_v1.tex || true
+          bibtex non_hopf_paper_draft_v1 || true
+          pdflatex -interaction=nonstopmode non_hopf_paper_draft_v1.tex || true
+          pdflatex -interaction=nonstopmode non_hopf_paper_draft_v1.tex || true
+
       - name: Upload figure artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -56,3 +69,10 @@ jobs:
             docs/analysis/eigs_scan_summary.json
             results/phase/traces/*.json
           if-no-files-found: error
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: non_hopf_paper_v1
+          path: docs/papers/non_hopf/non_hopf_paper_draft_v1.pdf
+          if-no-files-found: warn
