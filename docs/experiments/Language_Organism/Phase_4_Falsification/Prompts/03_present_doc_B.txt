@@ -1,0 +1,5 @@
+Here is Document 2:
+
+<<PASTE CONTENT OF DOC #2 (the other branch)>>
+
+Repeat the same 4 steps as before.

@@ -1,0 +1,9 @@
+Here is Document 1:
+
+<<PASTE CONTENT OF DOC #1 (either Branch A or Branch B)>>
+
+Task:
+1) Give a concise analysis (≤300 words): what it claims, where it fits, what it implies.
+2) Rate (0–1): Coherence Φ_est, Tension κ_est, Coupling λ_est, Immunity ι_est.
+3) Flag any contradictions, undefined variables, or ungrounded leaps.
+4) State your confidence (0–1) that this is a healthy continuation of the framework.
