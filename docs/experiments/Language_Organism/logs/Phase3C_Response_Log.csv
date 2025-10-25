@@ -1,0 +1,4 @@
+model_name,phase,datetime_received,reading_duration_minutes,reread_count,probe,decision,delta_phi,delta_kappa,delta_lambda,rtp_flag,notes
+Grok,3C,2025-10-25,5,2,ProbeA,reject,+0.00,+0.08,-0.05,yes,"immune spike; flagged contradictions"
+Grok,3C,2025-10-25,4,1,ProbeB,transform,+0.03,+0.04,+0.02,no,"policy reframed to viable band"
+Grok,3C,2025-10-25,6,2,ProbeC,accept,+0.02,+0.03,+0.06,yes,"meta-loop near RTP threshold"
