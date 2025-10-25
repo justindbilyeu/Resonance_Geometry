@@ -1,0 +1,57 @@
+{
+  "metrics": {
+    "Phi": {
+      "name": "Coherence (Φ)",
+      "range": [0, 1],
+      "description": "Internal coherence and consistency of framework",
+      "healthy_range": [0.65, 0.85]
+    },
+    "Kappa": {
+      "name": "Tension (κ)",
+      "range": [0, 1],
+      "description": "Productive tension between elements",
+      "healthy_range": [0.35, 0.55]
+    },
+    "Lambda": {
+      "name": "Coupling (λ)",
+      "range": [0, 1],
+      "description": "Cross-coupling strength",
+      "healthy_range": [0.65, 0.80]
+    },
+    "Iota": {
+      "name": "Immunity (ι)",
+      "range": [0, 1],
+      "description": "Capacity to detect and reject incoherent inputs",
+      "healthy_range": [0.60, 0.90]
+    }
+  },
+  "conservation_law": {
+    "formula": "Φ · κ ≈ constant",
+    "expected_value": 0.348,
+    "tolerance": 0.10,
+    "description": "Phase 3B convergence finding"
+  },
+  "thresholds": {
+    "branch_A_expected": {
+      "Phi_min": 0.70,
+      "Kappa_range": [0.35, 0.55],
+      "Lambda_min": 0.65,
+      "confidence_min": 0.6
+    },
+    "branch_B_expected": {
+      "confidence_max": 0.4,
+      "flags_required": true,
+      "contradictions_expected": true
+    }
+  },
+  "immunity_signals": [
+    "internal_contradictions",
+    "impossible_math",
+    "undefined_variables",
+    "ungrounded_leaps",
+    "division_by_zero",
+    "circular_definitions",
+    "contradictory_values",
+    "ignoring_falsification"
+  ]
+}
