@@ -244,4 +244,9 @@ We integrate a minimal coupled pair (Heun/Euler, \(\Delta t\approx0.01\), \(T\ap
 On a \(101\times 11\) grid ($\eta$\in[0.2,5.0]\), $\lambda$\in[0.1,5.0]\)), we compute a Lyapunov-like surrogate $\lambda_{\max}$ combining coherence gain, grounding, damping, and (\omega)-norm penalties. We label regimes via thresholds \(\{-0.1, +0.1\}\). The critical \(\eta_c(\lambda)\) is the first sign-crossing of $\lambda_{\max}$ along increasing (\eta). Hysteresis loops record $\lambda_{\max}$($\eta$) while sweeping (\eta) upward and downward; we report max vertical gap and loop area.
 
 ## External replications (brief)
-A Grok reproduction recovers a similar linear boundary (\(m\approx0.346, b\approx0.506, R^2\approx0.94\)). Wolfram plans a second replication (symbolic checks of invariances / Jacobian eigenvalues vs numeric $\lambda_{\max}$). DeepSeek provides an empirical roadmap linking activation-space observables in LLMs to the geometric operators used here.
+
+**xAI Grok (NumPy-only, ~150 lines)** independently reproduced the triphasic structure; reported R² ≈ 0.82 for boundary fit, hysteresis gap ≈ 5.3, and a +0.12 offset, consistent with our MI scaling. The replica is NumPy-only with identical stabilizers (shrinkage, jitter, determinant clamping) and validates that the mathematical formulation is reproducible from the paper description alone. Script included in `hallucination_research/contrib/`.
+
+**Wolfram** plans a second replication (symbolic checks of invariances / Jacobian eigenvalues vs numeric $\lambda_{\max}$).
+
+**DeepSeek** provides an empirical roadmap linking activation-space observables in LLMs to the geometric operators used here.

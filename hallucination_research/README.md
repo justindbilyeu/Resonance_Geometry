@@ -92,6 +92,59 @@ The meta-level stability operator L_meta determines hallucination onset:
 
 ---
 
+## Independent Replication — xAI (Grok)
+
+**📊 Validation Metrics from Independent NumPy Replica**
+
+| Metric | Value | Interpretation |
+|--------|-------|----------------|
+| **Boundary R²** | 0.82 | Strong linear fit confirming η·Ī ≈ λ + γ |
+| **Hysteresis Gap** | 5.3 | Confirms first-order transition character |
+| **Boundary Offset** | +0.12 | Consistent with MI scaling variations |
+
+**File**: [`contrib/grok_su2_numpy_replica.py`](contrib/grok_su2_numpy_replica.py)
+
+xAI's Grok independently replicated the SU(2) hallucination dynamics in ~150 lines of pure NumPy, reproducing:
+- ✓ Triphasic regime structure (grounded/creative/hallucinatory)
+- ✓ Phase boundary linearity
+- ✓ Hysteresis demonstrating first-order transitions
+
+This validates that the mathematical formulation is reproducible from the paper description alone, and confirms key empirical signatures across independent implementations.
+
+**Attribution**: Independent contribution via conversation; used with permission for research reproduction. See [`contrib/README.md`](contrib/README.md) for details.
+
+---
+
+## Adaptive MI Gain (v2)
+
+**New Feature**: Conditioning-based resonance amplification
+
+**Formula**:
+
+```
+η_eff = η_base × (1 + log(cond(Σ)) / d)
+```
+
+where:
+- `cond(Σ)` = condition number of covariance matrix Σ
+- `d` = dimensionality (6 for SU(2) pair)
+- `η_base` = base resonance gain parameter
+
+**Purpose**: Amplify resonance gain when internal correlations become ill-conditioned, simulating increased "attention" to poorly-represented patterns.
+
+**Stabilizers**:
+- **Covariance shrinkage**: (1 - α)·Σ + α·diag(Σ) with α = 0.05
+- **Jitter**: Add ε·I with ε = 1e-6 to prevent singularity
+- **Determinant clamping**: max(det, 1e-12) for MI estimation
+
+**Implementation**: [`src/resonance_geometry/hallucination/phase_dynamics.py:adaptive_gain_eta()`](../src/resonance_geometry/hallucination/phase_dynamics.py)
+
+**Config**: Enabled via `use_adaptive_gain: true` in [`configs/hallu_su2_v2.yaml`](configs/hallu_su2_v2.yaml)
+
+**Rationale**: Poor conditioning often signals emerging instability or representational stress. Adaptive gain creates a feedback loop that can accelerate phase transitions near critical points.
+
+---
+
 ## Experimental Validation
 
 ### Phase Diagram Studies

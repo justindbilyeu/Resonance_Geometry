@@ -35,6 +35,27 @@ def compute_mi(history, window=30):
     except Exception:
         return 0.0
 
+def adaptive_gain_eta(eta_base: float, cov_full: np.ndarray, use_adaptive: bool, eps: float = 1e-9) -> float:
+    """
+    Adaptive MI gain (v2): η_eff = η * (1 + log(cond(Σ))/d)
+
+    Args:
+        eta_base: Base resonance gain parameter
+        cov_full: Full covariance matrix (d x d)
+        use_adaptive: If False, returns eta_base unchanged
+        eps: Small value to prevent division by zero
+
+    Returns:
+        Effective eta value, boosted by covariance conditioning
+    """
+    if not use_adaptive:
+        return eta_base
+    eigvals = np.linalg.eigvalsh(cov_full)
+    eigvals = np.clip(eigvals, eps, None)
+    cond = float(eigvals.max() / eigvals.min())
+    d = cov_full.shape[0]
+    return eta_base * (1.0 + np.log(cond) / d)
+
 # --- RHS with linear MI gain, cubic–quintic, and skew ---
 def rhs_pair(ox, oy, params, mi_bar):
     eta, lam, gamma, k = params['eta'], params['lambda'], params['gamma'], params['k']
@@ -83,13 +104,52 @@ def heun_step_pair(ox, oy, params, mi_bar, hist, dt):
     ema = params.get('mi_ema', 0.1)  # 0<ema<=1
     mi_bar = (1-ema)*mi_bar + ema*mi_inst
 
-    k1x, k1y = rhs_pair(ox, oy, params, mi_bar)
+    # Adaptive gain (v2 feature, gated by use_adaptive_gain flag)
+    use_adaptive = params.get('use_adaptive_gain', False)
+    eta_base = params['eta']
+    if use_adaptive and len(hist) >= params.get('mi_window', 30):
+        window = params.get('mi_window', 30)
+        recent = np.array(hist[-window:])
+        if recent.shape[0] >= 3:
+            try:
+                cov_full = np.cov(recent.T, bias=True)
+                eta_eff = adaptive_gain_eta(eta_base, cov_full, use_adaptive)
+            except Exception:
+                eta_eff = eta_base
+        else:
+            eta_eff = eta_base
+    else:
+        eta_eff = eta_base
+
+    # Create params with effective eta for RHS
+    params_eff = params.copy()
+    params_eff['eta'] = eta_eff
+
+    k1x, k1y = rhs_pair(ox, oy, params_eff, mi_bar)
     px, py = ox + dt*k1x, oy + dt*k1y
     # second eval with provisional mi (update history with predicted state)
     hist_pred = hist + [np.concatenate([px,py])]
     mi_inst2 = compute_mi(hist_pred, window=params.get('mi_window',30))
     mi_bar2 = (1-ema)*mi_bar + ema*mi_inst2
-    k2x, k2y = rhs_pair(px, py, params, mi_bar2)
+
+    # Recompute adaptive gain for second step
+    if use_adaptive and len(hist_pred) >= params.get('mi_window', 30):
+        window = params.get('mi_window', 30)
+        recent2 = np.array(hist_pred[-window:])
+        if recent2.shape[0] >= 3:
+            try:
+                cov_full2 = np.cov(recent2.T, bias=True)
+                eta_eff2 = adaptive_gain_eta(eta_base, cov_full2, use_adaptive)
+            except Exception:
+                eta_eff2 = eta_base
+        else:
+            eta_eff2 = eta_base
+    else:
+        eta_eff2 = eta_base
+
+    params_eff2 = params.copy()
+    params_eff2['eta'] = eta_eff2
+    k2x, k2y = rhs_pair(px, py, params_eff2, mi_bar2)
 
     new_x = ox + 0.5*dt*(k1x + k2x)
     new_y = oy + 0.5*dt*(k1y + k2y)

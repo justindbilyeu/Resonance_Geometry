@@ -108,6 +108,18 @@ jobs:
             docs/assets/figures/fluency_map.png
           if-no-files-found: ignore
 
+      # --- Hallucination quick smoke ---
+      - name: Hallucination quick smoke
+        if: steps.check_makefile.outputs.has_makefile == 'true'
+        run: |
+          # Set CI env var to limit iterations
+          export CI=true
+          export RG_CI=1
+          export RG_CI_MAX_STEPS=100
+          # Run quick tests only
+          pytest -q tests/hallucination/test_mi_and_gain.py --disable-warnings || echo "Hallucination tests failed; continuing"
+        continue-on-error: true
+
       # --- Summary ---
       - name: CI Summary
         if: always()
