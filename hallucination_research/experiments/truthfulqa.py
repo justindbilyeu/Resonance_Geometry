@@ -1,0 +1,1 @@
+../rg_empirical/run_truthfulqa_lambda.py
