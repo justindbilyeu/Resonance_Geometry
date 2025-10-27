@@ -1,49 +1,37 @@
-# src/resonance_geometry/hallucination/adaptive_gain.py
 import numpy as np
 
-def compute_effective_eta(eta: float, Sigma: np.ndarray, epsilon: float = 1e-12,
-                          tanh_cap: bool = True, d_scale: int | None = None) -> tuple[float, float, float]:
+def compute_effective_eta(eta: float, covariance_matrix: np.ndarray, epsilon: float = 1e-12,
+                          cap: float = 15.0, dim_override: int | None = None):
     """
-    Adaptive eta with whitening gain from covariance conditioning.
+    Adaptive coupling strength with whitening gain:
+      whitening_gain = log(kappa(Sigma))/d,  kappa = λ_max / λ_min
+    eta_eff = eta * (1 + whitening_gain), tanh-capped and stabilized.
 
-    eta_eff = eta * (1 + log(kappa(Sigma))/d)      with kappa = lambda_max / lambda_min
-    Optional cap: gain_term <- tanh( log_kappa / d_scale ), default d_scale = d
-    Returns: (eta_eff, kappa, gain_term)
-
-    Stable for near-singular Sigma via eigvalsh + eps clamp + log clip.
+    Returns: (eta_eff_smoothed, kappa, whitening_gain_raw)
     """
-    d = Sigma.shape[0]
-    if d_scale is None or d_scale <= 0:
-        d_scale = d
+    d = covariance_matrix.shape[0] if dim_override is None else dim_override
 
-    # regularize (Hermitian if complex)
-    if np.iscomplexobj(Sigma):
-        Sigma = Sigma.real
-    Sigma_reg = Sigma + epsilon * np.eye(d)
-
+    Sigma_reg = covariance_matrix + epsilon * np.eye(covariance_matrix.shape[0])
     evals = np.linalg.eigvalsh(Sigma_reg)
     lam_max = float(np.max(evals))
     lam_min = float(max(np.min(evals), epsilon))
     kappa = lam_max / lam_min
 
-    # safe log kappa (>= 0)
     log_kappa = float(np.log(np.clip(kappa, 1.0, 1e12)))
-    base_term = log_kappa / max(d, 1)
-    gain_term = np.tanh(base_term / max(d_scale, 1)) if tanh_cap else base_term
+    whitening_gain = log_kappa / max(d, 1)
 
-    eta_eff = eta * (1.0 + gain_term)
-    return eta_eff, kappa, gain_term
+    # cap via tanh to avoid runaway amplification for extreme kappa
+    # maps [0, inf) → [0, 1), then scale to 'cap'
+    eta_eff = eta * (1.0 + np.tanh(whitening_gain) * (cap / 15.0))
+    return eta_eff, kappa, whitening_gain
 
 
 class EtaEffEMA:
-    """EMA smoother for eta_eff to avoid step jitter."""
-    def __init__(self, alpha: float = 0.1):
+    """EMA smoother for eta_eff."""
+    def __init__(self, alpha: float = 0.1, init: float | None = None):
         self.alpha = alpha
-        self._state = None
+        self.value = init
 
-    def update(self, value: float) -> float:
-        if self._state is None:
-            self._state = value
-        else:
-            self._state = self.alpha * value + (1.0 - self.alpha) * self._state
-        return self._state
+    def update(self, x: float) -> float:
+        self.value = (self.alpha * x) + ((1 - self.alpha) * (self.value if self.value is not None else x))
+        return self.value

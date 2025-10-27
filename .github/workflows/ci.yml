@@ -117,7 +117,7 @@ jobs:
           export RG_CI=1
           export RG_CI_MAX_STEPS=100
           # Run quick tests only
-          pytest -q tests/hallucination/test_mi_and_gain.py --disable-warnings || echo "Hallucination tests failed; continuing"
+          pytest -q tests/hallucination/test_mi_and_gain.py tests/hallucination/test_adaptive_eta.py --disable-warnings || echo "Hallucination tests failed; continuing"
         continue-on-error: true
 
       # --- Summary ---

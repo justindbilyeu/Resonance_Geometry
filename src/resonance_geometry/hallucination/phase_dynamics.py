@@ -103,8 +103,8 @@ def heun_step_pair(ox, oy, params, mi_bar, hist, dt, eta_ema=None):
                 eta_eff_raw, kappa, gain_term = compute_effective_eta(
                     eta_base, cov_full,
                     epsilon=adaptive_cfg.get('epsilon', 1e-12),
-                    tanh_cap=adaptive_cfg.get('tanh_cap', True),
-                    d_scale=adaptive_cfg.get('d_scale', None)
+                    cap=adaptive_cfg.get('cap', 15.0),
+                    dim_override=adaptive_cfg.get('d_scale', None)
                 )
                 # Apply EMA smoothing if provided
                 if eta_ema is not None:
@@ -139,8 +139,8 @@ def heun_step_pair(ox, oy, params, mi_bar, hist, dt, eta_ema=None):
                 eta_eff2_raw, _, _ = compute_effective_eta(
                     eta_base, cov_full2,
                     epsilon=adaptive_cfg.get('epsilon', 1e-12),
-                    tanh_cap=adaptive_cfg.get('tanh_cap', True),
-                    d_scale=adaptive_cfg.get('d_scale', None)
+                    cap=adaptive_cfg.get('cap', 15.0),
+                    dim_override=adaptive_cfg.get('d_scale', None)
                 )
                 if eta_ema is not None:
                     eta_eff2 = eta_ema.update(eta_eff2_raw)

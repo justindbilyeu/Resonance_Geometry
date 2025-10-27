@@ -20,8 +20,8 @@ kappa_couple: 0.12
 adaptive_eta:
   enabled: true
   epsilon: 1e-12
-  tanh_cap: true
-  d_scale: 6
+  cap: 15.0
+  d_scale: 6  # dimensionality override for gain normalization
   ema_alpha: 0.1
 
 # Grid for sweeps

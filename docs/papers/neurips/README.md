@@ -32,9 +32,12 @@ Large language models sometimes produce confident falsehoods—hallucinations—
 
 - **`manuscript.md`**: Main paper text (current version)
 - **`supplement.md`**: (To be created) Additional proofs, ablations
+- **`appendix_D_deepseek_eta_eff.md`**: Adaptive whitening gain derivation (η_eff formula)
+- **`appendix_E_xai_replication.md`**: Independent replication by xAI/Grok (NumPy-only)
 - **`figures/`**: All paper figures
   - `phase_diagram_v2.png`
   - `hysteresis_v2.png`
+  - `phase_adaptive_overlay.svg` (adaptive η_eff comparison)
   - (More to be added from empirical work)
 - **`figures/source/`**: (To be created) Scripts generating figures
 - **`code_links.md`**: (To be created) Mapping results → code
@@ -46,18 +49,30 @@ Large language models sometimes produce confident falsehoods—hallucinations—
 ## Code Generating Results
 
 ### Figure 1: Phase Diagram
-- **Script**: `rg/sims/meta_flow_min_pair_v2.py` (to be moved to `experiments/hallucination/`)
-- **Config**: Parameters in Section 3.2 of manuscript
+- **Script**: `experiments/hallucination/run_phase_map.py`
+- **Config**: `hallucination_research/configs/hallu_su2_v2.yaml`
 - **Data**: `results/phase_diagram_v2.csv` (or similar)
-- **Commit**: [TBD after reorganization]
+- **Target**: `make hallu-phase-map`
 
 ### Figure 2: Hysteresis
-- **Script**: `rg/validation/hysteresis_sweep.py` (to be moved)
-- **Config**: Section 4.2 parameters
+- **Script**: `experiments/hallucination/run_hysteresis.py`
+- **Config**: `hallucination_research/configs/hallu_su2_v2.yaml`
 - **Data**: `results/hysteresis_v2.csv`
-- **Commit**: [TBD]
+- **Target**: `make hallu-hysteresis`
 
-### Figure 3-N: Empirical Results
+### Figure 3: Conditioning Sweep (Appendix D)
+- **Script**: `experiments/hallucination/run_phase_cond_sweep.py`
+- **Data**: `results/phase_cond/phase_cond_sweep.csv`
+- **Target**: `make phase-cond-sweep`
+- **Description**: Parameter sweep with adaptive whitening gain
+
+### Figure 4: Adaptive Overlay (Appendix D)
+- **Script**: `experiments/hallucination/run_phase_adaptive_overlay.py`
+- **Output**: `figures/Geometric Theory of AI Hallucination/phase_adaptive_overlay.svg`
+- **Target**: `make phase-adaptive-overlay`
+- **Description**: Comparison of base vs adaptive phase boundaries
+
+### Figure 5-N: Empirical Results
 - **Script**: (To be created) `experiments/hallucination/run_truthfulqa_extraction.py`
 - **Analysis**: (To be created) `experiments/hallucination/analyze_results.py`
 - **Status**: In progress (Q1 2025)
