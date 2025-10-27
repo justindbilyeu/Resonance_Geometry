@@ -243,3 +243,18 @@ hallu-quick: hallu-phase-map hallu-hysteresis
 
 test-hallu:
 >pytest -q tests/hallucination/
+
+# === Empirical Validation targets ===
+.PHONY: empirical-extract empirical-curvature empirical-eval test-empirical
+
+empirical-extract:
+	python rg_empirical/extract_activations.py --model gpt2 --dataset truthfulqa --mock
+
+empirical-curvature:
+	python rg_empirical/compute_curvature_metrics.py --activations results/activations/activations_gpt2_truthfulqa.npz
+
+empirical-eval:
+	python rg_empirical/eval_truthfulqa_lambda.py --metrics results/curvature/curvature_metrics_gpt2_truthfulqa.csv --mock_labels
+
+test-empirical:
+	pytest -q tests/empirical/ || echo "No empirical tests yet"

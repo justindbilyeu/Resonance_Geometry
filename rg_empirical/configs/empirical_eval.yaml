@@ -1,0 +1,85 @@
+# Empirical Validation Configuration
+# κ(Σ) and λ_max correlation with hallucination on TruthfulQA/HaluEval
+
+# Models to evaluate
+models:
+  - name: gpt2
+    layers: [8, 10, 12]  # Middle layers
+    max_samples: 100
+
+  - name: gpt2-medium
+    layers: [12, 16, 20]
+    max_samples: 100
+
+  - name: gpt2-large
+    layers: [18, 24, 30]
+    max_samples: 50  # Larger model, fewer samples
+
+# Datasets
+datasets:
+  truthfulqa:
+    source: huggingface  # or local JSON
+    n_samples: 100
+    categories: [science, history, misconceptions]
+
+  halueval:
+    source: huggingface
+    n_samples: 100
+    categories: [qa_samples, dialogue_samples]
+
+# Activation extraction
+extraction:
+  max_seq_length: 512
+  batch_size: 8
+  device: cpu  # or cuda
+  layer_selection: middle  # first, middle, last, all
+
+# Curvature metrics
+curvature:
+  epsilon: 1.0e-12  # Regularization
+  window_size: 10   # Rolling window for per-sample metrics
+  metrics:
+    - kappa          # Condition number
+    - lambda_max     # Leading eigenvalue
+    - lambda_min     # Smallest eigenvalue
+    - eff_rank       # Effective rank (participation ratio)
+    - trace          # Trace of covariance
+
+# Evaluation
+evaluation:
+  detector: lambda_max  # Primary signal (lambda_max, kappa, or combo)
+  baseline: random      # Baseline comparison
+  metrics:
+    - roc_auc
+    - precision_recall_auc
+    - f1_at_threshold
+
+  # Hypothesis tests
+  hypotheses:
+    H1:
+      description: "λ_max > threshold correlates with hallucination"
+      target_auc: 0.65
+      significance_level: 0.05
+
+    H2:
+      description: "Instability emerges in middle-late layers"
+      layers_to_compare: [[8, 10], [12, 14], [18, 20]]
+
+    H3:
+      description: "Temperature reduction decreases λ_max"
+      temperatures: [0.3, 0.7, 1.0]
+
+    H4:
+      description: "Permuted data shows no signal (null hypothesis)"
+      n_permutations: 100
+      expected_auc_range: [0.45, 0.55]
+
+# Output
+output:
+  results_dir: results/empirical/
+  figures_dir: docs/papers/neurips/figures/Geometric Theory of AI Hallucination/
+  format: svg  # All figures as SVG
+  log_level: INFO
+
+# Reproducibility
+seed: 42
