@@ -3,6 +3,8 @@ import os
 
 import numpy as np, matplotlib.pyplot as plt
 
+from .adaptive_gain import compute_effective_eta, EtaEffEMA
+
 # ----- SU(2) helpers -----
 sigma_x = np.array([[0, 1],[1, 0]], dtype=complex)
 sigma_y = np.array([[0, -1j],[1j, 0]], dtype=complex)
@@ -35,26 +37,8 @@ def compute_mi(history, window=30):
     except Exception:
         return 0.0
 
-def adaptive_gain_eta(eta_base: float, cov_full: np.ndarray, use_adaptive: bool, eps: float = 1e-9) -> float:
-    """
-    Adaptive MI gain (v2): η_eff = η * (1 + log(cond(Σ))/d)
-
-    Args:
-        eta_base: Base resonance gain parameter
-        cov_full: Full covariance matrix (d x d)
-        use_adaptive: If False, returns eta_base unchanged
-        eps: Small value to prevent division by zero
-
-    Returns:
-        Effective eta value, boosted by covariance conditioning
-    """
-    if not use_adaptive:
-        return eta_base
-    eigvals = np.linalg.eigvalsh(cov_full)
-    eigvals = np.clip(eigvals, eps, None)
-    cond = float(eigvals.max() / eigvals.min())
-    d = cov_full.shape[0]
-    return eta_base * (1.0 + np.log(cond) / d)
+# NOTE: adaptive_gain_eta is now imported from adaptive_gain module
+# The new compute_effective_eta returns (eta_eff, kappa, gain_term)
 
 # --- RHS with linear MI gain, cubic–quintic, and skew ---
 def rhs_pair(ox, oy, params, mi_bar):
@@ -98,22 +82,35 @@ def rhs_pair(ox, oy, params, mi_bar):
     doy = curv_push_y + drive_y - lam*gradUy - damp_y + nl_y + skew_y
     return dox, doy
 
-def heun_step_pair(ox, oy, params, mi_bar, hist, dt):
+def heun_step_pair(ox, oy, params, mi_bar, hist, dt, eta_ema=None):
     # instant MI from history; EMA for memory
     mi_inst = compute_mi(hist, window=params.get('mi_window', 30))
     ema = params.get('mi_ema', 0.1)  # 0<ema<=1
     mi_bar = (1-ema)*mi_bar + ema*mi_inst
 
-    # Adaptive gain (v2 feature, gated by use_adaptive_gain flag)
-    use_adaptive = params.get('use_adaptive_gain', False)
+    # Adaptive gain (v2 feature with whitening)
+    adaptive_cfg = params.get('adaptive_eta', {})
+    use_adaptive = adaptive_cfg.get('enabled', params.get('use_adaptive_gain', False))
     eta_base = params['eta']
+    kappa, gain_term = 1.0, 0.0  # defaults if not using adaptive
+
     if use_adaptive and len(hist) >= params.get('mi_window', 30):
         window = params.get('mi_window', 30)
         recent = np.array(hist[-window:])
         if recent.shape[0] >= 3:
             try:
                 cov_full = np.cov(recent.T, bias=True)
-                eta_eff = adaptive_gain_eta(eta_base, cov_full, use_adaptive)
+                eta_eff_raw, kappa, gain_term = compute_effective_eta(
+                    eta_base, cov_full,
+                    epsilon=adaptive_cfg.get('epsilon', 1e-12),
+                    tanh_cap=adaptive_cfg.get('tanh_cap', True),
+                    d_scale=adaptive_cfg.get('d_scale', None)
+                )
+                # Apply EMA smoothing if provided
+                if eta_ema is not None:
+                    eta_eff = eta_ema.update(eta_eff_raw)
+                else:
+                    eta_eff = eta_eff_raw
             except Exception:
                 eta_eff = eta_base
         else:
@@ -139,7 +136,16 @@ def heun_step_pair(ox, oy, params, mi_bar, hist, dt):
         if recent2.shape[0] >= 3:
             try:
                 cov_full2 = np.cov(recent2.T, bias=True)
-                eta_eff2 = adaptive_gain_eta(eta_base, cov_full2, use_adaptive)
+                eta_eff2_raw, _, _ = compute_effective_eta(
+                    eta_base, cov_full2,
+                    epsilon=adaptive_cfg.get('epsilon', 1e-12),
+                    tanh_cap=adaptive_cfg.get('tanh_cap', True),
+                    d_scale=adaptive_cfg.get('d_scale', None)
+                )
+                if eta_ema is not None:
+                    eta_eff2 = eta_ema.update(eta_eff2_raw)
+                else:
+                    eta_eff2 = eta_eff2_raw
             except Exception:
                 eta_eff2 = eta_base
         else:
@@ -154,7 +160,8 @@ def heun_step_pair(ox, oy, params, mi_bar, hist, dt):
     new_x = ox + 0.5*dt*(k1x + k2x)
     new_y = oy + 0.5*dt*(k1y + k2y)
     new_mi_bar = mi_bar2
-    return new_x, new_y, new_mi_bar
+    # Return diagnostics for logging
+    return new_x, new_y, new_mi_bar, eta_eff, kappa, gain_term
 
 def estimate_lambda_max_simple(ox, oy, params, mi_bar):
     # crude: leading real part ≈ η*MĪ - λ*k - γ - 3μ‖ω‖²
@@ -175,7 +182,7 @@ def _resolve_seed(seed):
     return seed
 
 
-def simulate_trajectory(params, T=60.0, dt=0.01, seed=None, init_x=None, init_y=None, mi_bar0=None):
+def simulate_trajectory(params, T=60.0, dt=0.01, seed=None, init_x=None, init_y=None, mi_bar0=None, log_csv_path=None):
     rng = np.random.default_rng(_resolve_seed(seed))
     # nonzero operating point (tiny bias)
     base_x = np.array([0.12, 0.08, 0.05], dtype=float)
@@ -183,17 +190,25 @@ def simulate_trajectory(params, T=60.0, dt=0.01, seed=None, init_x=None, init_y=
     ox = base_x.copy() if init_x is None else init_x.copy()
     oy = base_y.copy() if init_y is None else init_y.copy()
 
+    # Initialize EMA for adaptive eta if enabled
+    adaptive_cfg = params.get('adaptive_eta', {})
+    if adaptive_cfg.get('enabled', params.get('use_adaptive_gain', False)):
+        eta_ema = EtaEffEMA(alpha=adaptive_cfg.get('ema_alpha', 0.1))
+    else:
+        eta_ema = None
+
     steps = int(T/dt) if dt > 0 else 0
     if os.environ.get("RG_CI"):
         max_steps = int(os.environ.get("RG_CI_MAX_STEPS", "200"))
         steps = min(steps, max_steps)
     steps = max(1, steps)
     t_hist, E_hist, lam_hist, mi_hist, norm_hist = [], [], [], [], []
+    eta_eff_hist, kappa_hist, gain_hist = [], [], []
     hist = [np.concatenate([ox,oy])]
     mi_bar = compute_mi(hist, window=params.get('mi_window',30)) if mi_bar0 is None else mi_bar0
 
     for s in range(steps):
-        ox, oy, mi_bar = heun_step_pair(ox, oy, params, mi_bar, hist, dt)
+        ox, oy, mi_bar, eta_eff, kappa, gain_term = heun_step_pair(ox, oy, params, mi_bar, hist, dt, eta_ema)
         hist.append(np.concatenate([ox,oy]))
         F = curvature_F(ox, oy)
         E_dual = np.linalg.norm(F, 'fro')**2
@@ -202,6 +217,13 @@ def simulate_trajectory(params, T=60.0, dt=0.01, seed=None, init_x=None, init_y=
 
         t_hist.append(s*dt); E_hist.append(E_dual); lam_hist.append(lam_est)
         mi_hist.append(mi_bar); norm_hist.append(nn)
+        eta_eff_hist.append(eta_eff); kappa_hist.append(kappa); gain_hist.append(gain_term)
+
+        # Optional CSV logging (once per MI window for efficiency)
+        if log_csv_path and s % params.get('mi_window', 30) == 0:
+            from experiments.hallucination._logging import log_step_csv
+            regime = classify_regime_instant(E_dual, lam_est, nn)
+            log_step_csv(log_csv_path, s*dt, params['eta'], eta_eff, kappa, gain_term, mi_bar, nn, lam_est, regime)
 
         if nn > 200 or E_dual > 1e6: break
 
@@ -211,8 +233,17 @@ def simulate_trajectory(params, T=60.0, dt=0.01, seed=None, init_x=None, init_y=
         'lambda_max': np.array(lam_hist),
         'MI_bar': np.array(mi_hist),
         'norm': np.array(norm_hist),
+        'eta_eff': np.array(eta_eff_hist),
+        'kappa': np.array(kappa_hist),
+        'gain': np.array(gain_hist),
         'final_x': ox, 'final_y': oy, 'final_mi_bar': mi_bar
     }
+
+def classify_regime_instant(E_dual, lam_max, norm):
+    """Instant regime classification from current state."""
+    if norm > 50 or E_dual > 1.0 or lam_max > 0.1: return 2
+    if -0.1 < lam_max < 0.1: return 1
+    return 0
 
 def classify_regime(traj):
     if not len(traj['norm']): return 0

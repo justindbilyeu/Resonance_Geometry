@@ -115,33 +115,69 @@ This validates that the mathematical formulation is reproducible from the paper 
 
 ---
 
-## Adaptive MI Gain (v2)
+## Adaptive Whitening Gain (v2)
 
-**New Feature**: Conditioning-based resonance amplification
+**New Feature**: Conditioning-based resonance amplification with EMA smoothing
 
 **Formula**:
 
 ```
-η_eff = η_base × (1 + log(cond(Σ)) / d)
-```
+η_eff = η_base × (1 + gain_term)
 
 where:
-- `cond(Σ)` = condition number of covariance matrix Σ
-- `d` = dimensionality (6 for SU(2) pair)
+  gain_term = tanh(log(κ(Σ)) / d_scale)    [with optional tanh cap]
+  κ(Σ) = λ_max / λ_min                     [condition number]
+```
+
+**Parameters**:
 - `η_base` = base resonance gain parameter
+- `κ(Σ)` = condition number of covariance matrix Σ
+- `d` = dimensionality (6 for SU(2) pair)
+- `d_scale` = scaling factor for log normalization (default: d)
+- `tanh_cap` = optional cap to limit extreme gains
 
 **Purpose**: Amplify resonance gain when internal correlations become ill-conditioned, simulating increased "attention" to poorly-represented patterns.
 
 **Stabilizers**:
-- **Covariance shrinkage**: (1 - α)·Σ + α·diag(Σ) with α = 0.05
-- **Jitter**: Add ε·I with ε = 1e-6 to prevent singularity
-- **Determinant clamping**: max(det, 1e-12) for MI estimation
+- **Epsilon regularization**: Σ → Σ + ε·I with ε = 1e-12
+- **Log clamping**: κ ∈ [1, 10¹²] for numerical stability
+- **Tanh cap**: Limits gain_term ≤ 1 for extreme conditioning
+- **EMA smoothing**: α_EMA = 0.1 to prevent step jitter
 
-**Implementation**: [`src/resonance_geometry/hallucination/phase_dynamics.py:adaptive_gain_eta()`](../src/resonance_geometry/hallucination/phase_dynamics.py)
+**Phase Boundary Shift**:
 
-**Config**: Enabled via `use_adaptive_gain: true` in [`configs/hallu_su2_v2.yaml`](configs/hallu_su2_v2.yaml)
+The adaptive gain modifies the critical condition:
 
-**Rationale**: Poor conditioning often signals emerging instability or representational stress. Adaptive gain creates a feedback loop that can accelerate phase transitions near critical points.
+```
+η·Ī·(1 + log(κ)/d) ≈ λ + γ
+
+⟹  η_crit ≈ (λ + γ) / (Ī·(1 + log(κ)/d))
+```
+
+Higher conditioning (κ ≫ 1) **reduces** η_crit, shifting the boundary **leftward**.
+
+**Implementation**:
+- **Core module**: [`src/resonance_geometry/hallucination/adaptive_gain.py`](../src/resonance_geometry/hallucination/adaptive_gain.py)
+  - `compute_effective_eta()` - Main computation with stabilizers
+  - `EtaEffEMA` - Exponential moving average smoother
+- **Integration**: [`src/resonance_geometry/hallucination/phase_dynamics.py`](../src/resonance_geometry/hallucination/phase_dynamics.py)
+  - Wired into `heun_step_pair()` and `simulate_trajectory()`
+  - Returns diagnostics: (η_eff, κ, gain_term) for logging
+
+**Config**: Enabled via `adaptive_eta` block in [`configs/hallu_su2_v2.yaml`](configs/hallu_su2_v2.yaml)
+
+```yaml
+adaptive_eta:
+  enabled: true
+  epsilon: 1e-12
+  tanh_cap: true
+  d_scale: 6
+  ema_alpha: 0.1
+```
+
+**Tests**: See [`tests/hallucination/test_adaptive_eta.py`](../tests/hallucination/test_adaptive_eta.py) and [`test_phase_formula_shift.py`](../tests/hallucination/test_phase_formula_shift.py)
+
+**Rationale**: Poor conditioning often signals emerging instability or representational stress. Adaptive gain creates a feedback loop that can accelerate phase transitions near critical points. The EMA smoothing prevents oscillations while allowing the system to track gradual changes in conditioning.
 
 ---
 

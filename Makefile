@@ -231,7 +231,7 @@ test-asserts:
 >pytest -q
 
 # === Hallucination v1/v2 targets ===
-.PHONY: hallu-phase-map hallu-hysteresis hallu-quick
+.PHONY: hallu-phase-map hallu-hysteresis hallu-quick test-hallu
 
 hallu-phase-map:
 >python experiments/hallucination/run_phase_map.py --config hallucination_research/configs/hallu_su2_v2.yaml
@@ -240,3 +240,6 @@ hallu-hysteresis:
 >python experiments/hallucination/run_hysteresis.py --config hallucination_research/configs/hallu_su2_v2.yaml
 
 hallu-quick: hallu-phase-map hallu-hysteresis
+
+test-hallu:
+>pytest -q tests/hallucination/
