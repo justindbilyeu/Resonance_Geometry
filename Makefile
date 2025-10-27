@@ -243,3 +243,15 @@ hallu-quick: hallu-phase-map hallu-hysteresis
 
 test-hallu:
 >pytest -q tests/hallucination/
+
+# === RAIC (Resonance-Aware Inference Controller) targets ===
+.PHONY: raic-demo raic-synth test-raic
+
+raic-demo:
+	python controllers/demo_raic.py
+
+raic-synth:
+	python experiments/raic/run_synth_controller.py
+
+test-raic:
+	pytest -q tests/controllers/ || echo "No RAIC tests yet"

@@ -1,0 +1,53 @@
+# RAIC (Resonance-Aware Inference Controller) Demo Configuration
+# Synthetic covariance generation and batch evaluation settings
+
+# Controller parameters
+controller:
+  window_size: 20              # Rolling window for λ_max statistics
+  threshold_sigma: 2.0         # Alarm threshold: mean + k*σ
+  intervention_mode: temperature  # temperature, top_k, prompt, hybrid
+  baseline_temperature: 0.7    # Default sampling temperature
+  min_temperature: 0.3         # Lower bound during intervention
+  max_temperature: 1.0         # Upper bound (rarely used)
+
+# Synthetic data generation
+synthetic:
+  n_steps: 100                 # Number of time steps
+  dim: 6                       # Covariance matrix dimensionality
+  seed: 42                     # Random seed for reproducibility
+  instability_interval: [30, 50]  # Steps where λ_max is amplified
+
+# Experiment scenarios
+scenarios:
+  - name: stable_baseline
+    instability_interval: null  # No instability injection
+    expected_alarms: 0
+
+  - name: mild_instability
+    instability_interval: [40, 60]
+    lambda_amplification: 2.0  # Moderate conditioning degradation
+    expected_alarms: [5, 15]   # Expected range
+
+  - name: severe_instability
+    instability_interval: [30, 70]
+    lambda_amplification: 5.0  # Strong conditioning degradation
+    expected_alarms: [20, 40]
+
+  - name: intermittent_spikes
+    spike_steps: [20, 50, 80]  # Isolated spikes
+    lambda_amplification: 3.0
+    expected_alarms: [3, 10]
+
+# Output settings
+output:
+  results_dir: results/raic/
+  log_csv: raic_demo_log.csv   # Step-by-step log
+  summary_json: raic_demo_summary.json  # Aggregate statistics
+  figures_dir: docs/papers/neurips/figures/Geometric Theory of AI Hallucination/
+
+# Visualization
+visualization:
+  plot_lambda_trace: true      # Time series of λ_max
+  plot_temperature_trace: true # Time series of temperature
+  plot_alarm_histogram: true   # Distribution of alarm events
+  format: svg                  # Output format (svg, png)
