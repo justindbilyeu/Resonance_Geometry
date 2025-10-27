@@ -240,8 +240,26 @@ We also probe **hysteresis** by sweeping (\eta) up/down at fixed (\lambda). The 
 ![Hysteresis loops](./figures/hysteresis.png)
 
 ## Methods — Simulation \& classification
-We integrate a minimal coupled pair (Heun/Euler, \(\Delta t\approx0.01\), \(T\approx6.0\), Gaussian noise \(\sigma\approx$10^{-3}$) with $\gamma$=0.5, \alpha=0.6, \beta=0.02, \kappa=0.12\).  
+We integrate a minimal coupled pair (Heun/Euler, \(\Delta t\approx0.01\), \(T\approx6.0\), Gaussian noise \(\sigma\approx$10^{-3}$) with $\gamma$=0.5, \alpha=0.6, \beta=0.02, \kappa=0.12\).
 On a \(101\times 11\) grid ($\eta$\in[0.2,5.0]\), $\lambda$\in[0.1,5.0]\)), we compute a Lyapunov-like surrogate $\lambda_{\max}$ combining coherence gain, grounding, damping, and (\omega)-norm penalties. We label regimes via thresholds \(\{-0.1, +0.1\}\). The critical \(\eta_c(\lambda)\) is the first sign-crossing of $\lambda_{\max}$ along increasing (\eta). Hysteresis loops record $\lambda_{\max}$($\eta$) while sweeping (\eta) upward and downward; we report max vertical gap and loop area.
+
+### Adaptive Whitening Gain
+
+We incorporate covariance conditioning via an adaptive resonance amplification:
+\[
+\eta_{\mathrm{eff}}=\eta\!\left(1+\frac{\log\kappa(\Sigma)}{d}\right),\quad \kappa(\Sigma)=\frac{\lambda_{\max}}{\lambda_{\min}},
+\]
+where \(\Sigma\) is the empirical covariance over a sliding window of internal states, and \(d\) is the state dimensionality. The gain term \(\log\kappa(\Sigma)/d\) amplifies \(\eta\) when correlations become ill-conditioned, simulating increased "attention" to poorly-represented patterns.
+
+**Stabilization**: We apply (i) Ledoit-Wolf shrinkage (\(\alpha=0.05\)) toward the diagonal, (ii) jitter regularization (\(\epsilon=10^{-6}\mathbf{I}\)), and (iii) determinant clamping (\(\geq 10^{-12}\)) for MI estimation. An optional \(\tanh\) cap limits extreme gains.
+
+**EMA smoothing**: To avoid step jitter, we smooth \(\eta_{\mathrm{eff}}\) via exponential moving average with \(\alpha_{\mathrm{EMA}}=0.1\).
+
+**Phase boundary shift**: This modifies the critical condition to
+\[
+\eta\,\bar{I}\!\left(1+\frac{\log\kappa(\Sigma)}{d}\right)\approx \lambda+\gamma \;\;\Rightarrow\;\; \eta_{\mathrm{crit}}\approx \frac{\lambda+\gamma}{\bar{I}\left(1+\frac{\log\kappa(\Sigma)}{d}\right)}.
+\]
+Higher conditioning (\(\kappa \gg 1\)) *reduces* \(\eta_{\mathrm{crit}}\), shifting the phase boundary leftward in parameter space. This captures the intuition that systems with poorly-conditioned internal representations require less external drive to destabilize.
 
 ## External replications (brief)
 
