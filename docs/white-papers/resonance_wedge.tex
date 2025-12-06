@@ -61,10 +61,10 @@ emerging at a critical delay $\Delta \approx 0.104~\text{s}$. We further
 quantify a frequency-dependent hysteresis prefactor $C(\omega,K)$ via the
 area of Lissajous loops under sinusoidal drive, revealing a resonance peak
 near the system's natural frequency and reduced dissipation away from the
-wedge. These results provide an exact analytical criterion for when delayed
-feedback systems can sustain structured, resonant transients, and define
-the necessary conditions for the emergence of universal memory motifs in
-geometric plasticity networks.
+wedge. These results establish an exact analytical criterion for when delayed
+feedback systems can sustain structured, resonant transients, defining
+the necessary conditions for universal memory motifs in geometric plasticity
+networks.
 \end{abstract}
 
 \section{Introduction}
@@ -103,9 +103,10 @@ destabilizing?}
 
 \subsection{Two distinct failure modes}
 
-A critical question emerges: \emph{under what conditions can this plasticity
-loop sustain structured, oscillatory memory motifs at all?} Answering this
-requires distinguishing two fundamentally different instability mechanisms:
+This raises a critical question: \emph{under what conditions can this
+plasticity loop sustain structured, oscillatory memory motifs at all?}
+Answering this requires distinguishing two fundamentally different
+instability mechanisms:
 
 \paragraph{DC instability (explosion).}
 When the loop gain $K$ exceeds the intrinsic decay rate $B$, positive
@@ -407,7 +408,7 @@ Pad\'e-reduced system.
   \includegraphics[width=0.7\textwidth]{figures/rfo/motif_examples.png}
   \caption{\textbf{Universal memory motifs across the wedge.}
   Impulse responses $g(t)$ computed from the Pad\'e-reduced cubic eigenvalues
-  at fixed $\Delta = 0.15~\text{s}$ and varying loop gain $K$.
+  at fixed $\Delta = 0.15~\text{s}$ and varying loop gain $K$. 
   From top to bottom:
   (a)~$K = 0.05~\text{s}^{-1}$ (deep overdamped, three real poles, monotonic
   decay);
@@ -415,7 +416,7 @@ Pad\'e-reduced system.
   underdamped ringing);
   (c)~$K = 0.70~\text{s}^{-1}$ (strong ringing near the instability
   boundary, enhanced oscillations);
-  (d)~$K = 1.05~\text{s}^{-1}$ (unstable, $K > B$, exponential divergence).
+  (d)~$K = 1.05~\text{s}^{-1}$ (unstable, $K > B$, exponential divergence). 
   The characteristic rise--peak--cross--minimum structure (a ``Page-like''
   curve) emerges only within the stable-ringing wedge (panels b--c). The
   analytical Ring Threshold at $\Delta = 0.15~\text{s}$ is
@@ -620,7 +621,10 @@ time.
 The author acknowledges AI collaboration (Sage, Gemini, Claude, DeepSeek)
 in mathematical formulation, simulation design, and manuscript preparation.
 Numerical simulations were performed using Python with NumPy, SciPy, and
-Matplotlib. This work is part of the Resonance Geometry program.
+Matplotlib. Code and data for all figures and validation results are
+available at \url{https://github.com/justindbilyeu/Resonance_Geometry}
+(in particular, the \texttt{scripts/} and \texttt{figures/rfo/} directories).
+This work is part of the Resonance Geometry program.
 
 \appendix
 
