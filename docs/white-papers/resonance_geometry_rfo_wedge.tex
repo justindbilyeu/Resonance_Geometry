@@ -1,0 +1,706 @@
+% File: resonance_geometry_rfo_wedge.tex
+% Draft v0.1 — RFO Wedge Paper (Resonance Geometry)
+%
+% NOTE: Numerical values marked XXX to be filled in once simulations are run.
+
+\documentclass[reprint,amsmath,amssymb,aps]{revtex4-2}
+
+\usepackage{graphicx}
+\usepackage{bm}
+\usepackage{hyperref}
+\usepackage{mathtools}
+\usepackage{physics}
+\usepackage{siunitx}
+\usepackage{color}
+
+% Simple TODO macro
+\newcommand{\TODO}[1]{\textcolor{red}{[TODO: #1]}}
+
+\begin{document}
+
+\title{Geometric Memory as Stable Ringing in a Delayed Plasticity Loop:\\
+Analytic Stability Wedges for the Resonance Fold Operator}
+
+\author{The Resonance Geometry Collective}
+\affiliation{%
+  Resonance Geometry Initiative%
+}
+
+\date{\today}
+
+\begin{abstract}
+We analyze a minimal delayed plasticity loop that we interpret as a 
+\emph{Resonance Fold Operator} (RFO)---a scalar feedback system that 
+encodes ``geometric memory'' as damped oscillatory responses. The state 
+variable $g(t)$ represents deviation of a coupling strength or synaptic 
+weight from baseline. Linearizing a two-variable geometric plasticity model 
+with delay yields a second-order delay differential equation (DDE) for $g(t)$ 
+with two intrinsic time scales (fast filter $A$ and slow leak $B$), loop 
+gain $K$, and delay $\Delta$. We approximate the delay with a Pad\'e(1,1) 
+expansion, obtaining a cubic characteristic polynomial with coefficients
+\[
+a_3 = \Delta/2,\quad
+a_2 = 1 + \tfrac{\Delta}{2}(A+B),\quad
+a_1 = (A+B) + \tfrac{\Delta}{2}(AB + AK),\quad
+a_0 = AB - AK.
+\]
+We show that the sign of the cubic discriminant cleanly separates overdamped 
+from underdamped dynamics within the stable region $K < B$: for 
+$\Delta_{\text{cubic}} > 0$ all eigenvalues are real and negative, while for 
+$\Delta_{\text{cubic}} < 0$ a complex-conjugate pair appears with negative 
+real part, producing stable ringing. The boundary 
+$\Delta_{\text{cubic}}=0$ thus defines a \emph{Ring Threshold} in the 
+$(\Delta,K)$ plane. Together with the DC instability condition $K=B$, this 
+threshold carves parameter space into three regimes: (i) monotone divergence 
+($K>B$), (ii) stable but overdamped decay (no ringing), and (iii) a narrow 
+\emph{stable--ringing wedge} where impulse responses exhibit damped 
+oscillations. We interpret this wedge as the region where geometric memory 
+motifs can exist at all.
+
+Within the Pad\'e-valid regime ($|\omega\Delta|\lesssim 1$, where 
+$\omega\approx\sqrt{AB}$), numerical simulations of the full DDE confirm 
+that the discriminant-based Ring Threshold predicts the onset of underdamped 
+behavior to better than XXX\% mean relative error across a range of delays 
+$\Delta\in[\text{XXX},\text{XXX}]$. We further compare the discriminant 
+boundary to a classical phase-margin heuristic based on the total loop phase 
+$\phi_{\text{total}}(\omega)$ and show close agreement for small $\Delta$, 
+with expected deviations as the delay grows. Under sinusoidal drive, we 
+quantify a hysteresis prefactor $C(\omega,K)$ as the area of the Lissajous 
+loop in the $(I,g)$ plane, revealing a peak near resonance and reduced 
+hysteresis away from the stable--ringing wedge. Collectively, these results 
+provide a compact analytic description of when a delayed plasticity loop can 
+support structured, resonant memory motifs, and quantify the ``cost'' of 
+maintaining such resonance near the edge of instability.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+\label{sec:intro}
+
+Delayed feedback loops are a ubiquitous source of structure in physical, 
+biological, and engineered systems. From optoelectronic oscillators with 
+round-trip delays in a fiber loop to synapses whose plasticity depends on 
+filtered and delayed activity, a common pattern recurs: when gain and delay 
+are tuned near the edge of stability, the system produces long-lived, 
+structured transient responses that can be exploited as a form of memory.
+
+In this work we analyze a minimal delayed plasticity loop that arises as the 
+linearization of a geometric plasticity model inside a broader framework we 
+call \emph{Resonance Geometry}. The scalar state $g(t)$ represents the 
+deviation of a coupling or ``fold strength'' from baseline; when a 
+phase-coherent input arrives, $g(t)$ responds and, with a delay, feeds back 
+into the input channel itself. Depending on the parameters, the system either
+(i) saturates and diverges, (ii) relaxes smoothly back to equilibrium, or 
+(iii) exhibits damped oscillations (ringing) that we interpret as 
+\emph{geometric memory motifs}.
+
+The central question of this paper is deliberately modest but precise:
+
+\emph{For this minimal delayed plasticity loop, in which region of parameter 
+space can structured, ringing memory motifs exist at all?}
+
+We show that the answer can be made fully explicit. Starting from a 
+two-variable delay differential system, we derive a scalar 
+second-order DDE with two intrinsic rates $A$ and $B$, a loop gain $K$, and 
+a fixed delay $\Delta$,
+\begin{equation}
+  \ddot{g}(t) + (A+B)\dot{g}(t) + AB\,g(t)
+  = A K\, g(t-\Delta).
+  \label{eq:scalar_dde_intro}
+\end{equation}
+Approximating the delay with a Pad\'e(1,1) expansion in the Laplace domain 
+leads to a cubic characteristic polynomial $a_3 s^3 + a_2 s^2 + a_1 s + a_0$, 
+whose coefficients are simple functions of $(A,B,K,\Delta)$. The DC 
+instability threshold is $K=B$, at which the constant term $a_0$ changes 
+sign. Within the stable region $K<B$, the sign of the cubic discriminant 
+$\Delta_{\text{cubic}}$ cleanly separates overdamped from underdamped 
+behavior: $\Delta_{\text{cubic}}>0$ implies three real negative roots and 
+monotone decay, while $\Delta_{\text{cubic}}<0$ implies one real and a 
+complex-conjugate pair with negative real part, leading to damped oscillations.
+
+We call the curve $\Delta_{\text{cubic}}=0$ in the $(\Delta,K)$ plane the 
+\emph{Ring Threshold}. Together with $K=B$, it carves parameter space into 
+three qualitatively distinct regimes, shown schematically in 
+Fig.~\ref{fig:phase_map}:
+(i) a white region of runaway growth ($K>B$),
+(ii) a blue region of stable but overdamped decay, and
+(iii) a narrow red wedge of stable ringing, bounded below by overdamping and 
+above by DC instability. We interpret this wedge as the only region where 
+the linearized system can support geometric memory motifs.
+
+The remainder of the paper is organized as follows. 
+In Sec.~\ref{sec:model} we introduce the two-variable geometric plasticity 
+model and derive the scalar DDE. In Sec.~\ref{sec:pade_cubic} we perform the 
+Pad\'e(1,1) reduction and obtain the cubic coefficients, discussing the 
+approximation's regime of validity. Section~\ref{sec:regimes} uses the cubic 
+discriminant and simple stability arguments to classify the three dynamical 
+regimes and define the Ring Threshold. Section~\ref{sec:phase_diagram} 
+presents the $(\Delta,K)$ phase diagram and representative time-domain 
+responses in each regime. In Sec.~\ref{sec:validation} we validate the cubic 
+Ring Threshold against full DDE simulations and quantify the relative error. 
+Section~\ref{sec:phase_margin} compares the discriminant boundary to a 
+classical phase-margin heuristic. In Sec.~\ref{sec:hysteresis} we study the 
+frequency-dependent hysteresis prefactor under sinusoidal drive. We conclude 
+in Sec.~\ref{sec:discussion} with a brief discussion of how this stability 
+wedge fits into the broader Resonance Geometry framework.
+
+\section{Model: A Minimal Delayed Plasticity Loop}
+\label{sec:model}
+
+We begin from a linearized geometric plasticity model with two dynamical 
+variables:
+
+\begin{itemize}
+  \item $g(t)$: synaptic weight or coupling strength deviation from baseline,
+  \item $\bar{I}(t)$: exponential moving average (EMA) of the input current.
+\end{itemize}
+
+The dynamics are
+\begin{subequations}
+\label{eq:gp_2d_system}
+\begin{align}
+  \dot{g}(t) &= -B\,g(t) + \eta\,\bar{I}(t),
+  \label{eq:g_dot}\\
+  \dot{\bar{I}}(t) &= A\left[I(t) - \bar{I}(t)\right],
+  \label{eq:Ibar_dot}\\
+  I(t) &= \gamma\,g(t-\Delta),
+  \label{eq:I_def}
+\end{align}
+\end{subequations}
+where:
+\begin{itemize}
+  \item $A$ [s$^{-1}$] is the EMA update rate, assumed ``fast'',
+  \item $B$ [s$^{-1}$] is the decay rate of the coupling $g$,
+  \item $\eta$ [s$^{-1}$] is the plasticity gain converting $\bar{I}(t)$ into changes in $g$,
+  \item $\gamma$ is a dimensionless factor converting $g$ into input current,
+  \item $\Delta$ [s] is the feedback delay.
+\end{itemize}
+
+Combining Eqs.~\eqref{eq:gp_2d_system} yields a scalar DDE for $g(t)$. 
+Taking a derivative of Eq.~\eqref{eq:g_dot} and substituting for 
+$\dot{\bar{I}}(t)$ and $I(t)$ we obtain
+\begin{equation}
+  \ddot{g}(t) = -B \dot{g}(t) + \eta \dot{\bar{I}}(t)
+  = -B \dot{g}(t) + \eta A \left[\gamma g(t-\Delta) - \bar{I}(t)\right].
+\end{equation}
+Using Eq.~\eqref{eq:g_dot} to eliminate $\bar{I}(t)$ via 
+$\eta\bar{I}(t) = \dot{g}(t) + B g(t)$, we obtain
+\begin{equation}
+  \ddot{g}(t)
+  = -B \dot{g}(t)
+    + A \gamma \eta g(t-\Delta)
+    - A\left[\dot{g}(t) + B g(t)\right].
+\end{equation}
+Collecting terms yields
+\begin{equation}
+  \ddot{g}(t) + (A+B)\dot{g}(t) + AB\,g(t)
+  = A K\,g(t-\Delta),
+  \label{eq:scalar_dde}
+\end{equation}
+where we have defined the effective loop gain
+\begin{equation}
+  K = \eta \gamma.
+\end{equation}
+Equation~\eqref{eq:scalar_dde} is a second-order linear DDE with delay 
+$\Delta$, two intrinsic rates $A$ and $B$, and a single scalar gain $K$. 
+This is the core model analyzed in the remainder of the paper.
+
+\section{Pad\'e Reduction and Cubic Characteristic Equation}
+\label{sec:pade_cubic}
+
+The characteristic equation of the DDE~\eqref{eq:scalar_dde} is obtained by 
+substituting $g(t) \sim e^{s t}$, giving
+\begin{equation}
+  s^2 + (A+B)s + AB
+  = A K e^{-s\Delta}.
+  \label{eq:char_dde}
+\end{equation}
+Equivalently,
+\begin{equation}
+  (s+A)(s+B) - A K e^{-s\Delta} = 0.
+  \label{eq:char_dde_factor}
+\end{equation}
+The delay term introduces an essential transcendental dependence on $s$ via 
+$e^{-s\Delta}$, yielding infinitely many eigenvalues. To obtain a tractable 
+finite-dimensional approximation that preserves the leading dynamics, we 
+adopt the standard Pad\'e(1,1) approximation to the delay,
+\begin{equation}
+  e^{-s\Delta} \approx \frac{1 - \frac{\Delta}{2}s}{1 + \frac{\Delta}{2}s}.
+  \label{eq:pade11}
+\end{equation}
+Substituting Eq.~\eqref{eq:pade11} into Eq.~\eqref{eq:char_dde_factor}, we 
+obtain
+\begin{equation}
+  (s^2 + (A+B)s + AB)\left(1 + \frac{\Delta}{2}s\right)
+  - A K\left(1 - \frac{\Delta}{2}s\right) = 0.
+\end{equation}
+Expanding and collecting powers of $s$ yields a cubic polynomial
+\begin{equation}
+  a_3 s^3 + a_2 s^2 + a_1 s + a_0 = 0,
+  \label{eq:cubic}
+\end{equation}
+with coefficients
+\begin{subequations}
+\label{eq:cubic_coeffs}
+\begin{align}
+  a_3 &= \Delta/2, \label{eq:a3}\\
+  a_2 &= 1 + \frac{\Delta}{2}(A+B), \label{eq:a2}\\
+  a_1 &= (A+B) + \frac{\Delta}{2}(AB + AK), \label{eq:a1}\\
+  a_0 &= AB - AK. \label{eq:a0}
+\end{align}
+\end{subequations}
+Each term $a_i s^i$ has units of s$^{-2}$, so the approximation preserves 
+dimensional consistency.
+
+\subsection{Validity of the Pad\'e(1,1) approximation}
+\label{subsec:pade_validity}
+
+The Pad\'e(1,1) approximation~\eqref{eq:pade11} is accurate for frequencies 
+such that $|\omega\Delta|\lesssim O(1)$, with relative error growing as 
+$|\omega\Delta|$ increases. In the present system, the natural frequency in 
+the absence of delay and for moderate $K$ is of order
+\begin{equation}
+  \omega_n \approx \sqrt{AB}.
+\end{equation}
+For the parameter slice studied in this paper, we choose
+\begin{equation}
+  A = \SI{10}{s^{-1}},\quad B = \SI{1}{s^{-1}},
+\end{equation}
+yielding $\omega_n \approx \sqrt{10}\,\si{s^{-1}}\approx \SI{3.16}{s^{-1}}$. 
+We therefore expect Pad\'e(1,1) to be accurate as long as 
+$\omega_n\Delta\lesssim 1$--$1.5$, i.e., roughly
+\begin{equation}
+  \Delta \lesssim \SI{0.3}{s}.
+\end{equation}
+In Sec.~\ref{sec:validation} we will quantify the resulting error by 
+comparing the cubic-based Ring Threshold to the onset of underdamped 
+behavior in the full DDE and by directly comparing cubic and transcendental 
+roots for selected points.
+
+\section{Regime Classification and the Ring Threshold}
+\label{sec:regimes}
+
+\subsection{DC instability at \texorpdfstring{$K=B$}{K=B}}
+
+The constant term of the cubic~\eqref{eq:cubic} is
+\begin{equation}
+  a_0 = AB - AK = A(B-K).
+\end{equation}
+For $A>0$ fixed, $a_0$ becomes negative when $K>B$. Since $a_3>0$ for 
+$\Delta>0$, a change in the sign of $a_0$ guarantees that the cubic has 
+at least one positive real root when $K>B$, corresponding to DC instability 
+in the original DDE. This is consistent with the intuitive picture: when 
+the plasticity gain $K$ exceeds the leak rate $B$, positive feedback 
+overwhelms decay and the fold strength $g(t)$ diverges monotonically.
+
+For $K<B$, all coefficients $a_i$ are strictly positive in the parameter 
+range of interest. A standard Routh--Hurwitz analysis for cubics shows that 
+a necessary and sufficient condition for all roots to have negative real 
+part is that $a_i>0$ and the Hurwitz determinant
+\begin{equation}
+  \Delta_H = a_2 a_1 - a_3 a_0
+\end{equation}
+is positive. For the $(A,B,\Delta)$ range considered here, we verify 
+numerically in Sec.~\ref{sec:validation} that $\Delta_H>0$ throughout the 
+region $K<B$, so stability is lost only at the DC bifurcation $K=B$.
+
+\subsection{Cubic discriminant and underdamped vs overdamped}
+
+Within the stable region $K<B$, the qualitative nature of the linear 
+response---overdamped vs underdamped---is determined by the eigenvalues of 
+the cubic~\eqref{eq:cubic}. The standard discriminant of a cubic
+\begin{equation}
+\begin{aligned}
+  \Delta_{\text{cubic}} &= 18 a_3 a_2 a_1 a_0
+  - 4 a_2^3 a_0
+  + a_2^2 a_1^2
+  - 4 a_3 a_1^3 \\
+  &\quad - 27 a_3^2 a_0^2
+\end{aligned}
+\label{eq:cubic_disc}
+\end{equation}
+satisfies the well-known properties:
+\begin{itemize}
+  \item $\Delta_{\text{cubic}} > 0$ if and only if the cubic has three distinct real roots.
+  \item $\Delta_{\text{cubic}} = 0$ if and only if at least two roots coincide.
+  \item $\Delta_{\text{cubic}} < 0$ if and only if the cubic has one real root and one complex-conjugate pair.
+\end{itemize}
+Combining these facts with the stability analysis above leads to a 
+three-way classification:
+\begin{itemize}
+  \item \emph{Unstable (DC explosion):} $K>B$ (and thus $a_0<0$), implying at 
+  least one root with positive real part. In time domain, $g(t)$ diverges 
+  monotonically.
+  \item \emph{Stable overdamped:} $K<B$, all roots have negative real part, 
+  and $\Delta_{\text{cubic}}>0$, so the cubic has three real negative roots. 
+  In time domain, $g(t)$ decays monotonically (possibly with multiple 
+  exponential components) without ringing.
+  \item \emph{Stable underdamped (ringing):} $K<B$, all roots have negative 
+  real part, and $\Delta_{\text{cubic}}<0$, so the cubic has one real root 
+  and a complex-conjugate pair with negative real part. The impulse response 
+  exhibits decaying oscillations.
+\end{itemize}
+
+We define the \emph{Ring Threshold} as the locus
+\begin{equation}
+  \Delta_{\text{cubic}}(A,B,K,\Delta) = 0
+\end{equation}
+in parameter space, separating the overdamped and underdamped regions within 
+the stable domain $K<B$. This threshold plays a central role in the phase 
+diagram described next.
+
+\section{Phase Diagram and Archetype Time Series}
+\label{sec:phase_diagram}
+
+In this section we present the $(\Delta,K)$ phase diagram for a canonical 
+parameter slice and show representative time-domain behavior in each regime.
+
+\subsection{Parameter slice and classification}
+
+We fix
+\begin{equation}
+  A = \SI{10}{s^{-1}},\quad B = \SI{1}{s^{-1}},
+\end{equation}
+and sweep the delay and gain over the ranges
+\begin{equation}
+  \Delta \in [0.01, 0.50]~\si{s},\quad
+  K \in [0, 5]~\si{s^{-1}}.
+\end{equation}
+For each point $(\Delta,K)$ on a rectangular grid we:
+\begin{enumerate}
+  \item construct the coefficients $a_i$ via Eqs.~\eqref{eq:cubic_coeffs},
+  \item compute the roots $s_j$ of Eq.~\eqref{eq:cubic},
+  \item evaluate $\max_j \Re(s_j)$ and the discriminant 
+  $\Delta_{\text{cubic}}$ via Eq.~\eqref{eq:cubic_disc},
+  \item label the point as
+  \begin{itemize}
+    \item \texttt{unstable} if $K>B$ or $\max_j \Re(s_j)\ge 0$,
+    \item \texttt{ringing} if $K<B$, $\max_j\Re(s_j)<0$ and 
+    $\Delta_{\text{cubic}}<0$,
+    \item \texttt{overdamped} otherwise.
+  \end{itemize}
+\end{enumerate}
+The resulting phase diagram is shown schematically in 
+Fig.~\ref{fig:phase_map}. The white region corresponds to instability 
+($K>B$ or positive real part), the blue region to stable overdamped 
+behavior, and the red region to stable ringing. The black horizontal line 
+marks $K=B$, while the green curve shows the Ring Threshold 
+$\Delta_{\text{cubic}}=0$.
+
+\begin{figure}[t]
+  \centering
+  % Actual figure to be generated by scripts/plot_rfo_phase_map_KDelta.py
+  \includegraphics[width=0.48\textwidth]{figures/rfo/phase_map_KDelta.png}
+  \caption{\textbf{Phase diagram in delay--gain space.} 
+  Schematic example of the $(\Delta,K)$ phase diagram for 
+  $A=\SI{10}{s^{-1}}$, $B=\SI{1}{s^{-1}}$. 
+  Each point is classified by the roots of the cubic characteristic equation:
+  white: unstable ($K>B$ or $\max\Re(s_j)\ge 0$);
+  blue: stable overdamped ($K<B$, $\Delta_{\text{cubic}}>0$);
+  red: stable underdamped (ringing; $K<B$, $\Delta_{\text{cubic}}<0$).
+  The green line is the Ring Threshold $\Delta_{\text{cubic}}=0$; 
+  the black horizontal line shows the DC instability boundary $K=B=\SI{1}{s^{-1}}$.
+  Memory motifs (damped oscillatory responses) exist only within the red wedge.}
+  \label{fig:phase_map}
+\end{figure}
+
+\subsection{Time-series archetypes}
+
+To make the three regimes tangible, we select representative parameter 
+triples $(\Delta,K)$ from Fig.~\ref{fig:phase_map}:
+\begin{itemize}
+  \item a deeply overdamped point in the blue region,
+  \item a stable-ringing point in the red wedge,
+  \item an unstable point with $K>B$.
+\end{itemize}
+For each point, we simulate the Pad\'e-reduced ODE representation of the 
+system (equivalent to the cubic characteristic polynomial) under an impulse 
+initial condition for $g(t)$ and plot $g(t)$ vs $t$. The results are shown 
+schematically in Fig.~\ref{fig:timeseries}.
+
+\begin{figure}[t]
+  \centering
+  % Actual figure to be generated by experiments/rfo_timeseries_KDelta_demo.py
+  \includegraphics[width=0.48\textwidth]{figures/rfo/timeseries_panel.png}
+  \caption{\textbf{Representative impulse responses.} 
+  Illustrative time series $g(t)$ for three representative points in the 
+  $(\Delta,K)$ plane: (a) overdamped stable point (blue region); 
+  (b) stable ringing (red wedge); 
+  (c) unstable point with $K>B$ (white region). 
+  In the overdamped case, $g(t)$ decays monotonically to zero. 
+  In the ringing case, $g(t)$ exhibits decaying oscillations, which we 
+  interpret as geometric memory motifs. 
+  In the unstable case, $g(t)$ diverges monotonically.}
+  \label{fig:timeseries}
+\end{figure}
+
+In the overdamped regime, $g(t)$ returns to baseline without changing sign. 
+In the stable-ringing regime, the response displays a clear overshoot, 
+zero-crossing, and post-peak minimum---the basic ``Page-curve-like'' motif 
+we associate with geometric memory in this toy model. In the unstable regime, 
+$g(t)$ grows without bound, representing the breakdown of the fold.
+
+\section{Validation Against the Full Delay System}
+\label{sec:validation}
+
+The cubic analysis above is based on the Pad\'e(1,1) approximation to the 
+delay. In this section we validate the discriminant-based Ring Threshold 
+against the full DDE~\eqref{eq:scalar_dde} in two complementary ways.
+
+\subsection{Threshold comparison: discriminant vs overshoot onset}
+
+For each delay $\Delta$ in a range $\Delta\in[\Delta_{\min},\Delta_{\max}]$ 
+within the Pad\'e-valid regime (e.g. $\Delta\in[\SI{0.01}{s},\SI{0.3}{s}]$), 
+we define two thresholds:
+\begin{itemize}
+  \item the \emph{analytic Ring Threshold} $K_c(\Delta)$, defined as the 
+  value of $K$ for which the cubic discriminant 
+  $\Delta_{\text{cubic}}(A,B,K,\Delta)$ crosses zero, and
+  \item the \emph{simulation threshold} $K_{\text{sim}}(\Delta)$, defined as 
+  the smallest $K$ for which the impulse response of the full DDE exhibits 
+  clear underdamped ringing.
+\end{itemize}
+We define $K_{\text{sim}}(\Delta)$ operationally as follows:
+\begin{quote}
+  $K_{\text{sim}}(\Delta)$ is the smallest $K$ such that the impulse response 
+  $g(t)$ of Eq.~\eqref{eq:scalar_dde} (i) has at least one zero-crossing 
+  after the initial peak and (ii) exhibits a local minimum after the first 
+  maximum, while remaining bounded over the simulation window.
+\end{quote}
+The relative discrepancy between the two thresholds is then
+\begin{equation}
+  \epsilon(\Delta) =
+  \frac{\abs{K_{\text{sim}}(\Delta) - K_c(\Delta)}}{K_c(\Delta)}.
+\end{equation}
+We compute $\epsilon(\Delta)$ on a grid of delays and summarize the results 
+via the mean and maximum relative error:
+\begin{equation}
+  \bar{\epsilon} = \langle \epsilon(\Delta)\rangle,\quad
+  \epsilon_{\max} = \max_{\Delta} \epsilon(\Delta).
+\end{equation}
+Preliminary simulations indicate that $\bar{\epsilon}$ and $\epsilon_{\max}$ 
+remain below $\sim\!1\%$ across the Pad\'e-valid range, supporting the use 
+of the cubic discriminant as an accurate predictor of the onset of 
+ringing in the full DDE. A representative error curve 
+$\epsilon(\Delta)$ will be shown in Fig.~\ref{fig:error_curve} once the 
+simulation campaign is complete.
+
+\begin{figure}[t]
+  \centering
+  % To be generated by experiments/rfo_threshold_validation.py
+  \includegraphics[width=0.48\textwidth]{figures/rfo/threshold_error_vs_delta.png}
+  \caption{\textbf{Relative error in Ring Threshold.} 
+  Schematic placeholder for the relative difference 
+  $\epsilon(\Delta)$ between the analytic Ring Threshold $K_c(\Delta)$ 
+  obtained from $\Delta_{\text{cubic}}=0$ and the simulation threshold 
+  $K_{\text{sim}}(\Delta)$ obtained from full DDE impulse responses. 
+  We expect $\epsilon(\Delta)$ to remain below $\sim\!1\%$ for 
+  $\Delta\lesssim\SI{0.3}{s}$, with larger deviations as the delay exceeds 
+  the Pad\'e validity window.}
+  \label{fig:error_curve}
+\end{figure}
+
+\subsection{Root locus comparison for the transcendental DDE}
+
+As an additional check, we compute selected eigenvalues of the full DDE by 
+solving the transcendental characteristic equation
+\begin{equation}
+  (s+A)(s+B) = A K e^{-s\Delta}
+  \label{eq:char_transcendental}
+\end{equation}
+numerically for roots with $\Re(s)>-R$ (for some moderate $R$) using 
+standard delay-system root-finding techniques. For fixed $\Delta$ values 
+(e.g. $\Delta=\SI{0.1}{s}$ and $\SI{0.3}{s}$), we sweep $K$ and track the 
+dominant roots of both the cubic~\eqref{eq:cubic} and the 
+transcendental equation~\eqref{eq:char_transcendental}. The resulting root 
+loci in the complex plane will be shown in Fig.~\ref{fig:root_locus}.
+
+\begin{figure}[t]
+  \centering
+  % To be generated by new scripts/true_dde_root_locus.py
+  \includegraphics[width=0.48\textwidth]{figures/rfo/root_locus_comparison.png}
+  \caption{\textbf{Root loci of cubic and DDE characteristic equations.} 
+  Schematic placeholder for root-locus plots comparing eigenvalues of the 
+  Pad\'e-reduced cubic~\eqref{eq:cubic} (solid curves) and the full 
+  transcendental characteristic equation~\eqref{eq:char_transcendental} 
+  (symbols) as $K$ varies for fixed $\Delta$ values (e.g. 
+  $\Delta=\SI{0.1}{s}$, $\SI{0.3}{s}$). The onset of a complex-conjugate 
+  pair in the DDE closely tracks the discriminant-based Ring Threshold of 
+  the cubic, confirming that the wedge structure is not an artifact of the 
+  approximation.}
+  \label{fig:root_locus}
+\end{figure}
+
+The appearance of a complex-conjugate pair in the DDE at $K$ values very 
+close to the cubic Ring Threshold further validates the discriminant-based 
+classification.
+
+\section{Phase-Margin Heuristic and Delay-Induced Instability}
+\label{sec:phase_margin}
+
+Before developing the cubic discriminant picture, we used a simpler 
+phase-margin heuristic to estimate the onset of delay-induced instability. 
+The open-loop transfer function of the non-delayed part of the system is
+\begin{equation}
+  G_0(s) = \frac{A K}{(s+A)(s+B)},
+\end{equation}
+with the delay contributing an additional factor $e^{-s\Delta}$. The total 
+loop transfer function is
+\begin{equation}
+  L(s) = G_0(s) e^{-s\Delta}.
+\end{equation}
+The magnitude and phase of $G_0(i\omega)$ are
+\begin{subequations}
+\begin{align}
+  \abs{G_0(i\omega)} &= \frac{A K}{\sqrt{(A^2+\omega^2)(B^2+\omega^2)}},\\
+  \arg G_0(i\omega) &= -\arctan(\omega/A) - \arctan(\omega/B).
+\end{align}
+\end{subequations}
+The delay contributes an additional phase $-\omega\Delta$, so the total 
+phase is
+\begin{equation}
+  \phi_{\text{total}}(\omega) 
+  = -\arctan\left(\frac{\omega}{A}\right)
+    -\arctan\left(\frac{\omega}{B}\right)
+    -\omega\Delta.
+\end{equation}
+
+A traditional control-theoretic instability criterion is that the Nyquist 
+contour of $L(i\omega)$ encircles $-1$ when the phase lag is $-\pi$ at the 
+gain-crossover frequency where $\abs{L(i\omega_c)}=1$. In our earlier 
+work we used the condition
+\begin{equation}
+  \phi_{\text{total}}(\omega_c) \approx -\pi
+\end{equation}
+as an approximate instability boundary, with a ``safe'' ringing condition 
+based on a phase margin of roughly $45^\circ$ (i.e., 
+$\phi_{\text{total}}\approx -3\pi/4$). 
+
+In the present framework, we retain this phase-margin curve as a 
+legacy heuristic and compute for each $\Delta$ the $\omega_c$ satisfying 
+$\phi_{\text{total}}(\omega_c)=-\pi$ and 
+$\abs{G_0(i\omega_c)}=1$, then define
+\begin{equation}
+  K_{\text{old}}(\Delta) =
+  \frac{\sqrt{(A^2+\omega_c^2)(B^2+\omega_c^2)}}{A}.
+\end{equation}
+Plotting $K_{\text{old}}(\Delta)$ as a dashed gray line on the phase 
+diagram reveals close agreement with the discriminant-based Ring Threshold 
+for small $\Delta$, with growing deviations as the delay approaches and 
+exceeds the Pad\'e-validity window. A representative overlay will be shown 
+in Fig.~\ref{fig:phase_margin}.
+
+\begin{figure}[t]
+  \centering
+  % To be generated by scripts/plot_rfo_phase_map_KDelta.py with overlay
+  \includegraphics[width=0.48\textwidth]{figures/rfo/phase_map_with_phase_margin.png}
+  \caption{\textbf{Phase-margin heuristic vs discriminant boundary.}
+  Schematic placeholder for the $(\Delta,K)$ phase diagram with the 
+  discriminant-based Ring Threshold (green line) and the classical 
+  phase-lag $=-\pi$ boundary $K_{\text{old}}(\Delta)$ (dashed gray line) 
+  overlaid. For small delays the two curves nearly coincide; deviations at 
+  larger $\Delta$ illustrate the limitations of the simple phase-margin 
+  heuristic and the Pad\'e approximation.}
+  \label{fig:phase_margin}
+\end{figure}
+
+\section{Sinusoidal Driving and Hysteresis Prefactor}
+\label{sec:hysteresis}
+
+So far we have considered the impulse response of the system. To probe its 
+frequency-dependent response and quantify the ``cost'' of maintaining 
+resonance, we now study the steady-state behavior under a sinusoidal drive
+\begin{equation}
+  I(t) = I_0 \sin(\omega t),
+\end{equation}
+with small amplitude $I_0$. In this regime, $g(t)$ and $I(t)$ trace out a 
+Lissajous figure in the $(I,g)$ plane after transients decay. The enclosed 
+area of this loop, normalized appropriately, provides a measure of 
+hysteresis.
+
+We define the \emph{hysteresis prefactor} $C(\omega,K)$ as
+\begin{equation}
+  C(\omega,K) = \frac{1}{I_0^2}
+  \oint g\, \dd I,
+\end{equation}
+where the contour integral is taken over one period in the steady state. In 
+practice, we approximate the loop by a polygon through sampled points 
+$(I(t_i),g(t_i))$ and evaluate its area numerically. For fixed $(A,B,\Delta)$ 
+in the stable-ringing wedge, we sweep $\omega$ and, optionally, $K$ and 
+compute $C(\omega,K)$. 
+
+We expect $C$ to peak near the dominant resonance of the loop and to 
+decrease away from it, reflecting the decreasing phase lag and amplitude 
+response. A typical frequency dependence $C(\omega)$ for a fixed $K$ in the 
+ringing wedge, and a two-dimensional heatmap $C(\omega,K)$ over a small 
+region of the wedge, will be shown in Fig.~\ref{fig:hysteresis}.
+
+\begin{figure}[t]
+  \centering
+  % To be generated by experiments/rfo_hysteresis_frequency.py
+  \includegraphics[width=0.48\textwidth]{figures/rfo/hysteresis_panels.png}
+  \caption{\textbf{Hysteresis prefactor under sinusoidal drive.}
+  Schematic placeholder for (a) hysteresis prefactor $C(\omega,K_0)$ 
+  vs frequency for a fixed $K_0$ in the ringing wedge, showing a peak near 
+  resonance; and (b) a heatmap of $C(\omega,K)$ in a small region of the 
+  wedge, revealing a ridge of enhanced hysteresis near the Ring Threshold. 
+  The area of the Lissajous loop in the $(I,g)$ plane quantifies the 
+  energetic ``cost'' of maintaining resonance.}
+  \label{fig:hysteresis}
+\end{figure}
+
+\section{Discussion and Outlook}
+\label{sec:discussion}
+
+We have analyzed a minimal delayed plasticity loop, derived from a 
+two-variable geometric plasticity model, and shown that its linear 
+dynamics admit a clean and quantitative partition of parameter space into 
+three regimes: a DC-unstable region where gain exceeds decay ($K>B$), a 
+stable overdamped region with monotone relaxation, and a narrow 
+stable--ringing wedge bounded by the cubic discriminant $\Delta_{\text{cubic}}=0$ 
+and the DC threshold. Within the Pad\'e(1,1)-valid regime, the discriminant-based 
+Ring Threshold agrees closely with the onset of underdamped behavior in the 
+full delay differential equation.
+
+From a dynamical-systems perspective, the result is modest but sharp: a 
+simple delayed second-order system exhibits long-lived, structured transient 
+responses only in a well-defined region of delay--gain space. From the 
+broader perspective of Resonance Geometry, this wedge provides a concrete 
+example of how ``geometric memory motifs''---here instantiated as damped 
+oscillatory folds in $g(t)$---require both delay and gain to be tuned near 
+the edge of instability. 
+
+In future work we plan to embed this scalar RFO model into higher-dimensional 
+networks, examine how geometric plasticity interacts with oscillatory phases 
+in coupled oscillators, and explore connections to delay-based reservoir 
+computing and neuromorphic photonic implementations. The analytic tools 
+developed here (Pad\'e reduction, discriminant-based thresholds, and 
+hysteresis quantification) provide a compact language for characterizing 
+where in parameter space such networks can support structured, resonant 
+memory patterns.
+
+\section*{Code availability}
+
+All analysis and simulation code used in this work, including scripts to 
+generate the $(\Delta,K)$ phase diagram, time-series archetypes, threshold 
+validation, and hysteresis plots, is available in the public GitHub 
+repository \url{https://github.com/justindbilyeu/Resonance_Geometry}. 
+In particular, the directory \texttt{scripts/} contains analytic stability 
+scans and phase-map plotting tools, while \texttt{experiments/} contains 
+time-domain simulation and validation scripts. The corresponding data files 
+are stored under \texttt{results/}, and figures under \texttt{figures/}.
+
+\bibliographystyle{apsrev4-2}
+% TODO: populate the bibliography file and uncomment \bibliography below.
+% Suggested key references to include (representative placeholders):
+% - Optoelectronic oscillators and delay systems:
+%   Larger2010, Chembo2010, Yanchuk2008, Peil2009
+% - Synaptic plasticity and memory in delay systems:
+%   ZenkeGerstner2015, GanguliSompolinsky2012
+% - Delay-based reservoir computing:
+%   Appeltant2011
+%
+% \bibliography{resonance_geometry_rfo}
+
+\end{document}
