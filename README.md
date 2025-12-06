@@ -11,13 +11,34 @@
 
 *Mathematical foundations, computational experiments, and theoretical frameworks for understanding qualitative transitions in dynamical systems*
 
-[Featured Paper](#featured-research) •
-[Quick Start](#quick-start) •
-[Research Areas](#research-areas) •
-[Documentation](#documentation) •
-[Contributing](#contributing)
+[Featured Research](#-featured-research) •
+[Quick Start](#-quick-start) •
+[Research Areas](#-research-areas) •
+[Documentation](#-documentation) •
+[Contributing](#-contributing)
 
 </div>
+
+---
+
+## 📖 The Story of this Universe (Plain English)
+
+Imagine a room full of **metronomes** (our oscillators). Each has its own rhythm, but they are trying to listen to each other.
+
+- **The Geometry:** An invisible "friendship graph" connects them. Strong ties mean they listen closely; weak ties mean they ignore each other.
+- **The Plasticity:** We give the universe a simple rule: *If two metronomes sync up, strengthen their friendship. If they clash, weaken it.*
+
+Over time, something remarkable happens: **the universe rewrites its own wiring diagram to make harmony easier.**
+
+We simulate this process to demonstrate:
+
+1. **Learning** – The geometry physically changes to support resonance.
+2. **Memory** – Even after scrambling the metronomes, the geometry "remembers" the harmonious state and pulls the system back to it.
+3. **Function** – The shaped geometry acts as a tuned filter, amplifying signals that match its structure while ignoring noise.
+
+This is Resonance Geometry in miniature:
+
+> Space is not just a stage where dynamics happen; the pattern of connections is a living, learning object that co-evolves with the activity it carries.
 
 ---
 
@@ -37,7 +58,27 @@ Our approach emphasizes falsifiable predictions, open data, and mathematical rig
 
 ## 📜 Featured Research
 
-### Resonant Transition Points Beyond Hopf Bifurcations
+### 1. The Toy Universe v2.1 (Canon)
+
+**Status:** ✅ Operational | 💻 [View Code](src/toy_model/)
+
+A rigorous implementation of **Geometric Plasticity** on a Kuramoto oscillator substrate. This is the foundational physics engine of the project.
+
+**The Physics:**
+
+- **State Space (S):** M × G (phases × coupling matrix).
+- **Dynamics:** Fast phase synchronization coupled with slow geometric plasticity (Hebbian learning on the graph topology).
+- **Energy:** The system descends a joint Free Energy functional L(θ, K) that penalizes misalignment between strongly coupled oscillators and large coupling strengths.
+
+**Key Experiments (implemented in code):**
+
+- **Lifecycle:** Demonstrates emergence of synchrony, reduction in free energy, and growth of spectral connectivity (Fiedler value λ₂).
+- **Memory:** Shows that the learned geometry acts as an attractor basin for coherent states: after scrambling phases, the system rapidly returns to high synchrony.
+- **Functional Gain:** Compares trained vs random geometries with similar mean coupling and shows the trained geometry is significantly more responsive to coherent signals.
+
+---
+
+### 2. Resonant Transition Points Beyond Hopf Bifurcations
 
 **Status:** ✅ Draft complete | 📄 [Read the paper](docs/papers/non_hopf/non_hopf_paper_draft_v1.tex)
 
@@ -54,7 +95,7 @@ We demonstrate a **Resonant Transition Point (RTP)** at α≈0.35 where a couple
 
 The RTP is characterized by geometric tension accumulating before any linear instability:
 
-```
+```text
 Fisher Information Strain: S(α) = tr I(γ(α))
 Operational Criterion: max Re λᵢ(J) < 0  AND  ∂ₐS ≥ τ_S
 ```
@@ -62,6 +103,7 @@ Operational Criterion: max Re λᵢ(J) < 0  AND  ∂ₐS ≥ τ_S
 This separates *where* structure changes from *how* linear models fail.
 
 **Quick Build:**
+
 ```bash
 cd docs/papers/non_hopf
 ./compile.sh  # Requires LaTeX
@@ -86,7 +128,21 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### Run Example Analysis
+### Run the Toy Universe (v2.1)
+
+```bash
+# Run the full lifecycle:
+#   Phase A: Baseline (no plasticity)
+#   Phase B: Learning (Geometric Plasticity ON)
+#   Phase C: Memory test (scramble phases, frozen geometry)
+#   Experiment D: Functional geometry probe
+python src/toy_model/resonance_universe.py
+
+# Run parameter sweeps: Memory robustness vs functional gain
+PYTHONPATH=src python -m toy_model.science_suite
+```
+
+### Run Example Analysis (Non-Hopf RTP)
 
 ```bash
 # Generate eigenvalue sweeps for RTP paper
@@ -126,7 +182,8 @@ Studying adaptive networks where information flow reshapes connection strength t
 
 - **Framework:** Resonant Witness Postulate (RWP) + Geometric Plasticity (GP)
 - **Predictions:** Ringing boundaries, hysteresis resonance, motif emergence
-- **Status:** Simulation infrastructure operational
+- **Simulation Engine:** Toy Universe v2.1 (Kuramoto + GP) in [`src/toy_model/`](src/toy_model/)
+- **Status:** Toy model operational; extended simulations and parameter sweeps in active development
 
 ### 3. **AI Hallucination Geometry**
 
@@ -159,10 +216,14 @@ Resonance_Geometry/
 │   ├── theory/                # Mathematical derivations
 │   └── specs/                 # Technical specifications
 ├── src/
-│   └── resonance_geometry/    # Core Python library
-│       ├── core/              # System dynamics, plasticity rules
-│       ├── utils/             # Metrics, diagnostics
-│       └── visualization/     # Plotting utilities
+│   ├── resonance_geometry/    # Core Python library
+│   │   ├── core/              # System dynamics, plasticity rules
+│   │   ├── utils/             # Metrics, diagnostics
+│   │   └── visualization/     # Plotting utilities
+│   └── toy_model/             # NEW: Toy Universe v2.1 Canon Engine
+│       ├── __init__.py
+│       ├── resonance_universe.py   # Core physics class (Kuramoto + GP)
+│       └── science_suite.py        # Parameter sweeps & analysis
 ├── scripts/                   # Experiment runners
 │   ├── run_phase_sweep.py
 │   ├── run_hysteresis.py
@@ -218,7 +279,7 @@ make figures  # Generates all SVG plots
 ```bash
 pytest -q                                # Quick test suite
 pytest tests/test_eigs_assertions.py     # Paper-specific validations
-make test                                 # Full test + smoke tests
+make test                                # Full test + smoke tests
 ```
 
 **Acceptance Criteria** are hardcoded in unit tests:
@@ -272,9 +333,10 @@ git push origin feature/your-feature-name
 
 | Component | Status | Notes |
 |-----------|--------|-------|
+| 🧪 Toy Universe v2.1 | ✅ Operational | Canonical Kuramoto + GP engine in `src/toy_model/` |
 | 📄 Non-Hopf Paper | ✅ Draft Complete | Ready for arXiv submission |
 | 🧮 Eigenvalue Analysis | ✅ Operational | Narrow/wide/zoom sweeps validated |
-| 🔄 Geometric Plasticity Sims | 🔄 Active Development | Ringing boundary tests ongoing |
+| 🔄 Geometric Plasticity Sims | 🔄 Active Development | Ringing boundary tests and parameter sweeps |
 | 📐 Information Geometry | 🔄 In Progress | Fisher strain implementation underway |
 | 🎓 Dissertation | 🔄 Chapters 1-3 Draft | Chapter 4 in progress |
 | 🧪 CI/CD Pipeline | ✅ Operational | Automated tests, figure generation |
@@ -295,11 +357,11 @@ If this research contributes to your work, please cite:
 }
 ```
 
-For the broader geometric plasticity framework:
+For the broader geometric plasticity framework and toy universe:
 
 ```bibtex
 @misc{resonance_geometry_2025,
-  title={Geometric Plasticity: Adaptive Information Networks and Emergent Redundancy},
+  title={Geometric Plasticity and the Resonance Geometry Toy Universe},
   author={Bilyeu, Justin D. and the Resonance Geometry Collective},
   year={2025},
   note={Experimental framework and reproducibility pack},
@@ -330,17 +392,17 @@ For the broader geometric plasticity framework:
 ### Near-Term (Q1 2025)
 
 - [x] Complete non-Hopf RTP paper
-- [x] Implement Fisher information strain calculations
-- [ ] Submit to arXiv
+- [x] Implement first Kuramoto + Geometric Plasticity toy universe
+- [ ] Submit Non-Hopf RTP to arXiv
+- [ ] Extend Toy Universe to parameter sweeps (science_suite)
 - [ ] Complete dissertation Chapter 4
-- [ ] Extend to multi-frequency systems
 
 ### Mid-Term (Q2-Q3 2025)
 
 - [ ] Peer review and publication (target: *Physical Review E* or *SIAM J. Dynamical Systems*)
 - [ ] Expand information-geometric framework
 - [ ] Develop real-time RTP detection algorithms
-- [ ] Apply to empirical datasets (EEG, climate, economic)
+- [ ] Apply RG ideas to empirical datasets (EEG, climate, economic, etc.)
 
 ### Long-Term (2026+)
 
@@ -352,11 +414,15 @@ For the broader geometric plasticity framework:
 
 ## 🙏 Acknowledgments
 
-This project represents collaborative work with contributions from:
+This project represents collaborative work across humans and multiple AI research partners.
 
-- **The Resonance Geometry Collective**: Sage, Claude (Anthropic), Grok, DeepSeek, Gemini
-- **Research Infrastructure**: Built with Claude Code for experimental design and rigor
-- **Open Source Community**: Python scientific stack (NumPy, SciPy, NetworkX, Matplotlib)
+- **The Resonance Geometry Collective:**
+  - **Justin** – Architect of Resonance Geometry, integrator of the lab, and keeper of the story.
+  - **Sage (ChatGPT)** – Strategic oversight, experimental design, and cross-model synthesis.
+  - **Gemini** – Theory lead and v2.1 implementation of the Toy Universe geometric plasticity engine.
+  - **Claude (Anthropic)** – Mathematical formalization, spectral analysis, and paper-structure guidance.
+  - **Grok, DeepSeek, and others** – Auxiliary analysis, literature scans, and creative perturbations.
+- **Open Source Community**: Python scientific stack (NumPy, SciPy, NetworkX, Matplotlib, etc.).
 
 Special thanks to early reviewers and critics who keep this work honest and grounded.
 
@@ -383,12 +449,8 @@ Code and documentation shared for research, educational, and review purposes. Fo
 
 **Built with mathematical rigor, computational precision, and epistemic humility.**
 
-*"Not all transitions are Hopf bifurcations. Some are geometric."*
+*"Not all transitions are Hopf bifurcations. Some are geometric. And some are learned."*
 
 [⬆ Back to Top](#resonance-geometry)
 
 </div>
-
----
-
-*Last Updated: October 25, 2025*
