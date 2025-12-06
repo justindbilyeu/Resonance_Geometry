@@ -34,7 +34,13 @@ def test_narrow_range_stable():
     assert all(mr < 0.0 for mr in max_real), \
         f"All eigenvalues should be negative in narrow range, but max was {max(max_real)}"
 
+    # Check that max real part is approximately -γ/2 = -0.04 (constant trace property)
+    max_of_max_real = max(max_real)
+    assert -0.05 <= max_of_max_real <= -0.03, \
+        f"Expected max Re(λ) ≈ -0.04 (= -γ/2) in narrow range, but got {max_of_max_real:.4f}"
+
     print(f"✓ Narrow range: all {len(max_real)} points stable (max Re(λ) < 0)")
+    print(f"  Max Re(λ) = {max_of_max_real:.4f} ≈ -γ/2 (constant trace confirmed)")
 
 
 def test_wide_range_crossing():

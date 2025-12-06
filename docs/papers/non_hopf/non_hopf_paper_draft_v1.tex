@@ -38,7 +38,7 @@ Evidence from Eigenvalue Analysis}
 \maketitle
 
 \begin{abstract}
-Classical accounts attribute oscillatory onsets to Hopf bifurcations: a local loss of linear stability where an eigenvalue pair crosses the imaginary axis. We analyze a resonant coupling model and falsify that assumption at a Resonant Transition Point (RTP) near $\alpha\!=\!0.35$: the system reorganizes qualitatively while all eigenvalues remain strictly negative. A conventional Hopf crossing appears only later (near $\alpha\!\approx\!0.833$), demonstrating two distinct mechanisms: early global geometric reconfiguration and late local linear instability. The result is reproducible from public code and deterministic sweeps; eigenvalue trajectories, phase portraits, and time traces confirm non-Hopf structure. We formalize RTP via information geometry (Fisher curvature and metric strain) and show how geometric tension accumulates before any linear instability. This separates \emph{where} structure changes from \emph{how} linear models fail, clarifying a class of phase transitions missed by local criteria and opening paths to principled detection in complex systems.
+Classical accounts attribute oscillatory onsets to Hopf bifurcations: a local loss of linear stability where an eigenvalue pair crosses the imaginary axis. We analyze a resonant coupling model and falsify that assumption at a Resonant Transition Point (RTP) near $\alpha\!=\!0.35$: the system reorganizes qualitatively while all eigenvalues remain strictly negative with constant real part. A conventional loss of linear stability occurs only later (near $\alpha\!\approx\!0.833$), when the effective restoring force changes sign and one real eigenvalue crosses zero. This demonstrates two distinct mechanisms: early global geometric reconfiguration within a strictly stable spiral regime, and later local linear instability. The result is reproducible from public code and deterministic sweeps; eigenvalue trajectories, phase portraits, and time traces confirm non-Hopf structure. We formalize RTP via information geometry (Fisher curvature and metric strain) and show how geometric tension accumulates before any linear instability. This separates \emph{where} structure changes from \emph{how} linear models fail, clarifying a class of phase transitions missed by local criteria and opening paths to principled detection in complex systems.
 \end{abstract}
 
 \section{Introduction}
@@ -92,19 +92,47 @@ we sweep.
 
 Equilibrium points satisfy:
 \begin{equation}
-  \omega_0^2 \phi_{\text{eq}} = K_0 \sin(\alpha \phi_{\text{eq}})
+  \omega_0^2 \phi_{\text{eq}} = K_0 \sin(\alpha \phi_{\text{eq}}).
 \end{equation}
 
 The Jacobian at equilibrium $(\phi_{\text{eq}}, 0)$ is:
 \begin{equation}
-  J = \begin{pmatrix}
+  J(\alpha) = \begin{pmatrix}
     0 & 1 \\
     -(\omega_0^2 - K_0 \alpha \cos(\alpha \phi_{\text{eq}})) & -\gamma
-  \end{pmatrix}
+  \end{pmatrix}.
 \end{equation}
 
-A Hopf bifurcation occurs when the maximum real part of the eigenvalues crosses zero:
-$\max \mathrm{Re}(\lambda) = 0$.
+Let
+\begin{equation}
+  k(\alpha) \equiv \omega_0^2 - K_0 \alpha \cos(\alpha \phi_{\text{eq}})
+\end{equation}
+denote the effective stiffness. The characteristic polynomial is
+\begin{equation}
+  \lambda^2 + \gamma \lambda + k(\alpha) = 0,
+\end{equation}
+with eigenvalues
+\begin{equation}
+  \lambda_{\pm}(\alpha) = \frac{-\gamma \pm \sqrt{\gamma^2 - 4 k(\alpha)}}{2}.
+\end{equation}
+
+Two simple but important facts follow:
+\begin{itemize}
+  \item The trace is fixed:
+  \[
+    \mathrm{tr}\,J(\alpha) = \lambda_+(\alpha) + \lambda_-(\alpha) = -\gamma < 0
+  \]
+  for all $\alpha$. Thus the real parts of any complex eigenpair are locked at $-\gamma/2$.
+  \item The determinant is $\det J(\alpha) = k(\alpha)$. Instability can only arise when $k(\alpha)$ changes sign.
+\end{itemize}
+
+As long as the discriminant satisfies $\gamma^2 - 4 k(\alpha) < 0$, the eigenvalues form a complex conjugate pair with
+\[
+\Re \lambda_{\pm}(\alpha) = -\gamma/2 < 0,
+\]
+corresponding to a stable spiral. When $k(\alpha)$ passes through zero, one eigenvalue crosses $\lambda=0$ and the equilibrium becomes non-hyperbolic ($\lambda_1=0$, $\lambda_2=-\gamma$). For $k(\alpha)<0$, $\det J<0$ and the equilibrium is a saddle with one positive and one negative real eigenvalue.
+
+In particular, because $\mathrm{tr}\,J(\alpha)$ is strictly negative and independent of $\alpha$, this system \emph{cannot} undergo a Hopf bifurcation by varying $\alpha$ alone: a Hopf crossing would require $\mathrm{tr}\,J=0$ with $\det J>0$ at the critical point. Any loss of linear stability here is necessarily via a real eigenvalue crossing associated with the sign change of the effective stiffness $k(\alpha)$.
 
 \subsection{Numerical Methods}
 
@@ -131,6 +159,8 @@ throughout the entire range, forming a flat band well below zero.
 This finding \textbf{definitively rules out a Hopf bifurcation} as the mechanism for the RTP. The system
 reorganizes its behavior while maintaining strict linear stability.
 
+Analytically, in the regime where the discriminant $\gamma^2 - 4k(\alpha) < 0$, the eigenvalues form a complex conjugate pair with real part fixed at $-\gamma/2$. The observed "flat band" at $\mathrm{Re}(\lambda)\approx -0.04$ in Figure~\ref{fig:eigs-narrow} is therefore not just a numerical plateau but a direct consequence of the constant damping $\gamma=0.08$: the system remains a strictly stable spiral throughout the RTP region.
+
 \begin{figure}[t]
   \centering
   \includesvg[width=\columnwidth]{eigenvalue_real_vs_alpha_narrow}
@@ -142,27 +172,30 @@ reorganizes its behavior while maintaining strict linear stability.
   \label{fig:eigs-narrow}
 \end{figure}
 
-\subsection{Classical Hopf Emergence: Wide and Zoom Sweeps}
+\subsection{Onset of Linear Instability: Wide and Zoom Sweeps}
 
-To locate any Hopf bifurcation in the system, we performed a wide sweep from $\alpha = 0.10$ to $1.00$.
-Figure~\ref{fig:eigs-wide-zoom} (top panel) reveals a sharp eigenvalue crossing at $\alpha^\star \approx 0.835$:
+Having ruled out a Hopf bifurcation in the RTP region, we extended the parameter range to search for any
+linearized instability. A wide sweep from $\alpha = 0.10$ to $1.00$ (Figure~\ref{fig:eigs-wide-zoom}, top panel)
+reveals a crossing at $\alpha^\star \approx 0.835$ where one \emph{real} eigenvalue changes sign:
 
 \begin{itemize}
-  \item Last stable point: $\alpha = 0.830$, $\mathrm{Re}(\lambda) = -0.040$
-  \item First unstable point: $\alpha = 0.840$, $\mathrm{Re}(\lambda) = +0.058$
+  \item Last stable point: $\alpha = 0.830$, $\lambda_{\text{max}} = -0.040$
+  \item First unstable point: $\alpha = 0.840$, $\lambda_{\text{max}} = +0.058$
 \end{itemize}
 
-Beyond this crossing, the system enters an exponentially unstable regime characteristic of supercritical
-Hopf bifurcations.
+Because $\mathrm{tr}\,J(\alpha) = -\gamma < 0$ is constant, the eigenvalues cannot form an unstable complex
+conjugate pair. Instead, the instability arises when the effective stiffness $k(\alpha)$ changes sign,
+causing the determinant $\det J = k(\alpha)$ to become negative. This is a \textbf{saddle-type} instability:
+one real eigenvalue crosses zero from below while the other remains negative.
 
-To refine this critical point, we performed a zoom sweep with step size $0.001$ (Figure~\ref{fig:eigs-wide-zoom},
-bottom panel). This high-resolution scan places the crossing at:
+A zoom sweep with step size $0.001$ (Figure~\ref{fig:eigs-wide-zoom}, bottom panel) refines the crossing to:
 
 \begin{equation}
   \alpha^\star = 0.833051 \pm 0.000508
 \end{equation}
 
-with precision limited by the discretization step.
+with precision limited by the discretization step. Beyond this point, the system is linearly unstable but
+not oscillatory in the neighborhood of equilibrium.
 
 \begin{figure}[t]
   \centering
@@ -170,10 +203,10 @@ with precision limited by the discretization step.
   \vspace{0.4em}
   \includesvg[width=\columnwidth]{eigenvalue_real_vs_alpha}
   \caption{%
-  \textbf{Classical Hopf appears later:} (Top) Wide sweep $\alpha\in[0.10,1.00]$ shows crossing
-  at $\alpha^\star\approx0.835$. (Bottom) Zoom sweep $\alpha\in[0.80,0.86]$ refines the crossing
-  to $\alpha^\star\approx0.833051\pm0.000508$. Two regimes emerge: an early non-Hopf reorganization
-  and a later classical Hopf instability.
+  \textbf{Saddle-type instability at $\alpha\approx0.833$:} (Top) Wide sweep $\alpha\in[0.10,1.00]$ shows
+  a real eigenvalue crossing zero at $\alpha^\star\approx0.835$. (Bottom) Zoom sweep $\alpha\in[0.80,0.86]$
+  refines the crossing to $\alpha^\star\approx0.833051\pm0.000508$. Two regimes emerge: an early geometric
+  reorganization (RTP) with full stability, and a later saddle-type linear instability when $k(\alpha)$ changes sign.
   }
   \label{fig:eigs-wide-zoom}
 \end{figure}
@@ -183,14 +216,15 @@ with precision limited by the discretization step.
 Our analysis reveals two clearly separated transitions:
 
 \begin{enumerate}
-  \item \textbf{Non-Hopf RTP ($\alpha \approx 0.35$):} Global geometric reorganization with stable linearization
-  \item \textbf{Classical Hopf ($\alpha \approx 0.83$):} Local linearized instability with eigenvalue crossing
+  \item \textbf{Non-Hopf RTP ($\alpha \approx 0.35$):} Global geometric reorganization with all eigenvalues remaining strictly negative (constant real part $-\gamma/2 \approx -0.04$)
+  \item \textbf{Saddle-type instability ($\alpha \approx 0.83$):} Linear instability via real eigenvalue crossing zero when effective stiffness $k(\alpha)$ changes sign
 \end{enumerate}
 
 The separation of more than a factor of two in coupling strength demonstrates these are fundamentally different
-mechanisms. Time-series analysis (available in the repository at \texttt{results/phase/traces/}) confirms
-qualitative behavioral changes near $\alpha = 0.35$ despite continued eigenvalue stability, providing
-additional evidence for the non-Hopf nature of the RTP.
+mechanisms. Crucially, the constant trace $\mathrm{tr}\,J = -\gamma$ throughout the parameter range eliminates
+the possibility of a Hopf bifurcation at any $\alpha$. Time-series analysis (available in the repository at
+\texttt{results/phase/traces/}) confirms qualitative behavioral changes near $\alpha = 0.35$ despite continued
+eigenvalue stability, providing additional evidence for the geometric nature of the RTP.
 
 \section{Discussion}
 
@@ -266,7 +300,7 @@ systems.
 \subsection{Mathematical Formalization of the Resonant Transition Point (RTP)}
 \label{sec:rtp-formal}
 
-Let $x\in\mathcal{M}$ denote system state on a smooth manifold with metric $g$, and let $F(x;\alpha)$ generate the flow $\dot{x}=F$. Linear stability at an equilibrium $x^\ast(\alpha)$ is governed by the Jacobian $J=\mathrm{D}F(x^\ast;\alpha)$; Hopf requires $\max_i \Re\lambda_i(J)=0$ at transition. Our data show RTP at $\alpha\approx0.35$ while $\max_i \Re\lambda_i(J)<0$, excluding Hopf.
+Let $x\in\mathcal{M}$ denote system state on a smooth manifold with metric $g$, and let $F(x;\alpha)$ generate the flow $\dot{x}=F$. Linear stability at an equilibrium $x^\ast(\alpha)$ is governed by the Jacobian $J=\mathrm{D}F(x^\ast;\alpha)$. For our system (\S\ref{sec:model}), the fixed trace $\mathrm{tr}\,J(\alpha) = -\gamma < 0$ for all $\alpha$ eliminates the possibility of a Hopf bifurcation (which would require $\mathrm{tr}\,J=0$ with $\det J>0$ at the critical point). Our data confirm RTP at $\alpha\approx0.35$ with $\max_i \Re\lambda_i(J) \approx -0.04$ (= $-\gamma/2$), far from any linear instability.
 
 We quantify \emph{geometric tension} by two information-geometric objects:
 
@@ -292,7 +326,7 @@ We operationalize RTP as the smallest $\alpha^\star$ satisfying
 \partial_\alpha \mathcal{S}(\alpha^\star) \ge \tau_S\quad \text{and/or}\quad \Delta \mathcal{C}_k(\alpha^\star)\neq 0,
 \end{cases}
 \]
-for a pre-registered threshold $\tau_S$. This separates \emph{global geometric} reorganization from \emph{local linear} instability and explains the two-regime structure we observe (RTP at $\alpha\!\approx\!0.35$; Hopf near $\alpha\!\approx\!0.833$).
+for a pre-registered threshold $\tau_S$. This separates \emph{global geometric} reorganization from \emph{local linear} instability and explains the two-regime structure we observe (RTP at $\alpha\!\approx\!0.35$; saddle-type instability near $\alpha\!\approx\!0.833$).
 
 \section*{Acknowledgments}
 
