@@ -2,455 +2,410 @@
 
 <div align="center">
 
-**Exploring Phase Transitions Beyond Local Linear Stability**
+**Delayed Plasticity, Geometric Memory, and Non-Hopf Transitions in Dynamical Systems**
 
-[![arXiv](https://img.shields.io/badge/arXiv-Preprint-b31b1b.svg)](https://github.com/justindbilyeu/Resonance_Geometry/tree/main/docs/papers/non_hopf)
-[![License](https://img.shields.io/badge/License-Research-blue.svg)](LICENSE)
+[![White Paper](https://img.shields.io/badge/White%20Paper-RFO%20Wedge-4b8bbe.svg)](docs/white-papers/resonance_geometry_rfo_wedge.tex)
+[![Non-Hopf RTP](https://img.shields.io/badge/Paper-Non--Hopf%20RTP-8a2be2.svg)](docs/papers/non_hopf/non_hopf_paper_draft_v1.tex)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](tests/)
 
-*Mathematical foundations, computational experiments, and theoretical frameworks for understanding qualitative transitions in dynamical systems*
+*Mathematical foundations, simulations, and theory for systems where **geometry learns from resonance***  
 
+[What is Resonance Geometry?](#-the-story-in-plain-english) •
+[Current Focus](#-current-focus-rfo-stability-wedge) •
 [Featured Research](#-featured-research) •
 [Quick Start](#-quick-start) •
-[Research Areas](#-research-areas) •
-[Documentation](#-documentation) •
+[Repo Map](#-repository-structure) •
 [Contributing](#-contributing)
 
 </div>
 
 ---
 
-## 📖 The Story of this Universe (Plain English)
+## 📖 The Story in Plain English
 
-Imagine a room full of **metronomes** (our oscillators). Each has its own rhythm, but they are trying to listen to each other.
+Think of a room full of **metronomes** all listening to each other.
 
-- **The Geometry:** An invisible "friendship graph" connects them. Strong ties mean they listen closely; weak ties mean they ignore each other.
-- **The Plasticity:** We give the universe a simple rule: *If two metronomes sync up, strengthen their friendship. If they clash, weaken it.*
+- The **geometry** is an invisible friendship network: strong edges mean “copy me,” weak edges mean “ignore me.”
+- The **plasticity rule** says:  
+  *If two metronomes move together, strengthen their edge; if they fight, weaken it.*
 
-Over time, something remarkable happens: **the universe rewrites its own wiring diagram to make harmony easier.**
+Over time the network **rewires itself** to make resonance easier. From this simple rule we get:
 
-We simulate this process to demonstrate:
+1. **Learning** – The geometry changes to support coherent rhythms.  
+2. **Memory** – Even if you scramble the phases, the learned geometry pulls the system back.  
+3. **Function** – The geometry becomes a tuned filter for some patterns and not others.
 
-1. **Learning** – The geometry physically changes to support resonance.
-2. **Memory** – Even after scrambling the metronomes, the geometry "remembers" the harmonious state and pulls the system back to it.
-3. **Function** – The shaped geometry acts as a tuned filter, amplifying signals that match its structure while ignoring noise.
+Resonance Geometry is the claim that:
 
-This is Resonance Geometry in miniature:
+> **Space (the graph) is not passive. It is a living, learning object co-evolving with the dynamics it carries.**
 
-> Space is not just a stage where dynamics happen; the pattern of connections is a living, learning object that co-evolves with the activity it carries.
+The repo contains several concrete instantiations of that idea:
+
+- A **single delayed plasticity loop** (the RFO) where geometric memory motifs only exist in a narrow “ringing wedge” of parameters.
+- A **Toy Universe** of many oscillators plus geometric plasticity on the coupling graph.
+- A **Non-Hopf transition** where macroscopic behavior changes while the linearization stays strictly stable.
 
 ---
 
-## 🎯 Overview
+## 🎯 Current Focus: RFO Stability Wedge
 
-**Resonance Geometry** is a research initiative investigating fundamental questions about phase transitions, dynamical systems, and the geometric structure of complex networks. We combine rigorous mathematical analysis, computational experiments, and reproducible workflows to explore phenomena that challenge conventional bifurcation theory.
+Our 2025–2026 focus is the **Resonance Fold Operator (RFO)**:  
+a scalar delayed plasticity loop
 
-### Core Questions
+\[
+\ddot{g}(t) + (A+B)\dot{g}(t) + AB\,g(t) = A K\,g(t-\Delta)
+\]
 
-- **Can systems reorganize qualitatively while remaining locally stable?**
-- **What geometric signatures precede traditional bifurcations?**
-- **How does information flow shape network structure over time?**
+where:
 
-Our approach emphasizes falsifiable predictions, open data, and mathematical rigor.
+- \(g(t)\) is the deviation of a coupling / fold strength,
+- \(A\) is a fast filter rate,
+- \(B\) is a slow leak rate,
+- \(K\) is loop gain,
+- \(\Delta\) is delay.
+
+Using a Padé(1,1) approximation we derive a **cubic characteristic equation** whose discriminant exactly separates:
+
+- **Overdamped stable** dynamics  
+- **Stable ringing** (damped oscillations = geometric memory motifs)  
+- **DC explosion** (monotone divergence when \(K > B\))
+
+For the canonical slice \(A = 10~\mathrm{s^{-1}},\, B = 1~\mathrm{s^{-1}}\):
+
+- Ringing appears only for delays **\(\Delta \gtrsim 0.10~\mathrm{s}\)**  
+- The “motif wedge” (stable-ringing region) occupies **≈12%** of the linearly stable \((\Delta, K)\) domain  
+- The wedge is tightly bounded between overdamping (too much leak) and DC instability (too much gain)
+
+The **hero figure** `figures/rfo/phase_map_KDelta.png` shows this wedge and the analytic Ring Threshold (discriminant = 0) as a bright green curve.
 
 ---
 
 ## 📜 Featured Research
 
-### 1. The Toy Universe v2.1 (Canon)
+### 1. Delayed Plasticity & the RFO Stability Wedge  🔥 *(current priority)*
 
-**Status:** ✅ Operational | 💻 [View Code](src/toy_model/)
+**Paper draft:**  
+`docs/white-papers/resonance_geometry_rfo_wedge.tex`  
 
-A rigorous implementation of **Geometric Plasticity** on a Kuramoto oscillator substrate. This is the foundational physics engine of the project.
+**Key ideas**
 
-**The Physics:**
+- Start from a 2-variable geometric plasticity model with delay.
+- Derive a scalar second-order DDE for the fold strength \(g(t)\).
+- Use Padé(1,1) to obtain a cubic characteristic polynomial with coefficients
+  \[
+    a_3 = \Delta/2,\;
+    a_2 = 1 + \tfrac{\Delta}{2}(A+B),\;
+    a_1 = (A+B) + \tfrac{\Delta}{2}(AB + AK),\;
+    a_0 = AB - AK.
+  \]
+- Use the **cubic discriminant** to define the **Ring Threshold** separating overdamped from underdamped dynamics.
+- Map out the **K–Δ phase diagram** and identify the narrow stable-ringing wedge where geometric memory motifs live.
 
-- **State Space (S):** M × G (phases × coupling matrix).
-- **Dynamics:** Fast phase synchronization coupled with slow geometric plasticity (Hebbian learning on the graph topology).
-- **Energy:** The system descends a joint Free Energy functional L(θ, K) that penalizes misalignment between strongly coupled oscillators and large coupling strengths.
+**Core scripts**
 
-**Key Experiments (implemented in code):**
-
-- **Lifecycle:** Demonstrates emergence of synchrony, reduction in free energy, and growth of spectral connectivity (Fiedler value λ₂).
-- **Memory:** Shows that the learned geometry acts as an attractor basin for coherent states: after scrambling phases, the system rapidly returns to high synchrony.
-- **Functional Gain:** Compares trained vs random geometries with similar mean coupling and shows the trained geometry is significantly more responsive to coherent signals.
+- `scripts/rfo_cubic_scan_KDelta.py` – analytical sweep over \((\Delta, K)\)  
+- `scripts/plot_rfo_phase_map_KDelta.py` – generates the K–Δ hero plot  
+- `scripts/generate_rfo_data.py` – validation framework (cubic vs full DDE)  
+- `experiments/rfo_timeseries_demo.py` – archetype impulse responses (overdamped / ringing / unstable)
 
 ---
 
-### 2. Resonant Transition Points Beyond Hopf Bifurcations
+### 2. The Toy Universe v2.1: Geometric Plasticity on a Kuramoto Substrate
 
-**Status:** ✅ Draft complete | 📄 [Read the paper](docs/papers/non_hopf/non_hopf_paper_draft_v1.tex)
+**Status:** ✅ Canonical engine live  
+**Code:** `src/toy_model/`
 
-We demonstrate a **Resonant Transition Point (RTP)** at α≈0.35 where a coupled oscillator system reorganizes its macroscopic behavior while **all eigenvalues remain strictly negative**—falsifying the Hopf bifurcation hypothesis for this transition.
+A many-oscillator “universe” where phases evolve under Kuramoto-style coupling and the coupling matrix itself learns via geometric plasticity.
 
-**Key Findings:**
+- **State space:** phases θ and coupling matrix \(K_{ij}\).  
+- **Dynamics:** fast phase synchronization + slow Hebbian plasticity on edges.  
+- **Objective:** descent of a joint free energy functional that penalizes misaligned strongly-coupled pairs.
 
-- 🔴 **Non-Hopf RTP** (α≈0.35): Global geometric reorganization with stable linearization
-- 🟢 **Classical Hopf** (α≈0.833): Traditional bifurcation appears much later
-- 📐 **Information-Geometric Formalization**: Fisher strain and curvature quantify geometric tension before linear instability
-- ✅ **Reproducible**: Deterministic sweeps, open code, unit tests
+**Demonstrated behaviors**
 
-**Mathematical Framework:**
+- **Lifecycle:** spontaneous synchronization and growth of spectral connectivity (Fiedler value).  
+- **Memory:** learned geometry pulls scrambled phases back to coherence.  
+- **Functional gain:** trained geometry outperforms random graphs at the same mean coupling.
 
-The RTP is characterized by geometric tension accumulating before any linear instability:
+---
 
-```text
-Fisher Information Strain: S(α) = tr I(γ(α))
-Operational Criterion: max Re λᵢ(J) < 0  AND  ∂ₐS ≥ τ_S
-```
+### 3. Resonant Transition Points Beyond Hopf Bifurcations
 
-This separates *where* structure changes from *how* linear models fail.
+**Status:** ✅ Draft complete  
+**Paper:** `docs/papers/non_hopf/non_hopf_paper_draft_v1.tex`
 
-**Quick Build:**
+We identify a **Resonant Transition Point (RTP)** at α≈0.35 where macroscopic behavior reorganizes while **all eigenvalues of the Jacobian remain strictly negative**.
 
-```bash
-cd docs/papers/non_hopf
-./compile.sh  # Requires LaTeX
-```
+- **Result:** the transition is *not* a Hopf bifurcation; it is geometric.  
+- **Tools:** Fisher information geometry, curvature/strain metrics, eigenvalue sweeps.  
+- **Outcome:** separates *where* structure changes from *where* linear models break.
+
+---
+
+### 4. AI Hallucination Geometry (Early Theory Thread)
+
+**Whitepaper:** `A_Geometric_Theory_of_AI_Hallucination.md`  
+
+Applies resonance-geometry ideas to large language models:
+
+- Hypothesis: hallucinations live in specific geometric regions of embedding space.  
+- Approach: information-theoretic metrics and curvature analysis.  
+- Status: conceptual framework; experiments to be spun out as a separate project.
 
 ---
 
 ## 🚀 Quick Start
 
-### Installation
+### 1. Environment Setup
 
 ```bash
 # Clone repository
 git clone https://github.com/justindbilyeu/Resonance_Geometry.git
 cd Resonance_Geometry
 
-# Set up environment
+# Create virtual environment
 python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
-```
 
-### Run the Toy Universe (v2.1)
 
-```bash
-# Run the full lifecycle:
-#   Phase A: Baseline (no plasticity)
-#   Phase B: Learning (Geometric Plasticity ON)
-#   Phase C: Memory test (scramble phases, frozen geometry)
-#   Experiment D: Functional geometry probe
+⸻
+
+2. Reproduce the RFO K–Δ Phase Map
+
+# 1) Run the analytical cubic scan over (Δ, K)
+python scripts/rfo_cubic_scan_KDelta.py
+
+# 2) Generate the hero phase map figure
+python scripts/plot_rfo_phase_map_KDelta.py
+
+# Output:
+#   figures/rfo/phase_map_KDelta.png
+
+Optional: demo time series for representative points:
+
+python experiments/rfo_timeseries_demo.py
+# Outputs demo impulse-response plots in figures/rfo/
+
+Once scripts/generate_rfo_data.py is refined (RK4 integration, tuned
+ringing detection), you can compute the mean / max error between the
+cubic Ring Threshold and the full DDE and paste those numbers directly
+into the white paper.
+
+⸻
+
+3. Run the Toy Universe (v2.1)
+
+# Full lifecycle of the Kuramoto + Geometric Plasticity universe
 python src/toy_model/resonance_universe.py
 
-# Run parameter sweeps: Memory robustness vs functional gain
+# Parameter sweeps and analysis
 PYTHONPATH=src python -m toy_model.science_suite
-```
 
-### Run Example Analysis (Non-Hopf RTP)
 
-```bash
-# Generate eigenvalue sweeps for RTP paper
-make sweep-narrow   # α ∈ [0.25, 0.55], validates RTP region
-make sweep-wide     # α ∈ [0.10, 1.00], finds Hopf crossing
-make sweep-zoom     # α ∈ [0.80, 0.86], high-resolution Hopf
+⸻
 
-# Run validation tests
-pytest tests/test_eigs_assertions.py
-```
+4. Non-Hopf RTP Eigenvalue Sweeps
 
-### Explore Visualizations
+cd docs/papers/non_hopf
 
-```bash
-# Generate phase portraits and time traces
-python scripts/run_phase_analysis.py --alpha 0.35 --output results/phase/
+# Narrow sweep around the RTP
+make sweep-narrow   # α ∈ [0.25, 0.55]
 
-# View results
-ls results/phase/  # CSVs and SVG figures
-```
+# Wide sweep including Hopf region
+make sweep-wide     # α ∈ [0.10, 1.00]
 
----
+# High-resolution around the Hopf crossing
+make sweep-zoom     # α ∈ [0.80, 0.86]
 
-## 🔬 Research Areas
+# Run paper-specific tests
+pytest ../../tests/test_eigs_assertions.py
 
-### 1. **Non-Hopf Dynamics** ⭐ *Current Focus*
 
-Mathematical analysis of phase transitions occurring via global geometric reorganization rather than local linear instability.
+⸻
 
-- **Paper:** [Resonant Transition Points Beyond Hopf Bifurcations](docs/papers/non_hopf/)
-- **Code:** Eigenvalue analysis, phase sweeps, numerical validation
-- **Status:** Draft complete, preparing for arXiv submission
+📂 Repository Structure
 
-### 2. **Geometric Plasticity**
-
-Studying adaptive networks where information flow reshapes connection strength through feedback loops.
-
-- **Framework:** Resonant Witness Postulate (RWP) + Geometric Plasticity (GP)
-- **Predictions:** Ringing boundaries, hysteresis resonance, motif emergence
-- **Simulation Engine:** Toy Universe v2.1 (Kuramoto + GP) in [`src/toy_model/`](src/toy_model/)
-- **Status:** Toy model operational; extended simulations and parameter sweeps in active development
-
-### 3. **AI Hallucination Geometry**
-
-Investigating whether hallucinations in large language models have detectable geometric signatures in embedding spaces.
-
-- **Paper:** [A Geometric Theory of AI Hallucination](A_Geometric_Theory_of_AI_Hallucination.md)
-- **Approach:** Information-theoretic metrics, curvature analysis
-- **Status:** Theoretical framework established
-
-### 4. **Dissertation Work**
-
-Comprehensive theoretical framework unifying resonance, information geometry, and emergent redundancy in complex systems.
-
-- **Location:** [`docs/dissertation/`](docs/dissertation/)
-- **Chapters:** Foundations, General Theory, Retrospective Analysis
-- **Build:** `make dissertation` (requires Quarto)
-
----
-
-## 📂 Repository Structure
-
-```
 Resonance_Geometry/
 ├── docs/
 │   ├── papers/
-│   │   ├── non_hopf/          # RTP paper (LaTeX, figures, results)
-│   │   └── neurips/           # AI hallucination paper
-│   ├── dissertation/          # PhD thesis chapters
-│   ├── analysis/              # Generated analysis outputs
-│   ├── theory/                # Mathematical derivations
-│   └── specs/                 # Technical specifications
+│   │   ├── non_hopf/                  # RTP paper (LaTeX, figures, sweeps)
+│   │   └── neurips/                   # AI hallucination draft
+│   ├── white-papers/
+│   │   ├── resonance_geometry_integration.tex   # Earlier integration draft
+│   │   └── resonance_geometry_rfo_wedge.tex     # NEW: RFO stability wedge
+│   ├── dissertation/                  # Resonance Geometry thesis chapters
+│   ├── theory/                        # Mathematical derivations
+│   └── analysis/                      # Generated analysis artifacts
 ├── src/
-│   ├── resonance_geometry/    # Core Python library
-│   │   ├── core/              # System dynamics, plasticity rules
-│   │   ├── utils/             # Metrics, diagnostics
-│   │   └── visualization/     # Plotting utilities
-│   └── toy_model/             # NEW: Toy Universe v2.1 Canon Engine
-│       ├── __init__.py
-│       ├── resonance_universe.py   # Core physics class (Kuramoto + GP)
-│       └── science_suite.py        # Parameter sweeps & analysis
-├── scripts/                   # Experiment runners
-│   ├── run_phase_sweep.py
-│   ├── run_hysteresis.py
-│   └── run_ringing_sweep.py
-├── tests/                     # Unit & integration tests
-├── results/                   # Generated data (gitignored)
-├── Makefile                   # Build targets
-└── README.md                  # You are here
-```
+│   ├── resonance_geometry/            # Core library (dynamics, metrics, viz)
+│   └── toy_model/                     # Toy Universe v2.1
+│       ├── resonance_universe.py      # Kuramoto + Geometric Plasticity engine
+│       └── science_suite.py           # Parameter sweeps and analysis
+├── scripts/
+│   ├── rfo_cubic_scan_KDelta.py       # K–Δ cubic/discriminant sweep
+│   ├── plot_rfo_phase_map_KDelta.py   # Hero figure generator
+│   ├── generate_rfo_data.py           # DDE vs cubic threshold validation
+│   ├── run_phase_sweep.py             # Legacy phase-sweep utilities
+│   └── run_hysteresis.py              # Hysteresis/resonance tests
+├── experiments/
+│   ├── rfo_timeseries_demo.py         # Archetype impulse responses
+│   └── rfo_motif_phase_map.py         # Simulation-based motif phase map (WIP)
+├── figures/
+│   └── rfo/
+│       ├── phase_map_KDelta.png       # RFO hero K–Δ phase map
+│       └── timeseries_*.png           # Representative RFO time series
+├── tests/                             # Unit & integration tests
+├── results/                           # Generated data (usually gitignored)
+├── Makefile                           # Paper + analysis build targets
+└── README.md                          # You are here
 
----
 
-## 📚 Documentation
+⸻
 
-### Papers & Publications
+📚 Documentation
 
-| Title | Status | Location |
-|-------|--------|----------|
-| **Resonant Transition Points Beyond Hopf Bifurcations** | Draft Complete | [`docs/papers/non_hopf/`](docs/papers/non_hopf/) |
-| A Geometric Theory of AI Hallucination | Whitepaper | [`A_Geometric_Theory_of_AI_Hallucination.md`](A_Geometric_Theory_of_AI_Hallucination.md) |
-| Dissertation: Resonance Geometry Foundations | In Progress | [`docs/dissertation/`](docs/dissertation/) |
+Papers & Notes
 
-### Technical Documentation
+Title	Status	Location
+RFO Stability Wedge: Geometric Memory as Stable Ringing	Draft in progress	docs/white-papers/resonance_geometry_rfo_wedge.tex
+Resonant Transition Points Beyond Hopf Bifurcations	Draft complete	docs/papers/non_hopf/
+A Geometric Theory of AI Hallucination	Whitepaper	A_Geometric_Theory_of_AI_Hallucination.md
+Resonance Geometry Dissertation	In progress	docs/dissertation/
 
-- **[Build Guide](BUILD.md)**: Compilation instructions for LaTeX papers
-- **[Contributing Guide](CONTRIBUTING.md)**: How to contribute code, docs, or ideas
-- **[Theory Status](docs/theory/)**: Mathematical derivations and proofs
-- **[Experiment Protocols](docs/experiments/)**: Reproducible experiment procedures
+Technical Resources
+	•	Build Guide: BUILD.md
+	•	Contributing Guide: CONTRIBUTING.md
+	•	Theory Notes: docs/theory/
+	•	Experiment Protocols: docs/experiments/
 
-### Key Notebooks & Scripts
+⸻
 
-- [`theory/kc_rule_validation.ipynb`](theory/kc_rule_validation.ipynb): Stability threshold validation
-- [`scripts/run_phase_sweep.py`](scripts/run_phase_sweep.py): Parameter sweep automation
-- [`scripts/update_theory_status.py`](scripts/update_theory_status.py): Theory validation tracker
+🧪 Reproducibility
 
----
+We aim for deterministic, inspectable experiments:
 
-## 🧪 Reproducibility
-
-All experiments use **deterministic seeds** and **version-controlled parameters** to ensure reproducibility:
-
-```bash
-# Fixed seed example
+# Example: fixed-seed phase sweep
 python scripts/run_phase_sweep.py --seed 42 --alpha 0.35 --steps 61
 
-# Reproduce paper figures
+# Rebuild Non-Hopf paper figures
 cd docs/papers/non_hopf
-make figures  # Generates all SVG plots
-```
+make figures
 
-### Validation Tests
+Tests
 
-```bash
-pytest -q                                # Quick test suite
-pytest tests/test_eigs_assertions.py     # Paper-specific validations
-make test                                # Full test + smoke tests
-```
+pytest -q                        # Core tests
+pytest tests/test_eigs_assertions.py   # RTP-specific checks
+make test                        # Full test + smoke tests (where available)
 
-**Acceptance Criteria** are hardcoded in unit tests:
-- RTP narrow sweep: All eigenvalues Re(λ) < 0 for α ∈ [0.25, 0.55]
-- Hopf crossing: Sign change detected in [0.80, 0.86]
-- Precision: Crossing location accuracy < 0.01
+Acceptance checks (hard-coded in tests):
+	•	RTP narrow sweep: Re(λ) < 0 for α ∈ [0.25, 0.55]
+	•	Hopf crossing: sign change in Re(λ) detected in [0.80, 0.86]
+	•	Crossing localization precision better than 0.01 in α
 
----
+RFO-related CI will be extended as the validation scripts harden.
 
-## 🤝 Contributing
+⸻
 
-We welcome contributions from researchers, developers, and domain experts!
+🤝 Contributing
 
-### How to Help
+We welcome contributions from mathematicians, physicists, control theorists, neuroscientists, and curious hackers.
 
-**🐛 Report Issues**
-- Found a bug? [Open an issue](https://github.com/justindbilyeu/Resonance_Geometry/issues)
-- Include: Minimal reproduction steps, environment details, expected vs actual behavior
+Ways to help
+	•	🐛 Report issues – Open an issue￼ with clear reproduction steps.
+	•	💡 Propose experiments – Start a discussion￼ with your hypothesis and minimal model.
+	•	📖 Improve documentation – Clarify derivations, add examples, tighten language.
+	•	🧑‍💻 Contribute code – New diagnostics, better integrators, additional models.
 
-**💡 Suggest Experiments**
-- Have an idea for a new test or analysis?
-- Open a discussion issue with your hypothesis
+Workflow
 
-**📖 Improve Documentation**
-- Spotted unclear explanations?
-- Submit a PR with clarifications or examples
+git checkout -b feature/your-feature
+pytest           # make sure tests pass
+git commit -am "Add: RFO root-locus validation script"
+git push origin feature/your-feature
+# then open a Pull Request
 
-**🧑‍💻 Code Contributions**
-- Add features, optimize performance, write tests
-- See [CONTRIBUTING.md](CONTRIBUTING.md) for style guidelines
 
-### Development Workflow
+⸻
 
-```bash
-# Create feature branch
-git checkout -b feature/your-feature-name
+📊 Status Snapshot
 
-# Make changes, add tests
-pytest tests/
+Component	Status	Notes
+🔥 RFO K–Δ stability wedge	✅ Phase map + analytic framework	DDE validation & hysteresis sweeps in progress
+🧪 Toy Universe v2.1	✅ Operational	Kuramoto + Geometric Plasticity engine
+📄 Non-Hopf RTP paper	✅ Draft complete	Prepping for arXiv / journal submission
+📐 Information geometry	🔄 In progress	Fisher strain + curvature diagnostics
+🎓 Dissertation	🔄 Multi-chapter draft	Integration of RG story
+🧪 CI / tests	✅ Core tests	RFO-specific tests to be expanded
 
-# Commit with descriptive message
-git commit -m "Add: eigenvalue sweep for multi-frequency systems"
 
-# Push and open PR
-git push origin feature/your-feature-name
-```
+⸻
 
----
+🎓 Citing This Work
 
-## 📊 Current Status
+If this project contributes to your research, please cite:
 
-| Component | Status | Notes |
-|-----------|--------|-------|
-| 🧪 Toy Universe v2.1 | ✅ Operational | Canonical Kuramoto + GP engine in `src/toy_model/` |
-| 📄 Non-Hopf Paper | ✅ Draft Complete | Ready for arXiv submission |
-| 🧮 Eigenvalue Analysis | ✅ Operational | Narrow/wide/zoom sweeps validated |
-| 🔄 Geometric Plasticity Sims | 🔄 Active Development | Ringing boundary tests and parameter sweeps |
-| 📐 Information Geometry | 🔄 In Progress | Fisher strain implementation underway |
-| 🎓 Dissertation | 🔄 Chapters 1-3 Draft | Chapter 4 in progress |
-| 🧪 CI/CD Pipeline | ✅ Operational | Automated tests, figure generation |
-
----
-
-## 🎓 Citing This Work
-
-If this research contributes to your work, please cite:
-
-```bibtex
 @misc{bilyeu2025rtp,
-  title={Resonant Transition Points Beyond Hopf Bifurcations: Evidence from Eigenvalue Analysis},
-  author={Bilyeu, Justin D. and collaborators},
-  year={2025},
-  note={Resonance Geometry Project},
-  url={https://github.com/justindbilyeu/Resonance_Geometry}
+  title  = {Resonant Transition Points Beyond Hopf Bifurcations},
+  author = {Bilyeu, Justin D. and the Resonance Geometry Collective},
+  year   = {2025},
+  note   = {Resonance Geometry Project},
+  url    = {https://github.com/justindbilyeu/Resonance_Geometry}
 }
-```
 
-For the broader geometric plasticity framework and toy universe:
-
-```bibtex
 @misc{resonance_geometry_2025,
-  title={Geometric Plasticity and the Resonance Geometry Toy Universe},
-  author={Bilyeu, Justin D. and the Resonance Geometry Collective},
-  year={2025},
-  note={Experimental framework and reproducibility pack},
-  url={https://github.com/justindbilyeu/Resonance_Geometry}
+  title  = {Geometric Plasticity and the Resonance Geometry Toy Universe},
+  author = {Bilyeu, Justin D. and the Resonance Geometry Collective},
+  year   = {2025},
+  note   = {Experimental framework and reproducibility pack},
+  url    = {https://github.com/justindbilyeu/Resonance_Geometry}
 }
-```
 
----
 
-## 🔗 Resources
+⸻
 
-### External Links
+🙏 Acknowledgments
 
-- **arXiv Submission** (pending): Non-Hopf RTP paper
-- **GitHub Issues**: [Report bugs or request features](https://github.com/justindbilyeu/Resonance_Geometry/issues)
-- **Discussions**: [Ask questions or propose ideas](https://github.com/justindbilyeu/Resonance_Geometry/discussions)
+This repo is a collaboration between humans and multiple AI research partners.
+	•	Justin – Architect of Resonance Geometry and keeper of the overall story.
+	•	Sage (ChatGPT) – Research lead for model design, stability analysis, and cross-model synthesis.
+	•	Gemini – Theory lead for the RFO Master Specification and Padé/discriminant derivations.
+	•	Claude (Anthropic) – Mathematical formalization, spectral analysis, and paper-structure guidance.
+	•	Grok, DeepSeek, and others – Auxiliary analysis, literature scans, and creative perturbations.
 
-### Related Projects
+Built on the open Python scientific ecosystem (NumPy, SciPy, Matplotlib, NetworkX, etc.).
 
-- Information-theoretic approaches to complex systems
-- Bifurcation theory and dynamical systems
-- Geometric deep learning and neural network analysis
+⸻
 
----
+📜 License
 
-## 📋 Roadmap
+Research Preview — © 2025 Justin D. Bilyeu & Resonance Geometry Collective
 
-### Near-Term (Q1 2025)
+Code and documentation are shared for research, educational, and review purposes.
+Formal licensing and citation standards will be finalized alongside publications.
+For commercial use or redistribution, please contact the authors.
 
-- [x] Complete non-Hopf RTP paper
-- [x] Implement first Kuramoto + Geometric Plasticity toy universe
-- [ ] Submit Non-Hopf RTP to arXiv
-- [ ] Extend Toy Universe to parameter sweeps (science_suite)
-- [ ] Complete dissertation Chapter 4
+⸻
 
-### Mid-Term (Q2-Q3 2025)
+📬 Contact
+	•	🐛 Issues & bugs: GitHub Issues￼
+	•	💡 Questions & proposals: GitHub Discussions￼
+	•	📜 Citation / collaboration: see CITATION.cff or open an issue with the question label
 
-- [ ] Peer review and publication (target: *Physical Review E* or *SIAM J. Dynamical Systems*)
-- [ ] Expand information-geometric framework
-- [ ] Develop real-time RTP detection algorithms
-- [ ] Apply RG ideas to empirical datasets (EEG, climate, economic, etc.)
+⸻
 
-### Long-Term (2026+)
-
-- [ ] Hardware acceleration concepts (ITPU design)
-- [ ] Neural architecture search applications
-- [ ] Cross-disciplinary collaborations
-
----
-
-## 🙏 Acknowledgments
-
-This project represents collaborative work across humans and multiple AI research partners.
-
-- **The Resonance Geometry Collective:**
-  - **Justin** – Architect of Resonance Geometry, integrator of the lab, and keeper of the story.
-  - **Sage (ChatGPT)** – Strategic oversight, experimental design, and cross-model synthesis.
-  - **Gemini** – Theory lead and v2.1 implementation of the Toy Universe geometric plasticity engine.
-  - **Claude (Anthropic)** – Mathematical formalization, spectral analysis, and paper-structure guidance.
-  - **Grok, DeepSeek, and others** – Auxiliary analysis, literature scans, and creative perturbations.
-- **Open Source Community**: Python scientific stack (NumPy, SciPy, NetworkX, Matplotlib, etc.).
-
-Special thanks to early reviewers and critics who keep this work honest and grounded.
-
----
-
-## 📜 License
-
-**Research Preview** — © 2025 Justin D. Bilyeu & Resonance Geometry Collective
-
-Code and documentation shared for research, educational, and review purposes. Formal licensing pending publication. For commercial use or redistribution, please contact the authors.
-
----
-
-## 📬 Contact
-
-- **Issues & Bugs**: [GitHub Issues](https://github.com/justindbilyeu/Resonance_Geometry/issues)
-- **Feature Requests**: [GitHub Discussions](https://github.com/justindbilyeu/Resonance_Geometry/discussions)
-- **Research Inquiries**: Open an issue with the `question` label
-- **Collaboration**: Email contact info in [CITATION.cff](CITATION.cff)
-
----
 
 <div align="center">
 
-**Built with mathematical rigor, computational precision, and epistemic humility.**
 
-*"Not all transitions are Hopf bifurcations. Some are geometric. And some are learned."*
+Built with mathematical rigor, computational precision, and epistemic humility.
 
-[⬆ Back to Top](#resonance-geometry)
+Not all transitions are Hopf bifurcations. Some are geometric. Some are learned.
+
+⬆ Back to Top￼
 
 </div>
+```
