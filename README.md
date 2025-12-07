@@ -43,6 +43,10 @@ Over time, the network **rewires itself** to amplify resonance. This simple feed
 - **Non-Hopf Transitions**: Macroscopic reorganization with strictly stable linearization
 - **Theory & Tools**: Analytical frameworks, phase diagrams, validation scripts
 
+### Dissertation
+
+Working title: *Resonance Geometry: Geometric Plasticity and Information Dynamics — From ringing phenomenology to mechanistic validation.* The in-repo dissertation lives in `docs/dissertation/` and builds via `make dissertation` (or `./build.sh dissertation`). The delayed-plasticity RFO wedge and non-Hopf transition are the flagship empirical case studies anchoring the broader geometric framework and its hallucination application.
+
 -----
 
 ## 🎯 Current Focus: The RFO Stability Wedge

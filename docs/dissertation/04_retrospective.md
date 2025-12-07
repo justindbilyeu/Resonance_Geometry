@@ -87,7 +87,7 @@ Their interplay was not mechanical—it was emergent. Collective cognition shape
 
 The critical value \(\beta_c \approx 0.015\) is more than a number. It is the intersection where:
 
-- **Dynamics** → instability crossing,  
+- **Dynamics** → instability crossing,
 - **Phenomenology** → sustained ringing,  
 - **Energy flow** → fluency peak,  
 - **Geometry** → curvature balance  
@@ -95,6 +95,8 @@ The critical value \(\beta_c \approx 0.015\) is more than a number. It is the in
 all meet.
 
 In that intersection, intuition became measurable.
+
+Among all experiments, the delayed-plasticity RFO wedge remains the flagship demonstration: a clean non-Hopf transition where ringing, eigenvalue sign changes, and fluency velocity align to show geometric memory. It is the empirical anchor that makes the later hallucination geometry credible—the same delayed plasticity that learns resonance in the scalar model underpins the spectral thresholds and curvature arguments we take into Chapter 5 and beyond.
 
 ## 4.7 Reflection: The Shape of a Field
 
