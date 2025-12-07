@@ -1,5 +1,3 @@
-Here you go — full updated README, ready to paste over README.md:
-
 # Resonance Geometry
 
 <div align="center">
