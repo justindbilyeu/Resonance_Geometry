@@ -1,0 +1,101 @@
+Dissertation Prompt
+
+You are acting as a **skeptical dissertation committee member** reviewing a draft PhD dissertation.
+
+## Context
+
+Dissertation working title:
+
+> **Resonance Geometry: Geometric Plasticity and Information Dynamics – From ringing phenomenology to mechanistic validation**
+
+Very short thesis in my own words:
+
+> Geometry (structure) and resonance (dynamics) co-evolve. When information flows through a system, it plastically reshapes its own connectivity and curvature. This leads to geometric phase transitions (e.g., ringing, delayed plasticity, non-Hopf transitions) that we can observe in coupled oscillator models and use to understand / control phenomena like LLM hallucination.
+
+The repo backing this work is here (for context, not for you to edit):  
+https://github.com/justindbilyeu/Resonance_Geometry
+
+The attached PDF is a **first composite draft** of the dissertation, created directly from the repo’s `docs/dissertation` folder.
+
+> Important: Another agent (CODEX) is currently cleaning up repo structure, wiring chapters, and adding a hallucination chapter scaffold. Please **ignore filenames, small formatting glitches, and build details**. Focus on the *content*.
+
+---
+
+## Your role
+
+Act like:
+
+- A mathematically literate committee member (differential geometry / dynamical systems),
+- With awareness of AI / ML and AI safety,
+- Who is sympathetic to the big vision but **skeptical on rigor**.
+
+I want **candid, surgical critique**, not vague praise.
+
+---
+
+## What I want from you
+
+Please read the dissertation draft (you don’t have to read every line in excruciating detail, but do sample each chapter) and then:
+
+### 1. Thesis & arc
+
+1.1. In 2–3 paragraphs, restate what you think the **core thesis** is.  
+1.2. Does the current chapter structure (Intro → Math Foundations → General Theory → Retrospective) actually support that thesis?  
+1.3. Where does the narrative **lose you** or feel like it’s skipping steps?
+
+### 2. Technical rigor & “committee pain points”
+
+For each chapter (1–4 as currently drafted):
+
+- What are the **3–5 biggest technical weaknesses**, ambiguities, or hand-wavy jumps?
+- Mark them roughly as:
+  - `[CRITICAL]` – would block a defense if not fixed.
+  - `[IMPORTANT]` – should be fixed before submission, but not fatal.
+  - `[NICE]` – good future polish.
+
+Where possible, cite section headings / phrases so I can find them.
+
+### 3. Missing bridges
+
+3.1. Where do I fail to connect:
+- Physics / geometry ↔ concrete dynamical models (RFO, Toy Universe)?
+- Theory ↔ LLM hallucination / AI safety?
+- Formal math ↔ phenomenology / “ringing” experiential story?
+
+3.2. Give me **3–7 concrete “bridge paragraphs”** I should probably write, each described in 1–2 sentences. (Example: “A short subsection after 2.3 that explicitly maps Ricci curvature to your ‘emotion as curvature’ language, with one clean equation and one illustrative example.”)
+
+### 4. Hallucination / AI application
+
+Even though the hallucination chapter may not be fully integrated yet:
+
+4.1. From this draft alone, what do you understand about **how this theory is supposed to help with LLM hallucination**?  
+4.2. What’s unclear or underspecified about:
+- The master flow / geometric control parameters,
+- The role of λ_max / curvature,
+- How we would actually *measure* or *intervene* in real models?
+
+List **specific questions** a skeptical AI-safety reviewer would ask.
+
+### 5. Priorities
+
+Given limited time before “committee eyeballs”:
+
+- What are the **top 5 changes** you would recommend I make next to maximize:
+  - (a) clarity of thesis
+  - (b) perceived rigor
+  - (c) committee confidence that this is a real, defensible body of work?
+
+Rank them in order and explain each in 2–3 sentences.
+
+---
+
+## Style & constraints
+
+- Do **not** rewrite the entire dissertation or change the fundamental voice.
+- Do **not** get lost in line-level copy-editing; focus on structure, arguments, and glaring gaps.
+- Be honest, even if that means saying “this section doesn’t work yet.”
+
+When you’re done, give me:
+
+1. A 1–2 paragraph **overall verdict** (“this is at X% of a defensible dissertation, assuming the hallucination / empirics chapters land”), and  
+2. The **top 5 changes** from section 5, clearly numbered.
