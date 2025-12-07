@@ -140,7 +140,8 @@ docs/dissertation/00_prologue.md \
 docs/dissertation/01_introduction.md \
 docs/dissertation/02_foundations.md \
 docs/dissertation/03_general_theory.md \
-docs/dissertation/04_retrospective.md
+docs/dissertation/04_retrospective.md \
+docs/dissertation/05_hallucination.md
 >@mkdir -p $(DIS_BUILD_DIR)
 >pandoc -d $(DIS_YAML)
 >@echo "[make] Built $(DIS_PDF)"
@@ -156,7 +157,8 @@ dissertation-html:
   docs/dissertation/01_introduction.md \
   docs/dissertation/02_foundations.md \
   docs/dissertation/03_general_theory.md \
-  docs/dissertation/04_retrospective.md
+  docs/dissertation/04_retrospective.md \
+  docs/dissertation/05_hallucination.md
 >@echo "[make] Built $(DIS_HTML)"
 
 .PHONY: dissertation-clean

@@ -154,6 +154,10 @@ This is where mathematics meets reality. If the theory is wrong, the data will t
 
 This dissertation makes five primary contributions:
 
+### Flagship empirical anchor: delayed plasticity and the RFO wedge
+
+The most mature empirical confirmation of the theory so far is the Resonance Fold Operator (RFO) delayed-plasticity system. Analytical discriminant analysis and validated simulations locate a non-Hopf transition at \(\beta_c \approx 0.015\), where ringing, eigenvalue crossings, and fluency velocity all converge. The wedge of stable-ringing parameters demonstrates **geometric memory**—the ability of adaptive coupling to store and replay coherence. This boundary, and its first-order hysteresis, remain the clearest laboratory for “delayed plasticity learns geometry,” grounding later chapters on Geometric Plasticity and hallucination.
+
 ### 1. A Unified Geometric Framework for Information Dynamics
 
 We show that diverse phenomena—adaptive networks (GP), AI hallucination, neural coding—can be understood through a common mathematical lens: **connection dynamics on fiber bundles**. The base manifold represents external states (truth, environment, data). The fibers represent internal degrees of freedom (representations, beliefs, models). The connection governs how internal states parallel-transport along external trajectories.

@@ -28,6 +28,7 @@ input-files:
   - docs/dissertation/02_foundations.md
   - docs/dissertation/03_general_theory.md
   - docs/dissertation/04_retrospective.md
+  - docs/dissertation/05_hallucination.md
 
 output-file: docs/dissertation/build/resonance_geometry_dissertation.pdf
 
