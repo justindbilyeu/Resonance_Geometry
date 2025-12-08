@@ -1,0 +1,75 @@
+name: Build Dissertation PDF
+
+on:
+  push:
+    branches:
+      - main
+      - 'claude/**'
+    paths:
+      - 'docs/dissertation/**'
+      - '.github/workflows/dissertation-build.yml'
+  pull_request:
+    paths:
+      - 'docs/dissertation/**'
+      - '.github/workflows/dissertation-build.yml'
+  workflow_dispatch:
+
+jobs:
+  build-dissertation:
+    name: Build dissertation PDF
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Pandoc
+        uses: pandoc/actions/setup@v1
+        with:
+          version: '3.1.11'
+
+      - name: Install LaTeX dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            texlive-xetex \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            texlive-fonts-extra \
+            lmodern
+
+      - name: Create build directory
+        run: mkdir -p docs/dissertation/build
+
+      - name: Build dissertation PDF
+        working-directory: docs/dissertation
+        run: |
+          pandoc \
+            --defaults=pandoc_defaults_dissertation.yaml \
+            --verbose
+
+      - name: Verify PDF was created
+        run: |
+          if [ -f docs/dissertation/build/dissertation.pdf ]; then
+            echo "✓ PDF successfully created"
+            ls -lh docs/dissertation/build/dissertation.pdf
+          else
+            echo "✗ PDF build failed"
+            exit 1
+          fi
+
+      - name: Upload dissertation PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: resonance-geometry-dissertation
+          path: docs/dissertation/build/dissertation.pdf
+          if-no-files-found: error
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dissertation-build-logs
+          path: |
+            docs/dissertation/build/*.log
+            docs/dissertation/build/*.aux
+          if-no-files-found: ignore
