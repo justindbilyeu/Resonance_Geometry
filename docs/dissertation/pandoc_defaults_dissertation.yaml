@@ -1,0 +1,30 @@
+from: markdown
+to: pdf
+pdf-engine: xelatex
+output-file: dissertation.pdf
+
+metadata:
+  title: "Resonance Geometry: Geometric Plasticity and Information Dynamics"
+  author:
+    - "Justin Bilyeu"
+  date: "Draft: December 2025"
+
+input-files:
+  - Dissertation.md
+  - 01_intro_thesis.md
+  - 02_math_foundations.md
+  - 03_geometric_plasticity.md
+  - 04_rfo_toy_universe_case_study.md
+  - 05_hallucination_theory.md
+  - 06_empirical_validation_llms.md
+  - 07_extensions_future.md
+  - 08_retrospective_observerse.md
+
+resource-path:
+  - .
+  - ..
+  - ../assets
+  - ../data
+  - ../../figures
+  - ../../data
+
