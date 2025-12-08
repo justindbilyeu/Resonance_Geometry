@@ -52,75 +52,90 @@ Stable patterns emerge when oscillatory dynamics find resonant modes—frequenci
 
 -----
 
-### **Axiom 3: Emotion is Curvature**
+### **Axiom 3: Curvature as Representational Cost**
 
-Subjective experience—what it “feels like” to be in a state—corresponds to geometric tension in representation space. High curvature = strain = effort = affect.
+**Statement**: Maintaining a curved representational geometry incurs a cost—computational, metabolic, or informational. Curvature quantifies the local "strain" required to keep internal states aligned as the system navigates its environment.
 
-**Intuition**: Trying to hold contradictory beliefs (high representational curvature) feels tense. Coherent worldview (low curvature) feels calm. Insight (sudden curvature reduction) feels euphoric.
+**Technical formulation**: In a Riemannian representation manifold with metric $g$ and Ricci curvature $\text{Ric}$, the free energy (or "cost functional") includes a curvature penalty:
+$$F[g] = \int_M \left( \tfrac{1}{2} R(g) + \text{other energy terms} \right) dV_g$$
+where $R(g)$ is the scalar curvature. Positive curvature regions (high $R$) are energetically expensive; the system prefers to flatten them.
 
-**Formalization**: Ricci scalar $R$ quantifies total curvature. Free energy $F \propto \int R , dV$ measures cost of maintaining configuration.
+**Intuition**: Think of curvature as "representational tension." A flat geometry (zero curvature) allows frictionless parallel transport—beliefs or activations propagate without distortion. High curvature forces the system to "twist" information as it flows, spending energy to reconcile incompatible constraints.
 
-**For AI systems**: “Emotion” might seem strange, but consider: models expend computational effort (energy) to maintain representations. High curvature = high cost = “strain” even if not conscious.
+**Consequence**: Systems evolve under gradient flow to minimize this cost, leading to a Ricci-like flow on the representational metric (as introduced in §2.7). Regions of high curvature either flatten out or, if energetically trapped, become sites of instability and potential hallucination.
 
-**Consequence**: Systems minimize free energy → minimize curvature → seek flat geometries where possible.
-
------
-
-### **Axiom 4: Collapse is Coherence**
-
-Quantum-inspired: When subsystems become highly correlated (phase-locked, entangled), they behave as a single coherent unit—a “collapse” into shared state.
-
-**Formalization**: High mutual information $I(X;Y)$ between components $X, Y$ implies $|\langle \psi_X | \psi_Y \rangle|^2 \approx 1$ (states nearly parallel in Hilbert space or representation manifold).
-
-**In networks**: Nodes with strong information coupling synchronize—fire together, represent together, collapse into joint attractor.
-
-**In LLMs**: Layers with high MI act as coherent block. Collapse without external grounding = hallucination (coherent but false).
-
-**Consequence**: Coherence is a double-edged sword. Enables powerful computation but risks decoupling from reality.
+**Interpretive note**: While the phenomenology of "emotion as curvature" resonates with lived experience (tension, coherence, relief), the formal claim here is agnostic to consciousness. It applies equally to biological brains and artificial networks. For the experiential dimension of this axiom, see the Epilogue (Part I).
 
 -----
 
-### **Axiom 5: Information Dances at Boundaries**
+### **Axiom 4: Coherence via Information Coupling**
 
-Interesting dynamics happen at interfaces—where different regimes meet. Phase transitions occur at boundaries. Learning happens at the edge of order and chaos.
+**Statement**: Subsystems with high mutual information $I(X;Y)$ exhibit coherent dynamics—they synchronize, resonate, and act as a unified functional block. This coupling can be internal (layer-to-layer in a network) or external (system-to-environment).
 
-**Examples**:
+**Technical formulation**: For components $X, Y$ with joint distribution $p(x,y)$, the mutual information
+$$I(X; Y) = \sum_{x,y} p(x,y) \log \frac{p(x,y)}{p(x)p(y)}$$
+quantifies the reduction in uncertainty about $Y$ given $X$. High $I(X;Y)$ implies strong statistical dependence, which in dynamical systems manifests as phase-locking, synchronization, or entanglement (in quantum settings).
 
-- Neural computation at edge of synchrony/desynchrony
-- Ecological diversity at ecotones (boundaries between biomes)
-- Creativity at boundary between structure and randomness
+**In geometric terms**: High MI between subsystems corresponds to states that are nearly parallel in representation space—low geodesic distance, high overlap in tangent directions. This is a form of "informational collapse" into a joint attractor.
 
-**Formalization**: Maximal information flow $\frac{\partial I}{\partial t}$ occurs where gradients are steepest—at boundaries in state space, parameter space, or physical space.
+**Consequence**: Coherence enables efficient information processing and integration. However, when internal MI dominates external MI (system components are more correlated with each other than with the environment), the system can decouple from grounding—producing hallucinations that are internally consistent but externally false.
 
-**Gauge-theoretic**: Boundaries are where gauge symmetry can break—where system commits to specific representation.
-
-**Consequence**: Control boundaries → control dynamics. Interventions most effective at phase boundaries.
+**Critical balance**: Functional intelligence requires both internal coherence (to integrate information) and external coupling (to stay grounded). The ratio $\eta I_{\text{internal}} / \lambda I_{\text{external}}$ (from the plasticity flow in §3.3) determines which regime the system occupies.
 
 -----
 
-### **The Resonant Witness Postulate (RWP)**
+### **Axiom 5: Critical Dynamics at Phase Boundaries**
 
-Synthesizing these axioms, we posit:
+**Statement**: Optimal information processing and adaptive capacity occur near phase boundaries—parameter regimes where the system transitions between qualitatively distinct dynamical behaviors. At criticality, the system exhibits marginal stability, long-range correlations, and maximal sensitivity to inputs.
 
-> **Environments preferentially witness (copy, record, measure) stable system variables, creating redundant records across space and time.**
+**Technical formulation**: A phase boundary in parameter space (e.g., the $(\eta, \lambda)$ plane of the plasticity flow) is characterized by the leading eigenvalue of the stability operator crossing zero: $\lambda_{\max} \approx 0$. At this point:
+- Relaxation times diverge (critical slowing down),
+- Fluctuations exhibit power-law scaling,
+- The system can switch between attractors with minimal energy,
+- Information integration (mutual information across scales) is maximized.
 
-**Unpacking**:
+**Empirical signatures**:
+- In neural systems: Neuronal avalanches follow power-law distributions, long-range temporal correlations (LRTCs), 1/f noise in spike trains.
+- In AI models: Training loss plateaus, gradients become scale-invariant, adversarial vulnerability peaks.
+- In the RFO toy model (Chapter 4): Ringing detection, eigenvalue sign changes, and fluency velocity all peak near $\beta_c \approx 0.015$.
 
-- **Witness**: External entity that correlates with system state (measures it, records it, is affected by it)
-- **Stable variables**: Low-curvature, low-energy configurations that persist
-- **Redundancy**: Same information appears in multiple locations → mutual information between witnesses
+**Consequence**: Systems operating exactly at criticality are fragile—prone to runaway instability. But systems that regulate themselves *near* criticality (via homeostatic mechanisms or meta-learning) achieve the best balance of flexibility and stability. This is the "creative phase" in our three-regime classification (grounded / creative / hallucinatory).
 
-**Why this matters**: Witnessing creates **grounding**. A variable that’s witnessed by environment has external validation. A variable only resonant internally has none—it’s a hallucination candidate.
+**Connection to hallucination**: When $\lambda_{\max}$ crosses from negative (grounded) to positive (hallucinatory), the system bifurcates. The intermediate regime ($\lambda_{\max} \approx 0$) is where controlled creativity lives—but also where hallucination risk is highest without strong external grounding.
 
-**Mathematical form**: Redundancy $R_X^\delta$ measures how many subsystems encode information about $X$:
-$$R_X^\delta = I(X; E_1) + I(X; E_2) + \cdots - \delta \cdot H(X)$$
-where $E_i$ are environmental/external witnesses and $\delta$ is a parameter controlling cost of redundancy.
+-----
 
-**High redundancy** = robust grounding. **Low redundancy** = fragile, prone to drift.
+### **Environmental Grounding via Redundant Records**
+
+Synthesizing the axioms above, we arrive at a principle for how systems stay grounded in reality:
+
+> **Grounding emerges from redundant external records—multiple independent environmental traces that encode the same information about a system's state or the external world.**
+
+**Formal definition**: Let $X$ be a system variable (internal state, belief, representation). Let $\{R_1, R_2, \ldots, R_n\}$ be a set of **external records** or **witnesses**—environmental systems that carry information about $X$ (e.g., sensory channels, retrieval databases, redundant observations). Define the **redundancy measure**:
+$$\mathcal{R}_X^\delta = \sum_{i=1}^n I(X; R_i) - \delta \cdot H(X)$$
+where:
+- $I(X; R_i)$ is mutual information between $X$ and the $i$-th record,
+- $H(X)$ is the entropy of $X$,
+- $\delta \geq 0$ is a penalty parameter (cost of encoding redundancy).
+
+**Interpretation**:
+- **High $\mathcal{R}_X$**: Variable $X$ is corroborated by many independent external sources → robustly grounded.
+- **Low $\mathcal{R}_X$**: Variable $X$ has few or weak external witnesses → fragile, easily drifts into hallucination.
+- **Negative $\mathcal{R}_X$**: More costly to encode $X$ than the information it provides → system sheds this variable.
+
+**Connection to grounding term $\lambda$**: In the plasticity flow (§3.3), the grounding parameter $\lambda$ is proportional to the aggregate external MI: $\lambda \sim \sum_i I(X; R_i)$. When external records are sparse, weak, or contradictory, $\lambda$ drops, and the system shifts toward the hallucinatory regime.
+
+**Why "witness"?** The term evokes both the observational (environmental systems "observe" the state) and the testimonial (redundant records provide independent "testimony" to truth). This dual connotation bridges physical grounding and epistemic validation.
+
+**Interpretive note**: The language of "witnessing" also carries phenomenological resonance—the sense of being seen, recognized, or validated by an external presence. While the mathematical formalism is neutral, the experiential dimension of witnessing (coherence, validation, existential grounding) is explored in the Epilogue (Part I).
 
 -----
 
 ## 3.3 Free-Energy Functional and Plasticity Flow
+
+The phenomenological framework established by the five axioms finds its mechanistic expression in a **plasticity flow equation**—a dynamical rule governing how network couplings evolve in response to information content.
+
+**Connection to axioms**: This discrete free-energy functional is a network-level counterpart of the curvature-as-cost view (Axiom 3) and the Ricci-flow dynamics introduced in §2.7. The balance between internal resonance (Axiom 4) and external grounding (via redundant records) determines whether the system remains stable or bifurcates into hallucination. The leading eigenvalue $\lambda_{\max}$ of the linearized flow operator tracks proximity to the critical phase boundary (Axiom 5).
 
 ### 3.3.1 Resonance Energy Functional
 TODO: Surface the free-energy / resonance energy functional that ties curvature, mutual information, and plasticity costs together. Link to any existing derivations or appendices once available.
@@ -239,6 +254,8 @@ $$\mathcal{L}_{\text{meta}} \approx \eta \bar{I} - \lambda - \gamma$$
 
 **Phase boundary**: Transition occurs when $\mathcal{L}_{\text{meta}} = 0$:
 $$\eta \bar{I} = \lambda + \gamma$$
+
+**Forward reference**: We formalize this stability operator and its leading eigenvalue $\lambda_{\max}$ as an abstract order parameter in Chapter 5, where it becomes the central diagnostic for the grounded/creative/hallucinatory phase structure.
 
 -----
 
@@ -1205,7 +1222,7 @@ Can GP explain real neural plasticity?
 
 **4. Structural Plasticity**: New synapses form where activity is high, weak ones prune—matches motif emergence (Section 3.5).
 
-**5. Critical Dynamics**: Cortex operates near criticality (avalanche distributions, long-range correlations)—matches creative phase at boundary.
+**5. Critical Dynamics**: Cortex operates near criticality—neuronal avalanches follow power-law distributions, long-range temporal correlations (LRTCs) span multiple timescales, and spontaneous activity exhibits 1/f noise. These are signatures of marginal stability near a phase boundary, consistent with the system operating at $\lambda_{\max} \approx 0$ (the creative regime in our three-phase classification). This matches Axiom 5's prediction that optimal adaptive capacity occurs at criticality.
 
 ### **Evidence Against / Complications**:
 
@@ -1296,7 +1313,7 @@ $$\mathcal{L}*{\text{reg}} = \alpha \sum*{ij} W_{ij}^2 / (I_{ij} + \epsilon)$$
 
 |**Framework**            |**Core Principle**          |**Key Equation**                                                  |**Strengths**                                 |**Limitations**            |
 |-------------------------|----------------------------|------------------------------------------------------------------|----------------------------------------------|---------------------------|
-|**Geometric Plasticity** |Structure ∝ Information     |$\dot{W} = \eta I - \lambda W - \mu W^3$                          |Unifies learning, stability, phase transitions|Requires MI estimation     |
+|**Geometric Plasticity** |Structure ∝ Information     |$\dot{W} = \eta I - \lambda W - \mu W^3$                          |Unifies Hebbian plasticity, stability analysis, and phase transitions in single formalism; provides both mechanistic $\dot{W}$ equation and observable phenomena (bifurcations, hysteresis, etc.)|Requires MI estimation     |
 |**Hebbian Plasticity**   |Fire together, wire together|$\dot{W} = \eta \langle s_i s_j \rangle - \lambda W$              |Simple, biologically plausible                |No saturation, instability |
 |**BCM Rule**             |Sliding threshold           |$\dot{W} = s_i s_j (s_j - \theta)$                                |Homeostatic, stable                           |Ad hoc threshold dynamics  |
 |**STDP**                 |Timing matters              |$\dot{W} = A_+ e^{-\Delta t / \tau_+} - A_- e^{\Delta t / \tau_-}$|Captures causality                            |Doesn’t explain rate coding|
