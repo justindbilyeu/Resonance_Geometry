@@ -157,7 +157,13 @@ This dissertation develops a geometric framework for understanding phase transit
 
 ## Build Instructions
 
-The dissertation builds with Pandoc using the defaults in `docs/dissertation/dissertation.yml`.
+Install [Pandoc](https://pandoc.org/) and a LaTeX engine (XeLaTeX recommended), then run:
+
+```
+./scripts/build_dissertation.sh
+```
+
+The script uses `docs/dissertation/pandoc_defaults_dissertation.yaml` to stitch the chapter files listed in `Dissertation.md` and writes the PDF to `docs/dissertation/build/resonance_geometry_dissertation.pdf`.
 
 ```bash
 make dissertation
