@@ -1,0 +1,32 @@
+name: Build Dissertation PDF
+
+on:
+  workflow_dispatch:          # manual "Run workflow" button
+  push:
+    paths:
+      - "docs/dissertation/**"
+      - ".github/workflows/dissertation-build.yml"
+
+jobs:
+  build_dissertation:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Create output directory
+        run: mkdir -p output
+
+      - name: Build dissertation PDF with pandoc
+        uses: docker://pandoc/latex:3.8
+        with:
+          args: >-
+            -d docs/dissertation/pandoc_defaults_dissertation.yaml
+            -o output/resonance_geometry_dissertation.pdf
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dissertation-pdf
+          path: output/resonance_geometry_dissertation.pdf
