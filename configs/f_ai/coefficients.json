@@ -1,0 +1,53 @@
+{
+  "version": "1.0",
+  "locked": true,
+  "description": "Preregistered coefficients for F_AI intrinsic metric",
+  "coefficients": {
+    "alpha": {
+      "value": 1.0,
+      "description": "Coupling weight (positive contribution)",
+      "component": "C"
+    },
+    "beta": {
+      "value": 1.0,
+      "description": "Holonomy uncertainty weight (negative contribution)",
+      "component": "U"
+    },
+    "lambda": {
+      "value": 1.0,
+      "description": "Goldilocks disagreement weight (negative contribution)",
+      "component": "D"
+    },
+    "mu": {
+      "value": 0.5,
+      "description": "Persistence weight (positive contribution)",
+      "component": "P"
+    },
+    "nu": {
+      "value": 0.2,
+      "description": "Complexity penalty weight (negative contribution)",
+      "component": "N"
+    }
+  },
+  "other_parameters": {
+    "D0": {
+      "value": 0.25,
+      "description": "Target disagreement level for Goldilocks penalty"
+    },
+    "lambda_edge": {
+      "value": 1.0,
+      "description": "Topology complexity coefficient (edges in graph)"
+    },
+    "epsilon": {
+      "value": 1e-8,
+      "description": "Numerical stability constant"
+    },
+    "m_max": {
+      "value": 100,
+      "description": "Maximum sentences for Procrustes alignment"
+    }
+  },
+  "functional_form": "F_AI = α·C̃ - β·Ũ - λ·D̃ + μ·P̃ - ν·Ñ",
+  "normalization": "robust_zscore",
+  "normalization_description": "Each component normalized via (X - median) / IQR from calibration split"
+}
