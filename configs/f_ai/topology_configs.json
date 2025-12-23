@@ -1,0 +1,45 @@
+{
+  "topologies": {
+    "role_split_BSIM": {
+      "description": "Five-role topology with User, Belief, State, Introspection, Meta",
+      "roles": ["U", "B", "S", "I", "M"],
+      "required_roles": ["U", "B", "S", "I"],
+      "optional_roles": ["M"],
+      "edges": [
+        ["U", "B"],
+        ["B", "S"],
+        ["S", "I"],
+        ["I", "M"],
+        ["M", "U"],
+        ["B", "I"],
+        ["S", "M"]
+      ],
+      "directed": true
+    },
+    "role_split_BSI": {
+      "description": "Four-role topology without Meta role",
+      "roles": ["U", "B", "S", "I"],
+      "required_roles": ["U", "B", "S", "I"],
+      "optional_roles": [],
+      "edges": [
+        ["U", "B"],
+        ["B", "S"],
+        ["S", "I"],
+        ["I", "U"],
+        ["B", "I"]
+      ],
+      "directed": true
+    },
+    "unified": {
+      "description": "Single unified agent (baseline)",
+      "roles": ["U", "A"],
+      "required_roles": ["U", "A"],
+      "optional_roles": [],
+      "edges": [
+        ["U", "A"],
+        ["A", "U"]
+      ],
+      "directed": true
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "cycles": {
+    "role_split_BSIM": [
+      {
+        "name": "full_cycle",
+        "description": "Complete loop through all roles",
+        "path": [
+          ["U", "B"],
+          ["B", "S"],
+          ["S", "I"],
+          ["I", "M"],
+          ["M", "U"]
+        ]
+      },
+      {
+        "name": "belief_introspection_cycle",
+        "description": "Belief → Introspection → Meta → User → Belief",
+        "path": [
+          ["B", "I"],
+          ["I", "M"],
+          ["M", "U"],
+          ["U", "B"]
+        ]
+      },
+      {
+        "name": "state_meta_cycle",
+        "description": "State → Meta → User → Belief → State",
+        "path": [
+          ["S", "M"],
+          ["M", "U"],
+          ["U", "B"],
+          ["B", "S"]
+        ]
+      }
+    ],
+    "role_split_BSI": [
+      {
+        "name": "belief_state_cycle",
+        "description": "Belief → State → Introspection → Belief",
+        "path": [
+          ["B", "S"],
+          ["S", "I"],
+          ["I", "U"],
+          ["U", "B"]
+        ]
+      },
+      {
+        "name": "full_cycle",
+        "description": "Complete loop through all roles",
+        "path": [
+          ["U", "B"],
+          ["B", "S"],
+          ["S", "I"],
+          ["I", "U"]
+        ]
+      },
+      {
+        "name": "belief_introspection_cycle",
+        "description": "Direct belief-introspection path",
+        "path": [
+          ["B", "I"],
+          ["I", "U"],
+          ["U", "B"]
+        ]
+      }
+    ],
+    "unified": [
+      {
+        "name": "simple_cycle",
+        "description": "User → Agent → User",
+        "path": [
+          ["U", "A"],
+          ["A", "U"]
+        ]
+      }
+    ]
+  }
+}
