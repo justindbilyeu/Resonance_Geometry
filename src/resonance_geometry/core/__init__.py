@@ -1,3 +1,5 @@
-"""Core functionality for Resonance Geometry (placeholder)."""
+"""Resonance Geometry base package."""
 
-# TODO: Populate with core GP/RWP implementations.
+from pkgutil import extend_path
+
+__path__ = extend_path(__path__, __name__)
