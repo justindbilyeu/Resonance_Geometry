@@ -1,44 +1,84 @@
-.venv/
-.env/
-__pycache__/
-.pytest_cache/
-.ipynb_checkpoints/
-.DS_Store
+# Resonance Geometry - Git Ignore Rules
 
-# local artifacts
-checkpoints/
-results/*
-!results/phase/
-results/phase/*
-!results/phase/traces/
-results/phase/traces/*
-!results/phase/traces/*.json
+# --- Python build & bytecode ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.so
+*.egg
+*.egg-info/
+.eggs/
+build/
+dist/
+wheels/
+
+# --- Virtual envs & tooling ---
+.venv/
+venv/
+env/
+ENV/
+.env/
+.python-version
+.conda/
+pip-wheel-metadata/
+
+# --- Notebooks & caches ---
+.ipynb_checkpoints/
+.mypy_cache/
+.pytype/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# --- Local configs & secrets ---
+.env
+.env.*
+*.secret
+*.key
+
+# --- Results / data artifacts ---
+results/
+**/results/
+logs/
+**/*.log
+data/raw/
+data/tmp/
+tmp/
+*.tmp
 *.npy
 *.npz
 *.pickle
 *.pkl
-*.log
-docs/dissertation/build/
 
-# site & build outputs
+# --- Project-specific artifacts ---
+checkpoints/
+results/phase/*
+!results/phase/traces/
+results/phase/traces/*
+!results/phase/traces/*.json
+docs/dissertation/build/
 docs/data/generated/
 docs/data/theory/*.json
 docs/data/pilot_*/summary.json
-site/
-_build/
-dist/
-build/
-
-# IDE/editor
-.vscode/
-.idea/
-
-# backups
-docs/assets/app.js.backup
-
-# Ringing sweep artifacts
 results/ringing_sweep/
 docs/assets/figures/ringing_alpha_beta.png
-# Paper figures (generated)
 figures/*.png
 docs/analysis/figures/*.png
+
+# --- Site & build outputs ---
+site/
+_build/
+
+# --- OS / Editor junk ---
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# --- Backups ---
+docs/assets/app.js.backup
+*.backup
