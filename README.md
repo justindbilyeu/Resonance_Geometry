@@ -36,6 +36,27 @@ Over time, the network **rewires itself** to amplify resonance. This simple feed
 
 > Space (the coupling graph) is not passive—it’s a living, learning object co-evolving with the dynamics it carries.
 
+### Status of Every Claim in This Repository
+
+Read this before citing anything here. The repository contains results at very
+different levels of support, and until 2026-09-02 the front page did not
+distinguish them.
+
+| Claim | Status | Where to check |
+|---|---|---|
+| Hopf bifurcation is impossible in the resonant coupling model (fixed trace tr J = −γ < 0 ∀α) | **Established — analytic proof** | `e40c842`, [`docs/papers/non_hopf/`](docs/papers/non_hopf/) |
+| Saddle-type instability at α\* = 0.833051 ± 0.000508 | **Established — derived, error-bounded, asserted by a passing test** | [`tests/test_eigs_assertions.py`](tests/test_eigs_assertions.py) |
+| Phase boundary η·Ī ≈ λ + γ in the SU(2) hallucination model | **Reproducible — slope 0.996, intercept 0.502, R² 0.998 across three grids** | [`REPRODUCTION.md`](docs/papers/hallucination/REPRODUCTION.md), re-run by CI |
+| Resonant Transition Point at α ≈ 0.35 | **Retracted 2026-09-02.** No such transition exists; seven quantities, zero sign changes in any second derivative below α\*. Three origin hypotheses each falsified against repo history | [`RTP_NULL_RESULT.md`](docs/papers/non_hopf/RTP_NULL_RESULT.md), [`tests/test_rtp_null.py`](tests/test_rtp_null.py) |
+| §4.1 fit η_c ≈ 0.346λ + 0.506, and its claimed independent replication | **Not supported.** Does not reproduce; no artifact backs the replication | [`REPRODUCTION.md §3`](docs/papers/hallucination/REPRODUCTION.md) |
+| Any connection between these dynamics and hallucination in a real language model | **Not tested.** No code here touches a transformer | — |
+| Geometric plasticity: learning, memory, functional gain | **Simulation results** — see §2 below for what each demonstrates | [`src/toy_model/`](src/toy_model/) |
+| The philosophical framework (ten axioms, "emotion is curvature") | **Philosophy, not physics.** The origin material, retained for provenance and not offered as a result. It lives in a separate repository and is deliberately not imported here | [justindbilyeu/ResonanceGeometry](https://github.com/justindbilyeu/ResonanceGeometry) |
+
+CI gates the established rows. `tests/known_failures.txt` lists what is currently
+broken and why, and a quarantined test that starts passing fails the build — so
+that list can only shrink.
+
 ### What’s in This Repo
 
 - **Resonance Fold Operator (RFO)**: A scalar delayed plasticity loop where geometric memory exists only in a narrow **stable-ringing wedge**
@@ -153,7 +174,7 @@ pytest ../../tests/test_eigs_assertions.py
 
 ### 🔥 1. RFO Stability Wedge (2025, Active)
 
-**Paper:** [`docs/white-papers/resonance_geometry_rfo_wedge.tex`](docs/white-papers/resonance_geometry_rfo_wedge.tex)
+**Paper:** [`docs/white-papers/resonance_geometry_rfo_wedge_v2.tex`](docs/white-papers/resonance_geometry_rfo_wedge_v2.tex)
 
 **Core contributions:**
 
@@ -189,23 +210,56 @@ Many-oscillator system where:
 
 **Paper:** [`docs/papers/non_hopf/non_hopf_paper_draft_v1.tex`](docs/papers/non_hopf/non_hopf_paper_draft_v1.tex)
 
-**Discovery:** Resonant Transition Point (RTP) at $\alpha \approx 0.35$ where:
+**What is established.** Hopf bifurcation is *mathematically impossible* in this
+model: the trace is fixed at $\mathrm{tr}\,J(\alpha) = -\gamma < 0$ for all
+$\alpha$, so a complex pair can never cross the imaginary axis. The real loss of
+linear stability is **saddle-type**, at
 
-- Macroscopic behavior reorganizes
-- **All eigenvalues remain strictly negative** (not a Hopf bifurcation)
-- Transition is **geometric**, not linear-instability-driven
+$$\alpha^\star = \omega_0^2/K_0 = 0.8333\ldots \qquad (\text{numerically } 0.833051 \pm 0.000508)$$
+
+where the effective stiffness $k(\alpha)$ changes sign and one real eigenvalue
+crosses zero. In the narrow sweep the maximum real part stays pinned at
+$-\gamma/2 \approx -0.04$. Derived in `e40c842`, asserted by
+[`tests/test_eigs_assertions.py`](tests/test_eigs_assertions.py), which gates CI.
+
+**What is not.** The Resonant Transition Point near $\alpha \approx 0.35$ — the
+place where macroscopic behaviour reorganises while all eigenvalues stay strictly
+negative — is a *located observation, not a derived quantity*. No derivation
+procedure, error bar, or pre-registered threshold has been given for 0.35, and no
+test covers it. Earlier versions of this README listed it as a "Discovery"; that
+overstated it. It is the phenomenon the paper is about, and it is still awaiting
+the derivation that would make it a result.
+
+The two numbers are not equivalent in status and the paper should not be read as
+if they were: **0.833051 is derived and tested; 0.35 is observed and open.**
 
 **Tools:** Fisher information geometry, curvature metrics, eigenvalue sweeps
 
 ### 🔄 4. AI Hallucination Geometry (Theory Thread)
 
-**Whitepaper:** [`A_Geometric_Theory_of_AI_Hallucination.md`](A_Geometric_Theory_of_AI_Hallucination.md)
+**Whitepaper:** [`docs/papers/hallucination/A_Geometric_Theory_of_AI_Hallucination.md`](docs/papers/hallucination/A_Geometric_Theory_of_AI_Hallucination.md)
+**Reproduction record:** [`docs/papers/hallucination/REPRODUCTION.md`](docs/papers/hallucination/REPRODUCTION.md)
 
 Applies RG concepts to LLMs:
 
 - Hypothesis: hallucinations occupy specific geometric regions in embedding space
 - Approach: information-theoretic metrics + curvature analysis
 - Status: conceptual framework, experiments TBD
+
+**Read REPRODUCTION.md before citing any number from this paper.** The SU(2)
+simulation behind it reproduces: the boxed boundary prediction
+$\eta\bar I \approx \lambda + \gamma$ holds at slope 0.996, intercept 0.502
+($R^2 = 0.998$), and the hysteresis loop gap comes out at 11.5158 against the
+paper's 11.52. But the fit printed in §4.1 ($\eta_c \approx 0.346\lambda +
+0.506$) does not reproduce under any configuration tried, and the manuscript's
+claim of an *independent replication* recovering those same digits is not
+supported by anything in this repository. §4.1 is flagged in place and needs a
+pass by its author.
+
+Nothing here has been demonstrated about language models. The system studied is
+a low-dimensional dynamical system; the step from its phase structure to
+hallucination in a transformer is an interpretive claim the simulation does not
+test.
 
 -----
 
@@ -218,7 +272,7 @@ Resonance_Geometry/
 │   │   ├── non_hopf/              # RTP paper (LaTeX, figures, sweeps)
 │   │   └── neurips/               # AI hallucination draft
 │   ├── white-papers/
-│   │   └── resonance_geometry_rfo_wedge.tex  # RFO stability paper
+│   │   └── resonance_geometry_rfo_wedge_v2.tex  # RFO stability paper
 │   ├── dissertation/              # RG thesis chapters
 │   ├── theory/                    # Mathematical derivations
 │   ├── ETHOS.md                   # Lab methods & evidence standards
@@ -254,7 +308,7 @@ Resonance_Geometry/
 
 |Title                                                  |Status       |Location                                            |
 |-------------------------------------------------------|-------------|----------------------------------------------------|
-|RFO Stability Wedge: Geometric Memory as Stable Ringing|📝 Draft      |`docs/white-papers/resonance_geometry_rfo_wedge.tex`|
+|RFO Stability Wedge: Geometric Memory as Stable Ringing|📝 Draft      |`docs/white-papers/resonance_geometry_rfo_wedge_v2.tex`|
 |Resonant Transition Points Beyond Hopf Bifurcations    |✅ Complete   |`docs/papers/non_hopf/`                             |
 |A Geometric Theory of AI Hallucination                 |📋 Whitepaper |`A_Geometric_Theory_of_AI_Hallucination.md`         |
 |Resonance Geometry Dissertation                        |🔄 In Progress|`docs/dissertation/`                                |

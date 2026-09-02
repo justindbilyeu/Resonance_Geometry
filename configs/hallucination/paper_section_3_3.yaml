@@ -1,0 +1,39 @@
+# Parameters for "A Geometric Theory of AI Hallucination", section 3.3,
+# in the key names experiments/hallucination/run_phase_map.py and
+# run_hysteresis.py actually read.
+#
+# WHY THIS FILE EXISTS
+#   hallucination_research/configs/hallu_su2_v2.yaml holds the same VALUES
+#   under different KEY NAMES (alpha_sat / beta_sat / kappa_couple / ema_I,
+#   and adaptive_eta.enabled rather than a top-level use_adaptive_gain).
+#   The scripts read alpha / beta / kappa / ema_alpha / use_adaptive_gain, so
+#   they raise KeyError: 'alpha' against that file and neither of the paper's
+#   two headline results could be regenerated from anything in the repo.
+#   The values below are transcribed from the paper's own section 3.3 --
+#   "gamma=0.5, alpha=0.6, beta=0.02, kappa=0.12, MI window 30, EMA 0.1" --
+#   so the mapping is read off the paper, not guessed.
+#
+#   hallu_su2_v2.yaml is left untouched; nothing else reads this file.
+
+seed: 42
+dt: 0.01
+t_horizon: 5.0
+
+# Section 3.3, verbatim.
+gamma: 0.5
+alpha: 0.6
+beta: 0.02
+kappa: 0.12
+window: 30
+ema_alpha: 0.1
+
+use_adaptive_gain: false
+
+# Section 3.3: "Sweep eta in [0.2,5.0], lambda in [0.1,5.0]".
+# The paper does not record the grid RESOLUTION; 25 x 11 is chosen here and
+# the fit is stable across resolutions (see docs/papers/hallucination/
+# REPRODUCTION.md for the numbers at three different grids).
+grid:
+  eta: [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6,
+        2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 4.8, 5.0]
+  lambda: [0.1, 0.59, 1.08, 1.57, 2.06, 2.55, 3.04, 3.53, 4.02, 4.51, 5.0]

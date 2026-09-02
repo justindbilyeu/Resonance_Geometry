@@ -1,0 +1,77 @@
+# Known-failing tests, quarantined so CI can be honest about everything else.
+#
+# HOW THIS WORKS
+#   Each uncommented line is a pytest node ID. tests/conftest.py marks it
+#   xfail(strict=True). Two consequences, both deliberate:
+#     - a listed test that fails      -> xfail, CI stays green
+#     - a listed test that PASSES     -> XPASS, strict, CI goes RED
+#   So the list can only shrink. You cannot fix a test and forget to
+#   un-quarantine it; CI will make you.
+#
+# Modules that fail at COLLECTION cannot be xfailed (pytest never gets far
+# enough to see the mark). Those are listed at the bottom and are passed as
+# --ignore in .github/workflows/ci.yml, where the same reasons are repeated.
+#
+# NOTHING HERE HAS BEEN FIXED. This file records debt; it does not pay it.
+# Baseline captured 2026-09-02 at 0832dde: 8 failed, 90 passed, 3 collection
+# errors, under Python 3.11 with requirements.txt + requirements-dev.txt.
+
+# --- Third-party API drift. One-line fixes; not attempted here because they
+#     change what code runs, and that is a science-adjacent call for Justin. ---
+
+# numpy.trapz was removed in NumPy 2.0 (renamed numpy.trapezoid).
+# SIDE EFFECT: this test deletes the tracked file
+# results/gp_demo/multi_frequency_results.json and dies before writing
+# it back, so a test run leaves the working tree dirty. Restore with
+# `git checkout -- results/gp_demo/multi_frequency_results.json`.
+tests/test_gp_multiband_smoke.py::test_multi_band_smoke
+
+# scipy.sparse.csgraph has no attribute `identity`; it lives at
+# scipy.sparse.identity. src/rg_empirical/laplacian_lambda.py:21.
+tests/test_laplacian_lambda.py::test_lambda_max_bounds_and_finiteness
+
+# --- Modules the tests import that are not in this repository. ---
+
+# imports `spin_foam_mc_optimized`, which does not exist anywhere in the tree.
+tests/test_sanity.py::test_core_modules_importable
+
+# resonance_geometry.state_vector does not exist.
+tests/test_topological_constraints.py::test_state_vector_extraction_shape
+
+# resonance_geometry.forbidden does not exist.
+tests/test_topological_constraints.py::test_forbidden_classifier_label
+
+# resonance_geometry.fractals does not exist.
+tests/test_topological_constraints.py::test_fractal_dimension_placeholder
+
+# --- Path drift. ---
+
+# Subprocesses experiments/topo_test/01_grid_sampling.py, which opens
+# 'config/topo_test.yaml'. The file is at 'configs/topo_test.yaml'.
+tests/topo_test/test_skeleton_runs.py::test_pipeline_smoke
+
+# --- A REAL BEHAVIOURAL FAILURE. Read this one. ---
+#
+# "Doubling d_scale should halve gain" — the test asserts a normalisation
+# property of compute_effective_eta and the implementation does not have it.
+# This is not environment drift and not a missing file: it is code
+# disagreeing with its own stated spec, in the adaptive-gain machinery the
+# hallucination paper's eta axis depends on. It is quarantined only so the
+# other 90 tests can gate; it is NOT dismissed, and it should be the first
+# thing looked at.
+tests/hallucination/test_adaptive_eta.py::TestComputeEffectiveEta::test_d_scale_controls_normalization
+
+# =====================================================================
+# COLLECTION ERRORS — cannot be xfailed. See --ignore in ci.yml.
+#
+#   tests/hallucination/test_mi_and_gain.py
+#       ImportError: cannot import name 'adaptive_gain_eta' from
+#       resonance_geometry.hallucination.phase_dynamics
+#
+#   tests/test_itpu.py
+#       FileNotFoundError: Phase_4_Falsification/analysis/compute_itpu.py
+#       (not in the repository)
+#
+#   tests/test_spin_foam_smoke.py
+#       ModuleNotFoundError: No module named 'spin_foam_mc_optimized'
+# =====================================================================

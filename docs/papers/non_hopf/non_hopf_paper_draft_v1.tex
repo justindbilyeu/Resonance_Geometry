@@ -134,6 +134,25 @@ corresponding to a stable spiral. When $k(\alpha)$ passes through zero, one eige
 
 In particular, because $\mathrm{tr}\,J(\alpha)$ is strictly negative and independent of $\alpha$, this system \emph{cannot} undergo a Hopf bifurcation by varying $\alpha$ alone: a Hopf crossing would require $\mathrm{tr}\,J=0$ with $\det J>0$ at the critical point. Any loss of linear stability here is necessarily via a real eigenvalue crossing associated with the sign change of the effective stiffness $k(\alpha)$.
 
+\paragraph{Retraction note (added 2026-09-02, not by the author).}
+The Resonant Transition Point at $\alpha\approx0.35$ asserted in the abstract
+and in Section~1 \emph{does not exist}. On the $\phi_{\text{eq}}=0$ branch --
+the only equilibrium for $\alpha<\alpha^\star$ -- the effective stiffness
+$k(\alpha)=\omega_0^2-K_0\alpha$ is exactly linear, so every smooth quantity of
+the system is a function of a linear function of $\alpha$. A sweep of seven such
+quantities (Im$\,\lambda$, damping ratio, quality factor, spiral pitch, Fisher
+metric $g_{\alpha\alpha}$, metric strain, nonlinear stiffness ratio) over
+20{,}001 points finds \emph{zero} sign changes in any second derivative below
+$\alpha^\star$: fixed convexity throughout, no extremum, no inflection, nothing
+distinguished at $0.35$ or anywhere else. Three separate hypotheses for the
+number's origin (a stale $K_0$, an external drive, fixed-time sampling) were
+each checked against the repository's full history and each falsified.
+The Hopf falsification in this section is unaffected and stands.
+See \texttt{RTP\_NULL\_RESULT.md} in this directory for the derivation, the
+kill test, and the forensics; \texttt{tests/test\_rtp\_null.py} re-runs the kill
+test on every push. The abstract has deliberately not been edited --
+retracting a claim is the author's act.
+
 \subsection{Numerical Methods}
 
 \begin{itemize}

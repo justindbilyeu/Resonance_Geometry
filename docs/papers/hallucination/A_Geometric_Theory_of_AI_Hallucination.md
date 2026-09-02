@@ -97,8 +97,8 @@ Regimes:
 - **Creative:** $\lambda_{\max}\approx 0$ (bounded oscillations).
 - **Hallucinatory:** $\lambda_{\max}>0$ (persistent growth/large positive spectral radius).
 
-**Code:** `rg/sims/meta_flow_min_pair_v2.py`, `rg/validation/hysteresis_sweep.py`  
-**Figures:** `figures/phase_diagram_v2.png`, `figures/hysteresis_v2.png`
+**Code:** `src/rg/sims/meta_flow_min_pair_v2.py`, `src/rg/validation/hysteresis_sweep.py`  
+**Figures:** `docs/papers/neurips/figures/phase_diagram_v2.png`, `docs/papers/neurips/figures/hysteresis_v2.png`
 
 ---
 
@@ -111,6 +111,17 @@ $$
 \boxed{\eta\,\bar I \;\approx\; \lambda + \gamma}
 $$
 across the grid (visual fit; residuals small). An explicit fit gives $\eta_c\approx 0.346\,\lambda + 0.506$ with $R^2\approx 0.94$ under our settings.
+
+> **Reproduction note (added 2026-09-02, not by the author).** The fit above
+> could not be reproduced from this repository under any configuration tried.
+> Re-running `run_phase_map.py` with the parameters stated in section 3.3
+> gives $\eta\bar I \approx 0.996\,\lambda + 0.502$ ($R^2 = 0.998$) — that is,
+> the boxed prediction holds with slope $\approx 1$, not $0.346$. A slope of
+> $0.346$ against a predicted $1.0$ does not "align with" the prediction, and
+> the sentence above should not describe it as doing so. See
+> [REPRODUCTION.md](REPRODUCTION.md) for the commands, three grids, and the
+> hysteresis check (which reproduces exactly at 11.5158). Section 4.1 needs a
+> pass by its author; it is not rewritten here.
 
 ## 4.2 Hysteresis (first-order character)
 
@@ -181,15 +192,15 @@ AI hallucination is best understood as a **geometric phase transition** in infor
 - **MI surrogate:** Gaussian MI from temporal correlations of the 6D state $(\omega_x,\omega_y)$ over a sliding window (30) with EMA 0.1.  
 - **Spectral surrogate:** Rayleigh-style estimate tied to $\eta\bar I,\lambda,\gamma$ and local norm.  
 - **Grids:** $\eta\in[0.2,5.0]$ (101 steps), $\lambda\in[0.1,5.0]$ (11 steps); $\gamma=0.5,\ \alpha=0.6,\ \beta=0.02,\ \kappa=0.12$.  
-- **Outputs:** phase map and hysteresis curves → `figures/phase_diagram_v2.png`, `figures/hysteresis_v2.png`, plus boundary overlay.
+- **Outputs:** phase map and hysteresis curves → `docs/papers/neurips/figures/phase_diagram_v2.png`, `docs/papers/neurips/figures/hysteresis_v2.png`, plus boundary overlay.
 
 ---
 
 # Figures
 
-- **Fig. 1** Phase diagram (grounded/creative/hallucinatory) in $(\eta,\lambda)$ with $\gamma=0.5$; dashed line $\eta\,\bar I = \lambda+\gamma$. *(file: figures/phase_diagram_v2.png)*  
-- **Fig. 2** Hysteresis under forward/backward $\eta$ sweeps at fixed $\lambda$; maximum loop gap $\approx 11.52$. *(file: figures/hysteresis_v2.png)*  
-- **Fig. 3** Phase boundary overlay with linear fit $\eta_c\approx 0.346\,\lambda + 0.506$ ($R^2\approx 0.94$). *(file: figures/phase_diagram_boundary_overlay_v2.png)*
+- **Fig. 1** Phase diagram (grounded/creative/hallucinatory) in $(\eta,\lambda)$ with $\gamma=0.5$; dashed line $\eta\,\bar I = \lambda+\gamma$. *(file: docs/papers/neurips/figures/phase_diagram_v2.png)*  
+- **Fig. 2** Hysteresis under forward/backward $\eta$ sweeps at fixed $\lambda$; maximum loop gap $\approx 11.52$. *(file: docs/papers/neurips/figures/hysteresis_v2.png)*  
+- **Fig. 3** Phase boundary overlay with linear fit $\eta_c\approx 0.346\,\lambda + 0.506$ ($R^2\approx 0.94$). *(file: docs/papers/neurips/figures/phase_diagram_boundary_overlay_v2.png)*
 
 ---
 

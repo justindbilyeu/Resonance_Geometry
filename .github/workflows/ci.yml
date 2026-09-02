@@ -1,5 +1,14 @@
 name: CI
 
+# The previous version of this file could not fail. Six of its fourteen steps
+# carried `continue-on-error: true`, most of those also ended in `|| true`, the
+# test step named two files of which one did not exist, and the summary printed
+# "checks completed" under `if: always()`. A green tick meant nothing.
+#
+# This version has two jobs:
+#   tests       - gates. No continue-on-error, no `|| true`. Red means broken.
+#   experiments - does not gate, and says so in its name.
+
 on:
   push:
     branches: [main]
@@ -7,7 +16,8 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  tests:
+    name: tests (gating)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,8 +25,7 @@ jobs:
       - name: Set up git safe directory (CI containers)
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
@@ -25,113 +34,87 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt -r requirements-dev.txt
 
-      # --- Linting (only if pre-commit config exists) ---
-      - name: Check for pre-commit config
-        id: check_precommit
+      # Three modules fail at COLLECTION, on missing files rather than on
+      # anything testable. They cannot be xfail-marked, because pytest never
+      # gets far enough to see a mark, so they are excluded here by name with
+      # the reason attached. The same three are listed at the bottom of
+      # tests/known_failures.txt. Remove one from BOTH places when its
+      # dependency lands.
+      #
+      #   test_mi_and_gain.py   ImportError: adaptive_gain_eta is not exported
+      #                         by resonance_geometry.hallucination.phase_dynamics
+      #   test_itpu.py          FileNotFoundError:
+      #                         Phase_4_Falsification/analysis/compute_itpu.py
+      #   test_spin_foam_smoke  ModuleNotFoundError: spin_foam_mc_optimized
+      - name: Run test suite
         run: |
-          if [ -f .pre-commit-config.yaml ]; then
-            echo "has_precommit=true" >> $GITHUB_OUTPUT
-          else
-            echo "has_precommit=false" >> $GITHUB_OUTPUT
-          fi
+          pytest -q \
+            --ignore=tests/hallucination/test_mi_and_gain.py \
+            --ignore=tests/test_itpu.py \
+            --ignore=tests/test_spin_foam_smoke.py
 
-      - name: Run pre-commit lint
-        if: steps.check_precommit.outputs.has_precommit == 'true'
-        run: pre-commit run -a
-        continue-on-error: true
-
-      # --- Unit tests (only stable ones) ---
-      - name: Run tests
+      # Everything currently failing is quarantined in tests/known_failures.txt
+      # as xfail(strict=True). Strict means a quarantined test that starts
+      # PASSING fails this job, so the list can only shrink. This step just
+      # surfaces the debt in the run log.
+      - name: Report quarantined tests
+        if: always()
         run: |
-          if [ -d tests ]; then
-            # Run only specific stable tests if they exist
-            if [ -f tests/test_ringing_detector.py ]; then
-              pytest -q tests/test_ringing_detector.py --disable-warnings || true
-            fi
-            if [ -f tests/test_jacobian_sweep.py ]; then
-              pytest -q tests/test_jacobian_sweep.py --disable-warnings || true
-            fi
-          else
-            echo "No tests directory found, skipping tests"
-          fi
-        continue-on-error: true
+          echo "## Quarantined tests" >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
+          echo 'Known failures, xfail(strict=True). See tests/known_failures.txt.' >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          grep -v '^\s*#' tests/known_failures.txt | grep -v '^\s*$' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
 
-      # --- Ringing sweep (if Makefile exists) ---
-      - name: Check for Makefile
-        id: check_makefile
-        run: |
-          if [ -f Makefile ]; then
-            echo "has_makefile=true" >> $GITHUB_OUTPUT
-          else
-            echo "has_makefile=false" >> $GITHUB_OUTPUT
-          fi
+  experiments:
+    name: experiments (does not gate)
+    runs-on: ubuntu-latest
+    # Long-running sweeps and figure generation. Failures here are expected
+    # while the experiment scripts are in flux and deliberately do not block a
+    # merge. If a step in here becomes something the repo relies on, move it
+    # into the `tests` job above rather than leaving it green-by-default.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: Run ringing sweep
-        if: steps.check_makefile.outputs.has_makefile == 'true'
-        run: |
-          make ring-sweep || echo "Ringing sweep skipped or failed"
-        continue-on-error: true
-
-      - name: Update theory status
-        if: steps.check_makefile.outputs.has_makefile == 'true'
-        run: |
-          make theory-status || echo "Theory status update skipped or failed"
-        continue-on-error: true
-
-      - name: Upload ringing artifacts
-        if: steps.check_makefile.outputs.has_makefile == 'true'
-        uses: actions/upload-artifact@v4
+      - uses: actions/setup-python@v5
         with:
-          name: ringing-sweep
-          path: |
-            results/ringing_sweep/*.json*
-            docs/reports/ringing_boundary.md
-          if-no-files-found: ignore
+          python-version: "3.11"
 
-      # --- OPTIONAL: Fluency sweep ---
-      - name: Run fluency sweep (optional)
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Lint
+        run: |
+          if [ -f .pre-commit-config.yaml ]; then pre-commit run -a; else echo "no pre-commit config"; fi
+
+      - name: Ringing sweep
+        run: make ring-sweep
+
+      - name: Theory status
+        run: make theory-status
+
+      - name: Fluency probe
         run: |
           if [ -f scripts/run_fluency_probe.py ]; then
-            python scripts/run_fluency_probe.py || echo "Fluency sweep failed; continuing"
+            python scripts/run_fluency_probe.py
           else
-            echo "Fluency sweep script not found; skipping"
+            echo "scripts/run_fluency_probe.py not present"; exit 1
           fi
-        continue-on-error: true
 
-      - name: Upload fluency artifacts (optional)
+      - name: Upload artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: fluency-results
+          name: experiment-outputs
           path: |
+            results/ringing_sweep/*.json*
             results/fluency_sweep/*.json*
+            docs/reports/ringing_boundary.md
             docs/reports/fluency_velocity.md
             docs/assets/figures/fluency_map.png
           if-no-files-found: ignore
-
-      # --- Hallucination quick smoke ---
-      - name: Hallucination quick smoke
-        if: steps.check_makefile.outputs.has_makefile == 'true'
-        run: |
-          # Set CI env var to limit iterations
-          export CI=true
-          export RG_CI=1
-          export RG_CI_MAX_STEPS=100
-          # Run quick tests only
-          pytest -q tests/hallucination/test_mi_and_gain.py --disable-warnings || echo "Hallucination tests failed; continuing"
-        continue-on-error: true
-
-      # --- Summary ---
-      - name: CI Summary
-        if: always()
-        run: |
-          echo "## CI Results" >> $GITHUB_STEP_SUMMARY
-          echo "- ✓ Dependencies installed" >> $GITHUB_STEP_SUMMARY
-          echo "- ✓ Basic checks completed" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ steps.check_precommit.outputs.has_precommit }}" == "true" ]; then
-            echo "- ✓ Pre-commit checks attempted" >> $GITHUB_STEP_SUMMARY
-          fi
-          if [ "${{ steps.check_makefile.outputs.has_makefile }}" == "true" ]; then
-            echo "- ✓ Make targets attempted" >> $GITHUB_STEP_SUMMARY
-          fi
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "All optional steps use continue-on-error to prevent blocking merges." >> $GITHUB_STEP_SUMMARY
