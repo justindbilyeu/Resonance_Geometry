@@ -1,0 +1,29 @@
+Documentation, Papers and Figures — CC BY 4.0
+
+Copyright (c) 2026 Justin Bilyeu.
+
+Everything in this repository that is prose or a picture rather than a program
+— the papers under docs/, the reproduction records, the figures, the README —
+is licensed under the Creative Commons Attribution 4.0 International licence.
+
+    https://creativecommons.org/licenses/by/4.0/
+    Legal code: https://creativecommons.org/licenses/by/4.0/legalcode
+
+You may share and adapt this material for any purpose, including commercially,
+provided you give appropriate credit, link to the licence, and indicate whether
+changes were made.
+
+The SOURCE CODE in this repository is licensed separately, under Apache
+License 2.0 — see LICENSE.
+
+Why two licences: this repository is half software and half writing, and the
+two want different things. Code wants to be run and forked. A paper wants to be
+cited. CC BY is written for the second and Apache for the first; using one for
+both would leave one of them awkwardly governed.
+
+A note on attribution, since it is the point of both licences here: if you
+reuse a result from this repository, please state which commit you took it
+from. The reported values in these papers have been corrected more than once
+(see docs/papers/hallucination/REPRODUCTION.md and
+docs/papers/non_hopf/RTP_NULL_RESULT.md), and a number quoted without a commit
+is a number nobody can check.

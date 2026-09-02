@@ -6,7 +6,8 @@
 
 [![arXiv](https://img.shields.io/badge/arXiv-Pending-b31b1b.svg)](https://arxiv.org)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![License](https://img.shields.io/badge/license-Research%20Preview-lightgrey.svg)](LICENSE)
+[![Code: Apache 2.0](https://img.shields.io/badge/code-Apache%202.0-blue.svg)](LICENSE)
+[![Docs: CC BY 4.0](https://img.shields.io/badge/docs-CC%20BY%204.0-lightgrey.svg)](LICENSE-DOCS)
 [![Status](https://img.shields.io/badge/status-active-brightgreen.svg)](https://github.com/justindbilyeu/Resonance_Geometry)
 
 *Mathematical foundations, simulations, and theory for systems where **geometry learns from resonance***
@@ -444,11 +445,31 @@ See [`docs/ETHOS.md`](docs/ETHOS.md) for our methodology and collaboration frame
 
 ## 📜 License
 
-**Research Preview** – © 2025 Justin D. Bilyeu & Resonance Geometry Collective
+© 2026 Justin Bilyeu. Open source, under two licences, because this repository
+is half software and half writing and the two want different things.
 
-Code and documentation shared for research, educational, and review purposes.  
-Formal licensing will be finalized alongside publications.  
-For commercial use or redistribution, please contact the authors.
+| What | Licence | File |
+|---|---|---|
+| Source code — `src/`, `tests/`, `experiments/`, `scripts/`, `tools/` | **Apache License 2.0** | [`LICENSE`](LICENSE) |
+| Papers, figures, docs, this README | **CC BY 4.0** | [`LICENSE-DOCS`](LICENSE-DOCS) |
+
+Apache rather than MIT for a specific reason. Apache 2.0 § 4(b) requires that
+anyone distributing a modified version **carry prominent notices stating that
+they changed the files.** For a project whose central lesson was that a
+modified claim can travel further than the correction to it, a licence that
+makes "say what you changed" a condition of reuse is the one that matches the
+work. MIT asks for no such thing.
+
+**If you reuse a result from here, cite the commit.** Reported values in these
+papers have been corrected more than once — see
+[`REPRODUCTION.md`](docs/papers/hallucination/REPRODUCTION.md) and
+[`RTP_NULL_RESULT.md`](docs/papers/non_hopf/RTP_NULL_RESULT.md). A number quoted
+without a commit is a number nobody can check, which is the failure this whole
+repository is now built to prevent.
+
+Previously this section read "Research Preview … formal licensing will be
+finalized alongside publications", and the badge above it linked to a `LICENSE`
+file that did not exist. It exists now.
 
 -----
 
