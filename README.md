@@ -153,7 +153,7 @@ pytest ../../tests/test_eigs_assertions.py
 
 ### 🔥 1. RFO Stability Wedge (2025, Active)
 
-**Paper:** [`docs/white-papers/resonance_geometry_rfo_wedge.tex`](docs/white-papers/resonance_geometry_rfo_wedge.tex)
+**Paper:** [`docs/white-papers/resonance_geometry_rfo_wedge_v2.tex`](docs/white-papers/resonance_geometry_rfo_wedge_v2.tex)
 
 **Core contributions:**
 
@@ -189,23 +189,56 @@ Many-oscillator system where:
 
 **Paper:** [`docs/papers/non_hopf/non_hopf_paper_draft_v1.tex`](docs/papers/non_hopf/non_hopf_paper_draft_v1.tex)
 
-**Discovery:** Resonant Transition Point (RTP) at $\alpha \approx 0.35$ where:
+**What is established.** Hopf bifurcation is *mathematically impossible* in this
+model: the trace is fixed at $\mathrm{tr}\,J(\alpha) = -\gamma < 0$ for all
+$\alpha$, so a complex pair can never cross the imaginary axis. The real loss of
+linear stability is **saddle-type**, at
 
-- Macroscopic behavior reorganizes
-- **All eigenvalues remain strictly negative** (not a Hopf bifurcation)
-- Transition is **geometric**, not linear-instability-driven
+$$\alpha^\star = 0.833051 \pm 0.000508$$
+
+where the effective stiffness $k(\alpha)$ changes sign and one real eigenvalue
+crosses zero. In the narrow sweep the maximum real part stays pinned at
+$-\gamma/2 \approx -0.04$. Derived in `e40c842`, asserted by
+[`tests/test_eigs_assertions.py`](tests/test_eigs_assertions.py), which gates CI.
+
+**What is not.** The Resonant Transition Point near $\alpha \approx 0.35$ — the
+place where macroscopic behaviour reorganises while all eigenvalues stay strictly
+negative — is a *located observation, not a derived quantity*. No derivation
+procedure, error bar, or pre-registered threshold has been given for 0.35, and no
+test covers it. Earlier versions of this README listed it as a "Discovery"; that
+overstated it. It is the phenomenon the paper is about, and it is still awaiting
+the derivation that would make it a result.
+
+The two numbers are not equivalent in status and the paper should not be read as
+if they were: **0.833051 is derived and tested; 0.35 is observed and open.**
 
 **Tools:** Fisher information geometry, curvature metrics, eigenvalue sweeps
 
 ### 🔄 4. AI Hallucination Geometry (Theory Thread)
 
-**Whitepaper:** [`A_Geometric_Theory_of_AI_Hallucination.md`](A_Geometric_Theory_of_AI_Hallucination.md)
+**Whitepaper:** [`docs/papers/hallucination/A_Geometric_Theory_of_AI_Hallucination.md`](docs/papers/hallucination/A_Geometric_Theory_of_AI_Hallucination.md)
+**Reproduction record:** [`docs/papers/hallucination/REPRODUCTION.md`](docs/papers/hallucination/REPRODUCTION.md)
 
 Applies RG concepts to LLMs:
 
 - Hypothesis: hallucinations occupy specific geometric regions in embedding space
 - Approach: information-theoretic metrics + curvature analysis
 - Status: conceptual framework, experiments TBD
+
+**Read REPRODUCTION.md before citing any number from this paper.** The SU(2)
+simulation behind it reproduces: the boxed boundary prediction
+$\eta\bar I \approx \lambda + \gamma$ holds at slope 0.996, intercept 0.502
+($R^2 = 0.998$), and the hysteresis loop gap comes out at 11.5158 against the
+paper's 11.52. But the fit printed in §4.1 ($\eta_c \approx 0.346\lambda +
+0.506$) does not reproduce under any configuration tried, and the manuscript's
+claim of an *independent replication* recovering those same digits is not
+supported by anything in this repository. §4.1 is flagged in place and needs a
+pass by its author.
+
+Nothing here has been demonstrated about language models. The system studied is
+a low-dimensional dynamical system; the step from its phase structure to
+hallucination in a transformer is an interpretive claim the simulation does not
+test.
 
 -----
 
@@ -218,7 +251,7 @@ Resonance_Geometry/
 │   │   ├── non_hopf/              # RTP paper (LaTeX, figures, sweeps)
 │   │   └── neurips/               # AI hallucination draft
 │   ├── white-papers/
-│   │   └── resonance_geometry_rfo_wedge.tex  # RFO stability paper
+│   │   └── resonance_geometry_rfo_wedge_v2.tex  # RFO stability paper
 │   ├── dissertation/              # RG thesis chapters
 │   ├── theory/                    # Mathematical derivations
 │   ├── ETHOS.md                   # Lab methods & evidence standards
@@ -254,7 +287,7 @@ Resonance_Geometry/
 
 |Title                                                  |Status       |Location                                            |
 |-------------------------------------------------------|-------------|----------------------------------------------------|
-|RFO Stability Wedge: Geometric Memory as Stable Ringing|📝 Draft      |`docs/white-papers/resonance_geometry_rfo_wedge.tex`|
+|RFO Stability Wedge: Geometric Memory as Stable Ringing|📝 Draft      |`docs/white-papers/resonance_geometry_rfo_wedge_v2.tex`|
 |Resonant Transition Points Beyond Hopf Bifurcations    |✅ Complete   |`docs/papers/non_hopf/`                             |
 |A Geometric Theory of AI Hallucination                 |📋 Whitepaper |`A_Geometric_Theory_of_AI_Hallucination.md`         |
 |Resonance Geometry Dissertation                        |🔄 In Progress|`docs/dissertation/`                                |
