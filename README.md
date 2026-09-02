@@ -454,7 +454,8 @@ description of how the work was actually done, not a legal entity: copyright
 rests with Justin Bilyeu, because he is the only party to this that can hold it.
 The models contributed derivations, code, criticism and a fair amount of
 confident nonsense, and the repository now contains the machinery to tell those
-apart.
+apart. Who did what, with a commit for each claim and an explicit note where
+the record does not support one, is in [`CONTRIBUTORS.md`](CONTRIBUTORS.md).
 
 | What | Licence | File |
 |---|---|---|

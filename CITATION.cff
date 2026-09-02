@@ -1,10 +1,30 @@
 cff-version: 1.2.0
-title: "Resonance Geometry: A Geometric Theory of AI Hallucination"
-message: "If you use this software or paper, please cite:"
+title: "Resonance Geometry"
+message: >-
+  If you use this software or these papers, please cite Justin Bilyeu and
+  the specific commit you took the result from. Reported values here have
+  been corrected more than once; a number quoted without a commit is a
+  number nobody can check.
+
+  AI systems contributed substantially to this work and are credited, with
+  the specific contribution and a commit for each, in CONTRIBUTORS.md. They
+  are deliberately not listed as authors: authorship carries accountability
+  for the work over time, and no instance of a model persists to answer for
+  what it produced. A named contribution with a commit attached is also more
+  informative than a byline.
+abstract: >-
+  Dynamical-systems and information-geometry work, including an analytic
+  proof that Hopf bifurcation is impossible in the resonant coupling model
+  studied here (the trace is fixed at -gamma), with the actual saddle-type
+  instability at alpha* = omega0^2/K0 = 0.8333, and an SU(2) phase-boundary
+  model applied by analogy to hallucination in language models. That analogy
+  is untested against any real language model; see the status table in
+  README.md, which sorts every claim in this repository by how well it is
+  supported.
 authors:
   - family-names: Bilyeu
     given-names: Justin
-  - family-names: "(AI collaborators)"
-    given-names: "Claude, Sage, Grok, DeepSeek, Gemini"
-date-released: 2025-10-07
+type: software
+license: Apache-2.0
 repository-code: "https://github.com/justindbilyeu/Resonance_Geometry"
+date-released: 2025-10-07
