@@ -47,7 +47,7 @@ distinguish them.
 | Hopf bifurcation is impossible in the resonant coupling model (fixed trace tr J = −γ < 0 ∀α) | **Established — analytic proof** | `e40c842`, [`docs/papers/non_hopf/`](docs/papers/non_hopf/) |
 | Saddle-type instability at α\* = 0.833051 ± 0.000508 | **Established — derived, error-bounded, asserted by a passing test** | [`tests/test_eigs_assertions.py`](tests/test_eigs_assertions.py) |
 | Phase boundary η·Ī ≈ λ + γ in the SU(2) hallucination model | **Reproducible — slope 0.996, intercept 0.502, R² 0.998 across three grids** | [`REPRODUCTION.md`](docs/papers/hallucination/REPRODUCTION.md), re-run by CI |
-| Resonant Transition Point at α ≈ 0.35 | **Open — a located observation.** No derivation, no error bar, no threshold, no test | — |
+| Resonant Transition Point at α ≈ 0.35 | **Retracted 2026-09-02.** No such transition exists; seven quantities, zero sign changes in any second derivative below α\*. Three origin hypotheses each falsified against repo history | [`RTP_NULL_RESULT.md`](docs/papers/non_hopf/RTP_NULL_RESULT.md), [`tests/test_rtp_null.py`](tests/test_rtp_null.py) |
 | §4.1 fit η_c ≈ 0.346λ + 0.506, and its claimed independent replication | **Not supported.** Does not reproduce; no artifact backs the replication | [`REPRODUCTION.md §3`](docs/papers/hallucination/REPRODUCTION.md) |
 | Any connection between these dynamics and hallucination in a real language model | **Not tested.** No code here touches a transformer | — |
 | Geometric plasticity: learning, memory, functional gain | **Simulation results** — see §2 below for what each demonstrates | [`src/toy_model/`](src/toy_model/) |
@@ -215,7 +215,7 @@ model: the trace is fixed at $\mathrm{tr}\,J(\alpha) = -\gamma < 0$ for all
 $\alpha$, so a complex pair can never cross the imaginary axis. The real loss of
 linear stability is **saddle-type**, at
 
-$$\alpha^\star = 0.833051 \pm 0.000508$$
+$$\alpha^\star = \omega_0^2/K_0 = 0.8333\ldots \qquad (\text{numerically } 0.833051 \pm 0.000508)$$
 
 where the effective stiffness $k(\alpha)$ changes sign and one real eigenvalue
 crosses zero. In the narrow sweep the maximum real part stays pinned at
