@@ -36,6 +36,27 @@ Over time, the network **rewires itself** to amplify resonance. This simple feed
 
 > Space (the coupling graph) is not passive—it’s a living, learning object co-evolving with the dynamics it carries.
 
+### Status of Every Claim in This Repository
+
+Read this before citing anything here. The repository contains results at very
+different levels of support, and until 2026-09-02 the front page did not
+distinguish them.
+
+| Claim | Status | Where to check |
+|---|---|---|
+| Hopf bifurcation is impossible in the resonant coupling model (fixed trace tr J = −γ < 0 ∀α) | **Established — analytic proof** | `e40c842`, [`docs/papers/non_hopf/`](docs/papers/non_hopf/) |
+| Saddle-type instability at α\* = 0.833051 ± 0.000508 | **Established — derived, error-bounded, asserted by a passing test** | [`tests/test_eigs_assertions.py`](tests/test_eigs_assertions.py) |
+| Phase boundary η·Ī ≈ λ + γ in the SU(2) hallucination model | **Reproducible — slope 0.996, intercept 0.502, R² 0.998 across three grids** | [`REPRODUCTION.md`](docs/papers/hallucination/REPRODUCTION.md), re-run by CI |
+| Resonant Transition Point at α ≈ 0.35 | **Open — a located observation.** No derivation, no error bar, no threshold, no test | — |
+| §4.1 fit η_c ≈ 0.346λ + 0.506, and its claimed independent replication | **Not supported.** Does not reproduce; no artifact backs the replication | [`REPRODUCTION.md §3`](docs/papers/hallucination/REPRODUCTION.md) |
+| Any connection between these dynamics and hallucination in a real language model | **Not tested.** No code here touches a transformer | — |
+| Geometric plasticity: learning, memory, functional gain | **Simulation results** — see §2 below for what each demonstrates | [`src/toy_model/`](src/toy_model/) |
+| The philosophical framework (ten axioms, "emotion is curvature") | **Philosophy, not physics.** The origin material, retained for provenance and not offered as a result. It lives in a separate repository and is deliberately not imported here | [justindbilyeu/ResonanceGeometry](https://github.com/justindbilyeu/ResonanceGeometry) |
+
+CI gates the established rows. `tests/known_failures.txt` lists what is currently
+broken and why, and a quarantined test that starts passing fails the build — so
+that list can only shrink.
+
 ### What’s in This Repo
 
 - **Resonance Fold Operator (RFO)**: A scalar delayed plasticity loop where geometric memory exists only in a narrow **stable-ringing wedge**
