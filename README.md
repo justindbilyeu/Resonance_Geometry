@@ -448,6 +448,14 @@ See [`docs/ETHOS.md`](docs/ETHOS.md) for our methodology and collaboration frame
 © 2026 Justin Bilyeu. Open source, under two licences, because this repository
 is half software and half writing and the two want different things.
 
+**Made by the Resonance Geometry Collective** — Justin Bilyeu, working with
+Claude (Anthropic), ChatGPT (OpenAI), DeepSeek, and Gemini (Google). That is a
+description of how the work was actually done, not a legal entity: copyright
+rests with Justin Bilyeu, because he is the only party to this that can hold it.
+The models contributed derivations, code, criticism and a fair amount of
+confident nonsense, and the repository now contains the machinery to tell those
+apart.
+
 | What | Licence | File |
 |---|---|---|
 | Source code — `src/`, `tests/`, `experiments/`, `scripts/`, `tools/` | **Apache License 2.0** | [`LICENSE`](LICENSE) |
